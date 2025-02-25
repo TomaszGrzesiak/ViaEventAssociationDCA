@@ -3,6 +3,7 @@
 
 public class Result
 {
+    public Guid Id { get; } = Guid.NewGuid();
     public bool IsSuccess { get; }
     public bool IsFailure => !IsSuccess;
     public List<Error> Errors { get; }
@@ -12,4 +13,7 @@ public class Result
         IsSuccess = isSuccess;
         Errors = errors ?? new List<Error>();
     }
+    
+    //@TODO
+    //functions
 }
