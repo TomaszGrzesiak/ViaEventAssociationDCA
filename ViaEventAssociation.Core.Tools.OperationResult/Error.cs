@@ -12,5 +12,4 @@ public class Error
         Message = message;
     }
     
-    public override string ToString() => $"{Code}: {Message}";
 }

@@ -1,5 +1,7 @@
 ﻿namespace ViaEventAssociation.Core.Tools.OperationResult;
-
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 public class Result
 {
@@ -13,7 +15,20 @@ public class Result
         IsSuccess = isSuccess;
         Errors = errors ?? new List<Error>();
     }
+
+    public static Result Success() => new Result(true);
+
+    public static Result Failure(Error[] errors) => new Result(false, errors.ToList());
     
-    //@TODO
-    //functions
+}
+
+public class Result<T> : Result
+{
+    public T Value { get; }
+
+    public Result(T value, bool isSuccess, List<Error>? errors = null)
+        : base(isSuccess, errors)
+    {
+        Value = value;
+    }
 }
