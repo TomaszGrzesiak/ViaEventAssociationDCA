@@ -6,4 +6,11 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <Folder Include="Aggregates\Events\" />
+      <Folder Include="Aggregates\Guests\" />
+      <Folder Include="Aggregates\Locations\" />
+      <Folder Include="Common\Bases\" />
+    </ItemGroup>
+
 </Project>
