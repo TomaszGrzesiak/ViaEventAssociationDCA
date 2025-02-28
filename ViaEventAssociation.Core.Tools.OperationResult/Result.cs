@@ -6,12 +6,11 @@ using System.Linq;
 public class Result
 {
     public Guid Id { get; } = Guid.NewGuid();
-    public string Code { get; }
+    // public string Code { get; }
     public string Message { get; }
 
-    public Result(string code, string message)
+    public Result(string message)
     {
-        Code = code;
         Message = message;
     }
     
