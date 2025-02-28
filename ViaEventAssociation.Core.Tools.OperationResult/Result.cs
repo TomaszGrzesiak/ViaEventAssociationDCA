@@ -19,7 +19,8 @@ public class Result
     public static Result Success() => new Result(true);
 
     public static Result Failure(Error[] errors) => new Result(false, errors.ToList());
-    
+        
+
 }
 
 public class Result<T> : Result
