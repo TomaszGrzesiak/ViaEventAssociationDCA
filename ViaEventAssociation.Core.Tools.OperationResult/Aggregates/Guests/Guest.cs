@@ -1,6 +1,6 @@
 namespace ViaEventAssociation.Core.Tools.OperationResult;
 
-public class Guest
+public class Guest : User
 {
     public Guid Id { get; } = Guid.NewGuid();
     private string Name { get; set; }
