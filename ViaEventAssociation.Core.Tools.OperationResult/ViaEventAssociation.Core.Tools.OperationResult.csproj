@@ -8,7 +8,6 @@
 
     <ItemGroup>
       <Folder Include="Aggregates\Locations\" />
-      <Folder Include="Common\Bases\" />
     </ItemGroup>
 
 </Project>
