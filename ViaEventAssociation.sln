@@ -14,6 +14,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\Unit
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Documentation", "Documentation\Documentation.csproj", "{F7E48897-6D7C-4491-AC6F-E48ACF92FD03}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ViaEventAssociation.Core.Application", "ViaEventAssociation.Core.Application\ViaEventAssociation.Core.Application.csproj", "{1B7FDF74-4A32-4CB6-BF41-C3C5B1A08A3E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ViaEventAssociation.Core.AppEntry", "ViaEventAssociation.Core.AppEntry\ViaEventAssociation.Core.AppEntry.csproj", "{E9F78384-D492-4570-8EC8-F9D1975F2DB0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,11 +36,20 @@ Global
 		{F7E48897-6D7C-4491-AC6F-E48ACF92FD03}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F7E48897-6D7C-4491-AC6F-E48ACF92FD03}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F7E48897-6D7C-4491-AC6F-E48ACF92FD03}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1B7FDF74-4A32-4CB6-BF41-C3C5B1A08A3E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B7FDF74-4A32-4CB6-BF41-C3C5B1A08A3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B7FDF74-4A32-4CB6-BF41-C3C5B1A08A3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B7FDF74-4A32-4CB6-BF41-C3C5B1A08A3E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E9F78384-D492-4570-8EC8-F9D1975F2DB0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E9F78384-D492-4570-8EC8-F9D1975F2DB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E9F78384-D492-4570-8EC8-F9D1975F2DB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E9F78384-D492-4570-8EC8-F9D1975F2DB0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{BEF5E627-AA86-4929-8D7C-86F3545D571F} = {4068B119-615E-4526-BB11-39A16DB793CA}
 		{A8C3C386-75E3-4D26-B592-AB3C179508C9} = {BEF5E627-AA86-4929-8D7C-86F3545D571F}
 		{C96D1BBF-96F1-4817-BFF3-617BEB952931} = {A8C3C386-75E3-4D26-B592-AB3C179508C9}
 		{46475565-4740-4E7D-9D51-CB60AB2FD5E2} = {0F495B80-DDF2-429A-932C-7D232A2DF872}
+		{1B7FDF74-4A32-4CB6-BF41-C3C5B1A08A3E} = {A8C3C386-75E3-4D26-B592-AB3C179508C9}
 	EndGlobalSection
 EndGlobal
