@@ -24,6 +24,8 @@ public class EmailAddress
     }
     private static Result<string> Validate(string emailAddress)
     {
+        var errors = new List<string>();
+        
         if (string.IsNullOrWhiteSpace(emailAddress))
             return Result<string>.Failure("Email is required.");
 
@@ -32,30 +34,27 @@ public class EmailAddress
 
         // Must end with @via.dk
         if (!email.EndsWith("@via.dk"))
-            return Result<string>.Failure("Email must end with '@via.dk'.");
+            errors.Add("Email must end with '@via.dk'.");
 
         // Must match format <text1>@<text2>.<text3>
         var parts = email.Split('@');
         if (parts.Length != 2 || !parts[1].Contains('.'))
-            return Result<string>.Failure("Email must be in the format <text1>@<text2>.<text3>");
+            errors.Add("Email must be in the format <text1>@<text2>.<text3>");
 
         var text1 = parts[0];
 
         if (text1.Length < 3 || text1.Length > 6)
-            return Result<string>.Failure("The part before @ must be between 3 and 6 characters long.");
+            errors.Add("The part before @ must be between 3 and 6 characters long.");
 
-        // Check if text1 is all letters and of length 3-4
-        if ((text1.Length == 3 || text1.Length == 4) && text1.All(char.IsLetter))
-        {
-            return Result<string>.Success(email);
-        }
-        
-        // Check if it's 6 digits
-        if (text1.Length == 6 && text1.All(char.IsDigit))
-        {
-            return Result<string>.Success(email);
-        }
+        bool is3Or4Letters = (text1.Length == 3 || text1.Length == 4) && text1.All(char.IsLetter);
+        bool is6Digits = text1.Length == 6 && text1.All(char.IsDigit);
 
-        return Result<string>.Failure("The part before @ must be either 3-4 letters or 6 digits.");
+        if (!is3Or4Letters && !is6Digits) // If the text1 is not 3-4 letters and also not 6 digits then it's invalid
+            errors.Add("The part before @ must be either 3–4 letters or 6 digits.");
+
+        if (errors.Count > 0)
+            return Result<string>.Failure(errors);
+
+        return Result<string>.Success(email);
     }
 }
