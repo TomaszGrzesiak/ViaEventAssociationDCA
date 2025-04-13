@@ -8,67 +8,60 @@ public class Result
     public bool IsSuccess { get; protected init; }
     public bool IsFailure => !IsSuccess;
 
-    public List<string> ErrorMessages { get; protected init; } = new List<string>();
-    //public String? ErrorMessage;
+    public List<string> ErrorMessages { get; protected init; }
     
-    
-    public static Result Success() => new Result() { IsSuccess = true };
-    
-    /**
-     * "params" is convenient, and it works that you can use as follows:
-     *
-     * Result.Failure("Error 1");
-     * Result.Failure("Error 1", "Error 2", "Error 3");
-     *
-     * and the arguments are automatically packed into a string[]
-     */
-    public static Result Failure(IEnumerable<string> errors)
+    // constructor for Failure
+    protected Result(List<string> errorMessages)
     {
-        var errorList = errors switch
-        {
-            // if errors is a List<string>...
-            List<string> list => list,
-            // if it's just a simple array[]
-            string[] array => array.ToList(),
-            // _ means, that the switch can match anything, f.x. a "null" parameter, f.x. in the case where we forget to set an error message and use "null" instead
-            _ => errors.ToList()
-        };
-        return new Result()
-        {
-            IsSuccess = false,
-            ErrorMessages = errorList
-        };
+        IsSuccess = false;
+        ErrorMessages = errorMessages;
     }
+    
+    // Constructor for success
+    protected Result()
+    {
+        IsSuccess = true;
+        ErrorMessages = new List<string>();
+    }
+     
+    public static Result Success() => new Result();
+    
+    public static Result Failure(string errorMessage) =>
+        new Result(new List<string> { errorMessage });
+
+    public static Result Failure(params string[] errorMessages) =>
+        new Result(errorMessages.ToList());
+
+    public static Result Failure(List<string> errorMessages) =>
+        new Result(errorMessages);
 }
 
 public class Result<T> : Result
 {
     public T? Payload { get; private init; }
-    
-    
-    private Result(List<string>? errorMessages)
+
+    // constructor for Failure. Payload in Failure will probably always be null or some sort of empty object.
+    private Result(List<string> errorMessages, T? payload = default) : base(errorMessages)
     {
-        Payload = default; // default sets the value to 0, null or other default value of the particular object
-        IsSuccess = false;
-        ErrorMessages = errorMessages ?? ["Unknown error. This message should never be displayed."];
+        Payload = payload;
     }
-    
-    public static Result<T> Success(T value) => new Result<T>(null)
+
+    private Result(T payload) : base() // this method expands on the base "private Result()" method from the class Result
     {
-        Payload = value,
-        IsSuccess = true,
-        ErrorMessages = new List<string>()
-    };
+        Payload = payload;
+    }
+
+    public static Result<T> Success(T value) => new Result<T>(value); 
     
     // "new" because this method has the same body as in super class, and thus it has to overwrite the superclass method. C# does this by default, but it likes to state it implicitly with the "new" keyword.
     // Failure accepts only IEnumerable<string>, so minimum an "array". It shouldn't be all that big of a deal, because it only needs adding square brackets, f.x. ["error"] instead of "error".
-    public static Result<T> Failure(string errorMessage) =>
+    public new static Result<T> Failure(string errorMessage) =>
         new Result<T>(new List<string> { errorMessage });
 
-    public static Result<T> Failure(params string[] errorMessages) =>
+    public new static Result<T> Failure(params string[] errorMessages) =>
         new Result<T>(errorMessages.ToList());
 
-    public static Result<T> Failure(List<string> errorMessages) =>
+    public new static Result<T> Failure(List<string> errorMessages) =>
         new Result<T>(errorMessages);
 }
 
