@@ -1,6 +1,6 @@
 using ViaEventAssociation.Core.Tools.OperationResult;
 
-namespace Domain.Aggregates.Event;
+namespace ViaEventAssociation.Core.Domain.Aggregates.Event;
 
 public class Event
 {

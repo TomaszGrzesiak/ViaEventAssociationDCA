@@ -1,6 +1,6 @@
 using ViaEventAssociation.Core.Tools.OperationResult;
 
-namespace Domain.Aggregates.Guest;
+namespace ViaEventAssociation.Core.Domain.Aggregates.Guest;
 
 public class Guest
 {

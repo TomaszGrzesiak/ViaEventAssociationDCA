@@ -24,6 +24,7 @@ public class Result
         ErrorMessages = new List<string>();
     }
      
+    // factory methods:
     public static Result Success() => new Result();
     
     public static Result Failure(string errorMessage) =>
@@ -51,6 +52,7 @@ public class Result<T> : Result
         Payload = payload;
     }
 
+    // factory methods:
     public static Result<T> Success(T value) => new Result<T>(value); 
     
     // "new" because this method has the same body as in super class, and thus it has to overwrite the superclass method. C# does this by default, but it likes to state it implicitly with the "new" keyword.

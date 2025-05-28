@@ -1,7 +1,7 @@
 ﻿using ViaEventAssociation.Core.Tools.OperationResult;
 
 
-namespace Domain;
+namespace ViaEventAssociation.Core.Domain;
 
 public class EmailAddress
 {
