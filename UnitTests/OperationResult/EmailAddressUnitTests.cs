@@ -5,6 +5,7 @@ namespace UnitTests.OperationResult;
 
 public class EmailAddressUnitTests
 {
+    
     [Fact]
     public void GivenProperEmail_WhenAnonChoosesToRegister_TheEmailAddressIsValidated()
     {
@@ -43,7 +44,7 @@ public class EmailAddressUnitTests
     public void SimplerWayToTestSameScenarioAsAbove_GivenProperEmail_WhenAnonChoosesToRegister_TheEmailAddressIsValidated(string input, string expected)
     {
         var result = EmailAddress.Create(input);
-
+    
         Assert.True(result.IsSuccess);
         Assert.Equal(expected, result.Payload!.Value);
     }
@@ -53,9 +54,9 @@ public class EmailAddressUnitTests
     {
         string testEmail = "abcd@gmail.com";
         Result<EmailAddress> result = EmailAddress.Create(testEmail);
-
+    
         Assert.True(result.IsFailure);
-        Assert.Contains("must end with '@via.dk'", result.ErrorMessages[0], StringComparison.OrdinalIgnoreCase);
+        Assert.Contains(ResultError.EmailNotEndingWithViaDk.Message, result.Errors[0].Message, StringComparison.OrdinalIgnoreCase);
     }
     
     [Theory]
@@ -71,27 +72,33 @@ public class EmailAddressUnitTests
     public void GivenIncorrectEmailFormat_ShouldFail(string testEmail)
     {
         Result<EmailAddress> result = EmailAddress.Create(testEmail);
-
+    
         Assert.True(result.IsFailure);
-        Assert.NotEmpty(result.ErrorMessages);
+        Assert.NotEmpty(result.Errors);
     }
     
     [Fact]
     public void GivenEmailFormatIncorrect_WhenAnonChoosesToRegisterWithOtherwsieValidValues_ThenTheRequestIsRejectedWithProperErrorMessages()
     {
         string invalidEmail = "x@badformat"; // too short, wrong domain, missing dot, invalid text1
-
+    
         var result = EmailAddress.Create(invalidEmail);
         
         Assert.True(result.IsFailure);
-        Assert.NotEmpty(result.ErrorMessages);
-        Assert.True(result.ErrorMessages.Count == 4, "Should contain 4 errors.");
-
+        Assert.NotEmpty(result.Errors);
+        Assert.True(result.Errors.Count == 4, "Should contain 4 errors.");
+    
         // Optional: check specific error messages
-        Assert.Contains(result.ErrorMessages, msg => msg.Contains("must end with '@via.dk'", StringComparison.OrdinalIgnoreCase));
-        Assert.Contains(result.ErrorMessages, msg => msg.Contains("format <text1>@<text2>.<text3>", StringComparison.OrdinalIgnoreCase));
-        Assert.Contains(result.ErrorMessages, msg => msg.Contains("3 and 6 characters", StringComparison.OrdinalIgnoreCase));
-        Assert.Contains(result.ErrorMessages, msg => msg.Contains("either 3–4 letters or 6 digits", StringComparison.OrdinalIgnoreCase));
+        var expectedErrors = new[]
+        {
+            ResultError.EmailNotEndingWithViaDk,
+            ResultError.EmailDoesNotFollowFormatText1AtText2DotText3,
+            ResultError.EmailPartBeforeAtMustBeBetween3And6CharactersLong,
+            ResultError.EmailPartBeforeAtMustBeEither3Or4LettersOr6Digits
+        };
+
+        foreach (var expected in expectedErrors)
+            Assert.Contains(expected, result.Errors);
     }
     
     [Theory]
@@ -101,10 +108,10 @@ public class EmailAddressUnitTests
     public void GivenEmptyOrWhitespaceEmail_WhenAnonChoosesToRegisterWithOtherwsieValidValues_ThenTheRequestIsRejectedWithProperErrorMessage(string? input)
     {
         var result = EmailAddress.Create(input!); // the method expects non-null, so we use ! to force it
-
+    
         Assert.True(result.IsFailure);
-        Assert.Single(result.ErrorMessages); // Expects that the list of errors is of lenght 1, no more, no less
-        Assert.Contains("Email is required.", result.ErrorMessages[0], StringComparison.OrdinalIgnoreCase);
+        Assert.Single(result.Errors); // Expects that the list of errors is of lenght 1, no more, no less
+        Assert.Contains(ResultError.EmailRequired, result.Errors);
     }
 }
 
