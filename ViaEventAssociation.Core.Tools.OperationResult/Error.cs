@@ -4,13 +4,14 @@ public sealed class Error
 {
     private static readonly HashSet<int> UsedCodes = new();
 
-    // custom errors (120 - 150)
+    // single or doublet errors (120-150)
     public static readonly Error UnParsableGuid = Create(120, "Could not parse the given Guid.");
     public static readonly Error GuestsMaxNumberTooSmall = Create(121, "Too small number of guests. Must be at least 5.");
     public static readonly Error EventTitleCannotBeEmpty = Create(122, "Event title cannot be empty.");
     public static readonly Error EventTitleCannotExceed100Characters = Create(123, "Event title cannot exceed 100 characters.");
     public static readonly Error EventDescriptionCannotBeNull = Create(124, "Description cannot be null.");
     public static readonly Error EventDescriptionCannotExceed250Characters = Create(125, "Description cannot be more than 250 characters.");
+    public static readonly Error InvalidFirstOrLastName = Create(126, "Both First and Last name must be 2–25 letters (a–z only).");
 
     // time range errors (150-160)
     public static readonly Error EventTimeRangeMissing = Create(150, "Time range is missing.");
