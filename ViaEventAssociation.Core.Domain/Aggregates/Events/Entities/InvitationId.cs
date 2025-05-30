@@ -2,7 +2,6 @@
 
 namespace ViaEventAssociation.Core.Domain.Aggregates.Events.Entities;
 
-public class InvitationId(Guid value) : Id(value)
+public class InvitationId(Guid value) : Id<InvitationId>(value)
 {
-    
 }

@@ -1,11 +1,7 @@
+using ViaEventAssociation.Core.Domain.Common.Bases;
+
 namespace ViaEventAssociation.Core.Tools.OperationResult.Common.Bases;
 
-public class EventId
+public class EventId(Guid value) : Id<EventId>(value)
 {
-    public Guid Value = new Guid();
-
-    public EventId(Guid value)
-    {
-        Value = value;
-    }
 }
