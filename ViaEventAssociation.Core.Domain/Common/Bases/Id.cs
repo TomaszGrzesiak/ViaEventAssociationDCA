@@ -32,7 +32,7 @@ public abstract class Id<T>(Guid value) : ValueObject where T : Id<T>
             : Result<T>.Success((T)Activator.CreateInstance(typeof(T), result.Payload!)!);
     }
 
-    // works like this, but for T type: f.x. InvitationId Generate() => new(Guid.NewGuid());
-    public static T Generate() => (T)Activator.CreateInstance(typeof(T), Guid.NewGuid())!;
+    // works like this, but for T type: f.x. InvitationId CreateUnique() => new(Guid.NewGuid());
+    public static T CreateUnique() => (T)Activator.CreateInstance(typeof(T), Guid.NewGuid())!;
     public static T FromGuid(Guid id) => (T)Activator.CreateInstance(typeof(T), id)!;
 }

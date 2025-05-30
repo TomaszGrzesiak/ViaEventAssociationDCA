@@ -12,6 +12,9 @@ public sealed class Error
     public static readonly Error EventDescriptionCannotBeNull = Create(124, "Description cannot be null.");
     public static readonly Error EventDescriptionCannotExceed250Characters = Create(125, "Description cannot be more than 250 characters.");
     public static readonly Error InvalidFirstOrLastName = Create(126, "Both First and Last name must be 2–25 letters (a–z only).");
+    public static readonly Error InvalidProfilePictureUrlEmpty = Create(127, "Profile picture URL cannot empty.");
+    public static readonly Error InvalidProfilePictureUrlOther = Create(128, "Profile picture URL is invalid.");
+    public static readonly Error OnlyHttpOrHttpsAllowed = Create(129, "Only Url starting from http or https is allowed for profile pictures.");
 
     // time range errors (150-160)
     public static readonly Error EventTimeRangeMissing = Create(150, "Time range is missing.");
