@@ -2,7 +2,7 @@
 
 namespace UnitTests.Core.Domain.Common.Bases;
 
-public class DummyAggregateId(Guid value) : Id(value);
+public class DummyAggregateId(Guid value) : Id<DummyAggregateId>(value);
 
 public class DummyAggregate(DummyAggregateId id, string name) : AggregateRoot<DummyAggregateId>(id)
 {

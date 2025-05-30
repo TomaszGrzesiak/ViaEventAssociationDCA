@@ -25,7 +25,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Core\Domain\Aggregates\Events\Entities\"/>
         <Folder Include="Features\"/>
     </ItemGroup>
 

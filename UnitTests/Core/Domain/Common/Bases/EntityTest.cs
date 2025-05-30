@@ -2,7 +2,7 @@
 
 namespace UnitTests.Core.Domain.Common.Bases;
 
-public class DummyId(Guid value) : Id(value);
+public class DummyId(Guid value) : Id<DummyId>(value);
 
 public class DummyEntity(DummyId id) : Entity<DummyId>(id);
 
