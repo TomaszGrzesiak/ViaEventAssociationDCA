@@ -1,4 +1,5 @@
 ﻿using ViaEventAssociation.Core.Domain;
+using ViaEventAssociation.Core.Domain.Aggregates.Guests;
 using ViaEventAssociation.Core.Tools.OperationResult;
 
 namespace UnitTests.OperationResult;

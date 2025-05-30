@@ -3,6 +3,7 @@
 * [x] Checked box example
 * [ ] ValueObject base
 * [ ] Entity base
+* [ ] Aggregate base
 * [ ] UC1 - Create event
   * [ ] value - EventId
   * [ ] S1

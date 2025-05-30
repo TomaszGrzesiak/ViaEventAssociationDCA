@@ -1,8 +1,8 @@
 // using ViaEventAssociation.Core.Tools.OperationResult;
 //
-// namespace ViaEventAssociation.Core.Domain.Aggregates.Event;
+// namespace ViaEventAssociation.Core.Domain.Aggregates.Events;
 //
-// public class Event
+// public class Events
 // {
 //     // TODO: make Value objects according to the domain model and assign them to the properties below: such like EventTitle, EventDescription, MaxGuests etc.
 //     /** Why is it worth to make EventId as value object, even with just a Value of type Guid?
@@ -25,110 +25,110 @@
 //
 //     private List<Invitation> InvitationList { get; set; } = new List<Invitation>();
 //     
-//     public static Result<Event> CreateEvent()
+//     public static Result<Events> CreateEvent()
 //     {
 //         // no validation - event needs only an automatically created Guid. It ain't go wrong.
-//         return Result<Event>.Success(new Event()); // creates an Event object and passing it as a Payload in the returned Result<Event> object.
+//         return Result<Events>.Success(new Events()); // creates an Events object and passing it as a Payload in the returned Result<Events> object.
 //     }
 //
-//     public Result<Event> UpdateEventTitle(Guid eventId, string title)
+//     public Result<Events> UpdateEventTitle(Guid eventId, string title)
 //     {
 //         // TODO: add proper validation based on the use cases / requirements
-//         if (eventId != Id) return Result<Event>.Failure("Event ID mismatch.");
+//         if (eventId != Id) return Result<Events>.Failure("Events ID mismatch.");
 //         
 //         Title = title;
 //         // Returns the updated object, so that the application or service layer can f.x. save to DB:  if (updateResult.IsSuccess) repository.Save(updateResult.Payload!);
-//         return Result<Event>.Success(this); 
+//         return Result<Events>.Success(this); 
 //     }
 //
-//     public Result<Event> UpdateEventDescription(Guid eventId, string eventDescription)
+//     public Result<Events> UpdateEventDescription(Guid eventId, string eventDescription)
 //     {
 //         // TODO: add proper validation based on the use cases / requirements
 //         if (eventId != Id)
 //         {
-//             return Result<Event>.Failure("Event ID mismatch.");
+//             return Result<Events>.Failure("Events ID mismatch.");
 //         }
 //         Description = eventDescription;
-//         return Result<Event>.Success(this);
+//         return Result<Events>.Success(this);
 //     }
 //
-//     public Result<Event> SetEventTimeRange(Guid eventId, DateTime startTime, DateTime endTime)
+//     public Result<Events> SetEventTimeRange(Guid eventId, DateTime startTime, DateTime endTime)
 //     {
 //         // TODO: add proper validation based on the use cases / requirements
 //         if (eventId != Id)
 //         {
-//             return Result<Event>.Failure("Event ID mismatch.");
+//             return Result<Events>.Failure("Events ID mismatch.");
 //         }
 //         TimeRange = (startTime, endTime);
-//         return Result<Event>.Success(this);
+//         return Result<Events>.Success(this);
 //     }
 //
-//     public Result<Event> SetEventVisibility(Guid eventId)
+//     public Result<Events> SetEventVisibility(Guid eventId)
 //     {
 //         if (eventId != Id)
 //         {
-//             return Result<Event>.Failure("Event ID mismatch.");
+//             return Result<Events>.Failure("Events ID mismatch.");
 //         }
 //         Visibility = "Public";
-//         return Result<Event>.Success(this);
+//         return Result<Events>.Success(this);
 //     }
 //
-//     public Result<Event> SetMaximumNumberOfGuests(Guid eventId, int maxGuests)
+//     public Result<Events> SetMaximumNumberOfGuests(Guid eventId, int maxGuests)
 //     {
 //         if (eventId != Id)
 //         {
-//             return Result<Event>.Failure("Event ID mismatch.");
+//             return Result<Events>.Failure("Events ID mismatch.");
 //         }
 //         MaxGuests = maxGuests;
-//         return Result<Event>.Success(this);
+//         return Result<Events>.Success(this);
 //     }
 //
-//     public Result<Event> ReadyTheEvent(Guid eventId)
+//     public Result<Events> ReadyTheEvent(Guid eventId)
 //     {
 //         if (eventId != Id)
 //         {
-//             return Result<Event>.Failure("Event ID mismatch.");
+//             return Result<Events>.Failure("Events ID mismatch.");
 //         }
 //         Status = "Ready";
-//         return Result<Event>.Success(this);
+//         return Result<Events>.Success(this);
 //     }
 //
-//     public Result<Event> ActivateTheEvent(Guid eventId)
+//     public Result<Events> ActivateTheEvent(Guid eventId)
 //     {
 //         if (eventId != Id)
 //         {
-//             return Result<Event>.Failure("Event ID mismatch.");
+//             return Result<Events>.Failure("Events ID mismatch.");
 //         }
 //         Status = "Active";
-//         return Result<Event>.Success(this);
+//         return Result<Events>.Success(this);
 //     }
 //
-//     public Result<Event> InviteGuests(Guid eventId, Guid guestId)
+//     public Result<Events> InviteGuests(Guid eventId, Guid guestId)
 //     {
 //         throw new NotImplementedException();
 //         if (eventId != Id)
 //         {
-//             return Result<Event>.Failure("Event ID mismatch.");
+//             return Result<Events>.Failure("Events ID mismatch.");
 //         }
 //     }
 //
-//     public Result<Event> AcceptRequest(Guid invitationId)
+//     public Result<Events> AcceptRequest(Guid invitationId)
 //     {
 //         throw new NotImplementedException();
 //     }
 //
-//     public Result<Event> DeclineRequest(Guid invitationId)
+//     public Result<Events> DeclineRequest(Guid invitationId)
 //     {
 //         throw new NotImplementedException();
 //     }
 //
-//     public Result<Event> CancelEvent(Guid eventId)
+//     public Result<Events> CancelEvent(Guid eventId)
 //     {
 //         if (eventId != Id)
 //         {
-//             return Result<Event>.Failure("Event ID mismatch.");
+//             return Result<Events>.Failure("Events ID mismatch.");
 //         }
 //         Status = "Canceled";
-//         return Result<Event>.Success(this);
+//         return Result<Events>.Success(this);
 //     }
 // }
