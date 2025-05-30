@@ -1,9 +1,9 @@
-﻿using ViaEventAssociation.Core.Tools.OperationResult;
+﻿using ViaEventAssociation.Core.Domain.Common.Bases;
+using ViaEventAssociation.Core.Tools.OperationResult;
 
+namespace ViaEventAssociation.Core.Domain.Aggregates.Guests;
 
-namespace ViaEventAssociation.Core.Domain;
-
-public class EmailAddress
+public class EmailAddress : ValueObject
 {
     public string Value { get; }
     
@@ -29,7 +29,7 @@ public class EmailAddress
             return Result<string>.Failure(ResultError.EmailRequired);
     
         var errors = new List<ResultError>();
-        // trimming empty spaces and converting to lower case @ID:10 - registering a new Guest account: "And the email is in all lower-case"
+        // trimming empty spaces and converting to lower case @ID:10 - registering a new Guests account: "And the email is in all lower-case"
         var email = emailAddress.Trim().ToLowerInvariant();
     
         // Must end with @via.dk
@@ -57,4 +57,11 @@ public class EmailAddress
     
         return Result<string>.Success(email);
     }
+
+    protected override IEnumerable<object> GetEqualityComponents()
+    {
+        yield return Value;
+    }
+
+    public override string ToString() => Value;
 }
