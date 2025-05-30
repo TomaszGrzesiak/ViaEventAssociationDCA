@@ -21,15 +21,16 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\ViaEventAssociation.Core.Domain\ViaEventAssociation.Core.Domain.csproj" />
+        <ProjectReference Include="..\ViaEventAssociation.Core.Domain\ViaEventAssociation.Core.Domain.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Features\" />
+        <Folder Include="Core\Domain\Aggregates\Events\Entities\"/>
+        <Folder Include="Features\"/>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\ViaEventAssociation.Core.Tools.OperationResult\ViaEventAssociation.Core.Tools.OperationResult.csproj" />
+        <ProjectReference Include="..\ViaEventAssociation.Core.Tools.OperationResult\ViaEventAssociation.Core.Tools.OperationResult.csproj"/>
     </ItemGroup>
 
 </Project>
