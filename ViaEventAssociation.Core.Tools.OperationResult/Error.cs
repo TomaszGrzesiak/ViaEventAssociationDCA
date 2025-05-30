@@ -40,6 +40,14 @@ public sealed class Error
     public static readonly Error InvitationAlreadyApproved = Create(170, "Invitation is already approved.");
     public static readonly Error InvitationAlreadyRejected = Create(171, "Invitation is already rejected.");
 
+    // Event-related errors (codes 180-189)
+    public static readonly Error GuestAlreadyInvited = Create(180, "This guest is already invited to the event.");
+    public static readonly Error GuestListFull = Create(181, "Cannot invite more guests. The guest list is full.");
+    public static readonly Error EventAlreadyActive = Create(182, "The event is already active.");
+    public static readonly Error EventAlreadyCancelled = Create(183, "The event is already cancelled.");
+    public static readonly Error EventIsNotPublic = Create(184, "Only public events allow guests to join freely.");
+    public static readonly Error GuestAlreadyJoined = Create(185, "This guest has already joined the event.");
+
 
     private Error(int code, string message)
     {

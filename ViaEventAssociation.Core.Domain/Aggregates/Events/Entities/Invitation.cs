@@ -1,7 +1,6 @@
 ﻿using ViaEventAssociation.Core.Domain.Aggregates.Guests;
 using ViaEventAssociation.Core.Domain.Common.Bases;
 using ViaEventAssociation.Core.Tools.OperationResult;
-using ViaEventAssociation.Core.Tools.OperationResult.Common.Bases;
 
 namespace ViaEventAssociation.Core.Domain.Aggregates.Events.Entities
 {

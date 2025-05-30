@@ -3,7 +3,7 @@ using ViaEventAssociation.Core.Tools.OperationResult;
 
 namespace ViaEventAssociation.Core.Domain.Aggregates.Events
 {
-    public sealed class EventStatus : Enumeration
+    public class EventStatus : Enumeration
     {
         public static readonly EventStatus Draft = new(1, "Draft");
         public static readonly EventStatus Active = new(2, "Active");
@@ -26,5 +26,7 @@ namespace ViaEventAssociation.Core.Domain.Aggregates.Events
             GetAll<EventStatus>().FirstOrDefault(s => string.Equals(s.Name, name, StringComparison.OrdinalIgnoreCase)) is { } match
                 ? Result<EventStatus>.Success(match)
                 : Result<EventStatus>.Failure(Error.InvalidEventStatus);
+
+        public override string ToString() => Name;
     }
 }

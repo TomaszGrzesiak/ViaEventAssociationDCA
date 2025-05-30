@@ -1,134 +1,131 @@
-// using ViaEventAssociation.Core.Tools.OperationResult;
-//
-// namespace ViaEventAssociation.Core.Domain.Aggregates.Events;
-//
-// public class Events
-// {
-//     // TODO: make Value objects according to the domain model and assign them to the properties below: such like EventTitle, EventDescription, MaxGuests etc.
-//     /** Why is it worth to make EventId as value object, even with just a Value of type Guid?
-//      *
-//      * Prevents mix-ups like this:
-//      * AcceptInvitation(guestId: Guid, invitationId: Guid); // ⚠️ silently wrong - easy to make a mistake and mix when other layers use it and possibly mix which id goes first
-//      *
-//      * With value objects:
-//      * AcceptInvitation(GuestId guestId, InvitationId invitationId); // ❌ won't compile if a programmer mismatch their implementation
-//      */
-//     private Guid Id { get; } = Guid.NewGuid();
-//     private string? Title { get; set; }
-//     private string? Description { get; set; }
-//     private (DateTime Start, DateTime End) TimeRange{ get; set; }
-//     private string Status { get; set; } = "Draft";
-//     private string Visibility { get; set; } = "Private";
-//     private int MaxGuests { get; set; } = 0;
-//     
-//     private List<Guid> GuestList { get; set; } = new List<Guid>();
-//
-//     private List<Invitation> InvitationList { get; set; } = new List<Invitation>();
-//     
-//     public static Result<Events> CreateEvent()
-//     {
-//         // no validation - event needs only an automatically created Guid. It ain't go wrong.
-//         return Result<Events>.Success(new Events()); // creates an Events object and passing it as a Payload in the returned Result<Events> object.
-//     }
-//
-//     public Result<Events> UpdateEventTitle(Guid eventId, string title)
-//     {
-//         // TODO: add proper validation based on the use cases / requirements
-//         if (eventId != Id) return Result<Events>.Failure("Events ID mismatch.");
-//         
-//         Title = title;
-//         // Returns the updated object, so that the application or service layer can f.x. save to DB:  if (updateResult.IsSuccess) repository.Save(updateResult.Payload!);
-//         return Result<Events>.Success(this); 
-//     }
-//
-//     public Result<Events> UpdateEventDescription(Guid eventId, string eventDescription)
-//     {
-//         // TODO: add proper validation based on the use cases / requirements
-//         if (eventId != Id)
-//         {
-//             return Result<Events>.Failure("Events ID mismatch.");
-//         }
-//         Description = eventDescription;
-//         return Result<Events>.Success(this);
-//     }
-//
-//     public Result<Events> SetEventTimeRange(Guid eventId, DateTime startTime, DateTime endTime)
-//     {
-//         // TODO: add proper validation based on the use cases / requirements
-//         if (eventId != Id)
-//         {
-//             return Result<Events>.Failure("Events ID mismatch.");
-//         }
-//         TimeRange = (startTime, endTime);
-//         return Result<Events>.Success(this);
-//     }
-//
-//     public Result<Events> SetEventVisibility(Guid eventId)
-//     {
-//         if (eventId != Id)
-//         {
-//             return Result<Events>.Failure("Events ID mismatch.");
-//         }
-//         Visibility = "Public";
-//         return Result<Events>.Success(this);
-//     }
-//
-//     public Result<Events> SetMaximumNumberOfGuests(Guid eventId, int maxGuests)
-//     {
-//         if (eventId != Id)
-//         {
-//             return Result<Events>.Failure("Events ID mismatch.");
-//         }
-//         MaxGuests = maxGuests;
-//         return Result<Events>.Success(this);
-//     }
-//
-//     public Result<Events> ReadyTheEvent(Guid eventId)
-//     {
-//         if (eventId != Id)
-//         {
-//             return Result<Events>.Failure("Events ID mismatch.");
-//         }
-//         Status = "Ready";
-//         return Result<Events>.Success(this);
-//     }
-//
-//     public Result<Events> ActivateTheEvent(Guid eventId)
-//     {
-//         if (eventId != Id)
-//         {
-//             return Result<Events>.Failure("Events ID mismatch.");
-//         }
-//         Status = "Active";
-//         return Result<Events>.Success(this);
-//     }
-//
-//     public Result<Events> InviteGuests(Guid eventId, Guid guestId)
-//     {
-//         throw new NotImplementedException();
-//         if (eventId != Id)
-//         {
-//             return Result<Events>.Failure("Events ID mismatch.");
-//         }
-//     }
-//
-//     public Result<Events> AcceptRequest(Guid invitationId)
-//     {
-//         throw new NotImplementedException();
-//     }
-//
-//     public Result<Events> DeclineRequest(Guid invitationId)
-//     {
-//         throw new NotImplementedException();
-//     }
-//
-//     public Result<Events> CancelEvent(Guid eventId)
-//     {
-//         if (eventId != Id)
-//         {
-//             return Result<Events>.Failure("Events ID mismatch.");
-//         }
-//         Status = "Canceled";
-//         return Result<Events>.Success(this);
-//     }
-// }
+﻿using ViaEventAssociation.Core.Domain.Aggregates.Events.Entities;
+using ViaEventAssociation.Core.Domain.Aggregates.Guests;
+using ViaEventAssociation.Core.Domain.Common.Bases;
+using ViaEventAssociation.Core.Domain.Events.ValueObjects;
+using ViaEventAssociation.Core.Domain.Invitations.ValueObjects;
+using ViaEventAssociation.Core.Tools.OperationResult;
+
+namespace ViaEventAssociation.Core.Domain.Aggregates.Events;
+
+public sealed class Event : AggregateRoot<EventId>
+{
+    public EventTitle Title { get; private set; }
+    public EventDescription Description { get; private set; }
+    public EventTimeRange TimeRange { get; private set; }
+    public EventStatus Status { get; private set; }
+    public EventVisibility Visibility { get; private set; }
+    public MaxGuests MaxGuests { get; private set; }
+
+    private readonly List<Invitation> _invitations = new();
+    public IReadOnlyCollection<Invitation> Invitations => _invitations.AsReadOnly();
+
+    private readonly List<GuestId> _guestList = new();
+    public IReadOnlyCollection<GuestId> GuestList => _guestList.AsReadOnly();
+
+    private Event(
+        EventId id,
+        EventTitle title,
+        EventDescription description,
+        EventTimeRange timeRange,
+        EventVisibility visibility,
+        MaxGuests maxGuests)
+        : base(id)
+    {
+        Title = title;
+        Description = description;
+        TimeRange = timeRange;
+        Visibility = visibility;
+        MaxGuests = maxGuests;
+        Status = EventStatus.Draft;
+    }
+
+    // TODO: Add EventVisibility extension of Enumeration.
+    // TODO2: Check for other methods based on the UML, because there's lots functionality missing, I believe.
+    // TODO: Add more overloads, so that there can be created f.x. an Event with only Status and Description, according to the requirements, etc.
+    // TODO: Check if this shit fits all the requirements.
+    // TODO: Add Unit test for it
+
+    public static Result<Event> Create(
+        EventTitle title,
+        EventDescription description,
+        EventTimeRange timeRange,
+        EventVisibility visibility,
+        MaxGuests maxGuests)
+    {
+        var newEvent = new Event(
+            EventId.CreateUnique(),
+            title,
+            description,
+            timeRange,
+            visibility,
+            maxGuests);
+
+        return Result<Event>.Success(newEvent);
+    }
+
+    public Result UpdateTitle(EventTitle newTitle)
+    {
+        Title = newTitle;
+        return Result.Success();
+    }
+
+    public Result UpdateDescription(EventDescription newDescription)
+    {
+        Description = newDescription;
+        return Result.Success();
+    }
+
+    public Result UpdateTimeRange(EventTimeRange newTimeRange)
+    {
+        TimeRange = newTimeRange;
+        return Result.Success();
+    }
+
+    public Result InviteGuest(Invitation invitation)
+    {
+        if (_invitations.Any(i => i.GuestId == invitation.GuestId))
+            return Result.Failure(Error.GuestAlreadyInvited);
+
+        if (_invitations.Count >= MaxGuests.Value)
+            return Result.Failure(Error.GuestListFull);
+
+        _invitations.Add(invitation);
+        return Result.Success();
+    }
+
+    public Result JoinAsGuest(GuestId guestId)
+    {
+        if (Visibility != EventVisibility.Public)
+            return Result.Failure(Error.EventIsNotPublic);
+
+        if (_guestList.Contains(guestId))
+            return Result.Failure(Error.GuestAlreadyJoined);
+
+        if (_guestList.Count >= MaxGuests.Value)
+            return Result.Failure(Error.GuestListFull);
+
+        _guestList.Add(guestId);
+        return Result.Success();
+    }
+
+    public Result Activate()
+    {
+        if (Status.Equals(EventStatus.Active))
+            return Result.Failure(Error.EventAlreadyActive);
+
+        Status = EventStatus.Active;
+        return Result.Success();
+    }
+
+    public Result Cancel()
+    {
+        if (Status.Equals(EventStatus.Cancelled))
+            return Result.Failure(Error.EventAlreadyCancelled);
+
+        Status = EventStatus.Cancelled;
+        return Result.Success();
+    }
+
+    public override string ToString() =>
+        $"{Title.ToString()} ({Status.ToString()})";
+}

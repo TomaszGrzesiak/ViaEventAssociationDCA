@@ -1,5 +1,5 @@
 ﻿using System;
-using ViaEventAssociation.Core.Tools.OperationResult.Common.Bases;
+using ViaEventAssociation.Core.Domain.Aggregates.Events;
 using Xunit;
 
 public class EventIdTests

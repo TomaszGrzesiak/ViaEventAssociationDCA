@@ -1,7 +1,7 @@
-﻿using ViaEventAssociation.Core.Domain.Aggregates.Events.Entities;
+﻿using ViaEventAssociation.Core.Domain.Aggregates.Events;
+using ViaEventAssociation.Core.Domain.Aggregates.Events.Entities;
 using ViaEventAssociation.Core.Domain.Aggregates.Guests;
 using ViaEventAssociation.Core.Tools.OperationResult;
-using ViaEventAssociation.Core.Tools.OperationResult.Common.Bases;
 
 namespace UnitTests.Core.Domain.Aggregates.Events.Entities;
 
