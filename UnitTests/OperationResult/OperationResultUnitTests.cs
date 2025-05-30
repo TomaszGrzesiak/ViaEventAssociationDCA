@@ -4,9 +4,9 @@ namespace UnitTests.OperationResult
 {
     public class OperationResultUnitTests
     {
-        private readonly ResultError _error1 = ResultError.CustomForUnitTestsOnly(1, "Error 1");
-        private readonly ResultError _error2 = ResultError.CustomForUnitTestsOnly(2, "Error 2");
-        
+        private readonly Error _error1 = Error.CustomForUnitTestsOnly(1, "Error 1");
+        private readonly Error _error2 = Error.CustomForUnitTestsOnly(2, "Error 2");
+
         [Fact]
         public void Result_Success_HasNoErrors()
         {
@@ -65,10 +65,7 @@ namespace UnitTests.OperationResult
         [Fact]
         public void ResultT_Failure_ThrowsOnEmptyErrors()
         {
-            var ex = Assert.Throws<ArgumentException>(() =>
-            {
-                Result<string>.Failure([]);
-            });
+            var ex = Assert.Throws<ArgumentException>(() => { Result<string>.Failure([]); });
             Assert.Equal("Failure must contain at least one error.", ex.Message);
         }
 

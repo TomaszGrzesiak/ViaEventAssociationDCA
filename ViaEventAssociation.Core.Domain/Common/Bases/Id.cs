@@ -21,7 +21,7 @@ public abstract class Id<T>(Guid value) : ValueObject where T : Id<T>
         bool canBeParsed = Guid.TryParse(id, out var guid);
         return canBeParsed
             ? Result<Guid>.Success(guid)
-            : Result<Guid>.Failure(ResultError.UnParsableGuid);
+            : Result<Guid>.Failure(Error.UnParsableGuid);
     }
 
     public static Result<T> FromString(string id)
