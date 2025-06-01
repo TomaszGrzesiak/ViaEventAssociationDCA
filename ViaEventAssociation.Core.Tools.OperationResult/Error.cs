@@ -29,10 +29,13 @@ public sealed class Error
     // time range errors (150-159)
     public static readonly Error EventTimeRangeMissing = Create(150, "Either start or end time is missing.");
     public static readonly Error EventTimeStartAfterEndTime = Create(151, "Start time cannot be after end time.");
-    public static readonly Error EventTimeDurationTooShort = Create(152, "Time duration must be at least 1 hour.");
-    public static readonly Error EventTimeDurationTooLong = Create(153, "Time duration cannot be more than 10 hours.");
-    public static readonly Error EventTimeInvalidEndTimeWindow = Create(154, "End time must be before 23:59 on same day or before 01:00 on the next day.");
-    public static readonly Error EventTimeInvalidStartTime = Create(155, "Start time must be after 08:00.");
+    public static readonly Error EventTimeStartDateAfterEndDate = Create(152, "Start date cannot be after end date.");
+    public static readonly Error EventTimeDurationTooShort = Create(153, "Time duration must be at least 1 hour.");
+    public static readonly Error EventTimeDurationTooLong = Create(154, "Time duration cannot be more than 10 hours.");
+    public static readonly Error EventTimeInvalidEndTimeWindow = Create(155, "End time must be before 23:59 on same day or before 01:00 on the next day.");
+    public static readonly Error EventTimeStartMustBeAfter8Am = Create(156, "Start time must be after 08:00.");
+    public static readonly Error EventTimeCannotStartInPast = Create(157, "Start must not be in the past.");
+    public static readonly Error EventTimeCannotSpan01To08 = Create(158, "Event cannot span between 01:00 and 08:00.");
 
     // url errors (160-169)
     public static readonly Error InvalidProfilePictureUrlEmpty = Create(160, "Profile picture URL cannot empty.");
@@ -65,7 +68,7 @@ public sealed class Error
     private static Error Create(int code, string message) =>
         UsedCodes.Add(code)
             ? new Error(code, message)
-            : throw new InvalidOperationException($"Duplicate error code detected: {code}");
+            : throw new InvalidOperationException($"-- == :: Duplicate ERROR code detected in Error.cs :: == --: {code}");
 
 
     public int Code { get; }

@@ -80,7 +80,7 @@ public class EventTestsId3
     public void Id3_F3_DescriptionUpdateWhenActive_ShouldFail()
     {
         var ev = VeaEvent.Create().Payload!;
-        ev.UpdateTimeRange(EventTimeRange.Create(DateTime.Now, DateTime.Now.AddHours(2)).Payload!);
+        ev.UpdateTimeRange(EventTimeRange.Default());
         ev.UpdateMaxGuests(MaxGuests.Create(10).Payload!);
         ev.UpdateVisibility(EventVisibility.Public);
         ev.Ready();

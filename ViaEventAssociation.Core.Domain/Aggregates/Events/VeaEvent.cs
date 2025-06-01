@@ -91,6 +91,8 @@ public sealed class VeaEvent : AggregateRoot<EventId>
 
     public Result UpdateTimeRange(EventTimeRange newTimeRange)
     {
+        if (Status.Equals(EventStatus.Active) || Status.Equals(EventStatus.Cancelled))
+            return Result.Failure(Error.ActiveOrCanceledEventCannotBeModified);
         TimeRange = newTimeRange;
         return Result.Success();
     }

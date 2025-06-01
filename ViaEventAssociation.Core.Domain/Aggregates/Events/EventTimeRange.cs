@@ -35,30 +35,50 @@ public sealed class EventTimeRange : ValueObject
     {
         var errors = new List<Error>();
 
-        if (StartTime >= EndTime)
+        if (StartTime.Date > EndTime.Date)
+            errors.Add(Error.EventTimeStartDateAfterEndDate);
+
+        if (StartTime.Date == EndTime.Date && StartTime >= EndTime)
             errors.Add(Error.EventTimeStartAfterEndTime);
 
         var duration = EndTime - StartTime;
 
         if (duration.TotalMinutes < 60)
             errors.Add(Error.EventTimeDurationTooShort);
+
         if (duration.TotalHours > 10)
             errors.Add(Error.EventTimeDurationTooLong);
 
-        var start = StartTime;
-        var end = EndTime;
+        if (StartTime < DateTime.Now)
+            errors.Add(Error.EventTimeCannotStartInPast);
 
-        var validStart = start.TimeOfDay >= TimeSpan.FromHours(8); // TimeOfDay returns a timespan from midnight. Basically it checks if the time is after 8am.
-        var validEndSameDay = end.Date == start.Date && end.TimeOfDay <= TimeSpan.FromHours(23.99);
-        var validEndNextDay = end.Date == start.Date.AddDays(1) && end.TimeOfDay <= TimeSpan.FromHours(1);
+        var validStart = StartTime.TimeOfDay >= TimeSpan.FromHours(8);
+
+        var validEndSameDay =
+            EndTime.Date == StartTime.Date &&
+            EndTime.TimeOfDay <= TimeSpan.FromHours(23.99);
+
+        var validEndNextDay =
+            EndTime.Date == StartTime.Date.AddDays(1) &&
+            EndTime.TimeOfDay <= TimeSpan.FromHours(1);
 
         if (!(validEndSameDay || validEndNextDay))
             errors.Add(Error.EventTimeInvalidEndTimeWindow);
 
         if (!validStart)
-            errors.Add(Error.EventTimeInvalidStartTime);
+            errors.Add(Error.EventTimeStartMustBeAfter8Am);
 
-        return errors.Count == 0 ? Result.Success() : Result.Failure(errors.ToArray());
+        // Spans 01:00 to 08:00 window?
+        var forbiddenWindowStart = EndTime.Date.AddHours(1); // 01:00
+        var forbiddenWindowEnd = EndTime.Date.AddHours(8); // 08:00
+
+        bool overlapsSleepTime = StartTime < forbiddenWindowEnd && EndTime > forbiddenWindowStart;
+        if (overlapsSleepTime)
+            errors.Add(Error.EventTimeCannotSpan01To08);
+
+        return errors.Count == 0
+            ? Result.Success()
+            : Result.Failure(errors.ToArray());
     }
 
     protected override IEnumerable<object> GetEqualityComponents()

@@ -89,7 +89,7 @@ public class EventTimeRangeTests
         var result = EventTimeRange.Create(start, end);
 
         Assert.True(result.IsFailure);
-        Assert.Contains(Error.EventTimeInvalidStartTime, result.Errors);
+        Assert.Contains(Error.EventTimeStartMustBeAfter8Am, result.Errors);
     }
 
     [Fact]
