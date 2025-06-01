@@ -33,4 +33,9 @@ public sealed class EventDescription : ValueObject
     }
 
     public override string ToString() => Value;
+
+    public static EventDescription Default()
+    {
+        return new EventDescription("");
+    }
 }

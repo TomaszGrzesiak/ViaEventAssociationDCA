@@ -1,7 +1,7 @@
-﻿using ViaEventAssociation.Core.Tools.OperationResult;
-using ViaEventAssociation.Core.Domain.Common.Bases;
+﻿using ViaEventAssociation.Core.Domain.Common.Bases;
+using ViaEventAssociation.Core.Tools.OperationResult;
 
-namespace ViaEventAssociation.Core.Domain.Events.ValueObjects;
+namespace ViaEventAssociation.Core.Domain.Aggregates.Events;
 
 public class EventTitle : ValueObject
 {
@@ -14,11 +14,8 @@ public class EventTitle : ValueObject
 
     public static Result<EventTitle> Create(string title)
     {
-        if (string.IsNullOrWhiteSpace(title))
-            return Result<EventTitle>.Failure(Error.EventTitleCannotBeEmpty);
-
-        if (title.Length > 100)
-            return Result<EventTitle>.Failure(Error.EventTitleCannotExceed100Characters);
+        if (string.IsNullOrWhiteSpace(title) || title.Length > 75 || title.Length < 3)
+            return Result<EventTitle>.Failure(Error.EventTitleMustBeBetween3And75Characters);
 
         return Result<EventTitle>.Success(new EventTitle(title.Trim()));
     }
@@ -29,4 +26,9 @@ public class EventTitle : ValueObject
     }
 
     public override string ToString() => Value;
+
+    public static EventTitle Default()
+    {
+        return new EventTitle("Working title.");
+    }
 }

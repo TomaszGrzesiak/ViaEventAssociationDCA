@@ -1,24 +1,24 @@
 ﻿#Completed Features Status
 
 * [x] Checked box example
-* [ ] ValueObject base
-* [ ] Entity base
-* [ ] Aggregate base
-* [ ] UC1 - Create event
-    * [ ] value - EventId
-    * [ ] S1
-    * [ ] S2
-    * [ ] S3
-    * [ ] S4
-* [ ] UC2 - Update event title
-    * [ ] S1
-    * [ ] S2
-    * [ ] F1
-    * [ ] F2
-    * [ ] F3
-    * [ ] F4
-    * [ ] F5
-    * [ ] F6
+* [x] ValueObject base
+* [x] Entity base
+* [x] Aggregate base
+* [x] UC1 - Create event
+    * [x] value - EventId
+    * [x] S1
+    * [x] S2
+    * [x] S3
+    * [x] S4
+* [x] UC2 - Update event title
+    * [x] S1
+    * [x] S2
+    * [x] F1
+    * [x] F2
+    * [x] F3
+    * [x] F4
+    * [x] F5
+    * [x] F6
 * [ ] UC3 - Update event description
     * [ ] S1
     * [ ] S2

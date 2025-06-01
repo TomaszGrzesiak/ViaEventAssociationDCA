@@ -1,5 +1,5 @@
 ﻿using System;
-using ViaEventAssociation.Core.Domain.Events.ValueObjects;
+using ViaEventAssociation.Core.Domain.Aggregates.Events;
 using Xunit;
 
 public class EventTitleTests
@@ -7,9 +7,9 @@ public class EventTitleTests
     [Fact]
     public void Create_WithValidTitle_ReturnsSuccess()
     {
-        var result = EventTitle.Create("My Cool Event");
+        var result = EventTitle.Create("My Cool VeaEvent");
         Assert.True(result.IsSuccess);
-        Assert.Equal("My Cool Event", result.Payload.Value);
+        Assert.Equal("My Cool VeaEvent", result.Payload.Value);
     }
 
     [Theory]

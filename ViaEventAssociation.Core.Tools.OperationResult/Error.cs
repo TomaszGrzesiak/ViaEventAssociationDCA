@@ -7,13 +7,17 @@ public sealed class Error
     // single or doublet errors (100-139)
     public static readonly Error UnParsableGuid = Create(100, "Could not parse the given Guid.");
     public static readonly Error GuestsMaxNumberTooSmall = Create(101, "Too small number of guests. Must be at least 5.");
-    public static readonly Error EventTitleCannotBeEmpty = Create(102, "Event title cannot be empty.");
-    public static readonly Error EventTitleCannotExceed100Characters = Create(103, "Event title cannot exceed 100 characters.");
+
+    public static readonly Error EventTitleMustBeBetween3And75Characters =
+        Create(102, "Event title must be between 3 and 75 characters long, excluding white space.");
+
     public static readonly Error EventDescriptionCannotBeNull = Create(104, "Description cannot be null.");
     public static readonly Error EventDescriptionCannotExceed250Characters = Create(105, "Description cannot be more than 250 characters.");
     public static readonly Error InvalidFirstOrLastName = Create(106, "Both First and Last name must be 2–25 letters (a–z only).");
     public static readonly Error InvalidInvitationStatus = Create(107, "Invalid invitation status.");
     public static readonly Error InvalidEventStatus = Create(108, "Invalid event status.");
+    public static readonly Error InvalidEventVisibility = Create(109, "Invalid event visibility.");
+
 
     // email errors (codes 140 - 149)
     public static readonly Error EmailRequired = Create(140, "Email is required.");
@@ -24,7 +28,7 @@ public sealed class Error
 
 
     // time range errors (150-159)
-    public static readonly Error EventTimeRangeMissing = Create(150, "Time range is missing.");
+    public static readonly Error EventTimeRangeMissing = Create(150, "Either start or end time is missing.");
     public static readonly Error EventTimeStartAfterEndTime = Create(151, "Start time cannot be after end time.");
     public static readonly Error EventTimeDurationTooShort = Create(152, "Time duration must be at least 1 hour.");
     public static readonly Error EventTimeDurationTooLong = Create(153, "Time duration cannot be more than 10 hours.");
@@ -40,13 +44,17 @@ public sealed class Error
     public static readonly Error InvitationAlreadyApproved = Create(170, "Invitation is already approved.");
     public static readonly Error InvitationAlreadyRejected = Create(171, "Invitation is already rejected.");
 
-    // Event-related errors (codes 180-189)
+    // Event-related errors (codes 180-199)
     public static readonly Error GuestAlreadyInvited = Create(180, "This guest is already invited to the event.");
     public static readonly Error GuestListFull = Create(181, "Cannot invite more guests. The guest list is full.");
     public static readonly Error EventAlreadyActive = Create(182, "The event is already active.");
     public static readonly Error EventAlreadyCancelled = Create(183, "The event is already cancelled.");
     public static readonly Error EventIsNotPublic = Create(184, "Only public events allow guests to join freely.");
     public static readonly Error GuestAlreadyJoined = Create(185, "This guest has already joined the event.");
+    public static readonly Error UpdateMaxGuestsImpossible = Create(186, "Update max guests is impossible.");
+    public static readonly Error UpdateVisibilityImpossible = Create(187, "Update event visibility is impossible.");
+    public static readonly Error ActivateFailure = Create(188, "Could not activate the event.");
+    public static readonly Error ActiveOrCanceledEventCannotBeModified = Create(189, "Active or canceled event cannot be modified.");
 
 
     private Error(int code, string message)
@@ -63,6 +71,7 @@ public sealed class Error
 
     public int Code { get; }
     public string Message { get; }
+
 
 #if DEBUG
     public static Error CustomForUnitTestsOnly(int code, string message)

@@ -1,17 +1,16 @@
-﻿using ViaEventAssociation.Core.Domain.Aggregates.Events.Entities;
+﻿using System.Data;
+using ViaEventAssociation.Core.Domain.Aggregates.Events.Entities;
 using ViaEventAssociation.Core.Domain.Aggregates.Guests;
 using ViaEventAssociation.Core.Domain.Common.Bases;
-using ViaEventAssociation.Core.Domain.Events.ValueObjects;
-using ViaEventAssociation.Core.Domain.Invitations.ValueObjects;
 using ViaEventAssociation.Core.Tools.OperationResult;
 
 namespace ViaEventAssociation.Core.Domain.Aggregates.Events;
 
-public sealed class Event : AggregateRoot<EventId>
+public sealed class VeaEvent : AggregateRoot<EventId>
 {
     public EventTitle Title { get; private set; }
     public EventDescription Description { get; private set; }
-    public EventTimeRange TimeRange { get; private set; }
+    public EventTimeRange? TimeRange { get; private set; }
     public EventStatus Status { get; private set; }
     public EventVisibility Visibility { get; private set; }
     public MaxGuests MaxGuests { get; private set; }
@@ -22,11 +21,11 @@ public sealed class Event : AggregateRoot<EventId>
     private readonly List<GuestId> _guestList = new();
     public IReadOnlyCollection<GuestId> GuestList => _guestList.AsReadOnly();
 
-    private Event(
+    private VeaEvent(
         EventId id,
         EventTitle title,
         EventDescription description,
-        EventTimeRange timeRange,
+        EventTimeRange? timeRange,
         EventVisibility visibility,
         MaxGuests maxGuests)
         : base(id)
@@ -39,20 +38,14 @@ public sealed class Event : AggregateRoot<EventId>
         Status = EventStatus.Draft;
     }
 
-    // TODO: Add EventVisibility extension of Enumeration.
-    // TODO2: Check for other methods based on the UML, because there's lots functionality missing, I believe.
-    // TODO: Add more overloads, so that there can be created f.x. an Event with only Status and Description, according to the requirements, etc.
-    // TODO: Check if this shit fits all the requirements.
-    // TODO: Add Unit test for it
-
-    public static Result<Event> Create(
+    public static Result<VeaEvent> Create(
         EventTitle title,
         EventDescription description,
         EventTimeRange timeRange,
         EventVisibility visibility,
         MaxGuests maxGuests)
     {
-        var newEvent = new Event(
+        var newEvent = new VeaEvent(
             EventId.CreateUnique(),
             title,
             description,
@@ -60,12 +53,30 @@ public sealed class Event : AggregateRoot<EventId>
             visibility,
             maxGuests);
 
-        return Result<Event>.Success(newEvent);
+        return Result<VeaEvent>.Success(newEvent);
+    }
+
+    public static Result<VeaEvent> Create()
+    {
+        var errors = new List<Error>();
+        var title = EventTitle.Default();
+        var newEvent = new VeaEvent(
+            EventId.CreateUnique(),
+            EventTitle.Default(),
+            EventDescription.Default(),
+            null,
+            EventVisibility.Private,
+            MaxGuests.Default());
+
+        return Result<VeaEvent>.Success(newEvent);
     }
 
     public Result UpdateTitle(EventTitle newTitle)
     {
+        if (Status.Equals(EventStatus.Active) || Status.Equals(EventStatus.Cancelled))
+            return Result.Failure(Error.ActiveOrCanceledEventCannotBeModified);
         Title = newTitle;
+        Status = EventStatus.Draft;
         return Result.Success();
     }
 
@@ -110,8 +121,12 @@ public sealed class Event : AggregateRoot<EventId>
 
     public Result Activate()
     {
-        if (Status.Equals(EventStatus.Active))
-            return Result.Failure(Error.EventAlreadyActive);
+        if (!Status.Equals(EventStatus.Ready))
+        {
+            var readyResult = Ready();
+            if (readyResult.IsFailure)
+                return Result.Failure([Error.ActivateFailure, ..readyResult.Errors]);
+        }
 
         Status = EventStatus.Active;
         return Result.Success();
@@ -128,4 +143,52 @@ public sealed class Event : AggregateRoot<EventId>
 
     public override string ToString() =>
         $"{Title.ToString()} ({Status.ToString()})";
+
+    public Result UpdateMaxGuests(MaxGuests newMaxGuests)
+    {
+        if (Equals(Status, EventStatus.Active))
+            return Result.Failure([Error.UpdateMaxGuestsImpossible, Error.EventAlreadyActive]);
+
+        if (Equals(Status, EventStatus.Cancelled))
+            return Result.Failure([Error.UpdateMaxGuestsImpossible, Error.EventAlreadyCancelled]);
+
+        MaxGuests = newMaxGuests;
+
+        if (Equals(Status, EventStatus.Ready))
+            Status = EventStatus.Draft;
+
+        return Result.Success();
+    }
+
+    public Result UpdateVisibility(EventVisibility newVisibility)
+    {
+        if (Equals(Status, EventStatus.Active))
+            return Result.Failure([Error.UpdateVisibilityImpossible, Error.EventAlreadyActive]);
+
+        if (Equals(Status, EventStatus.Cancelled))
+            return Result.Failure([Error.UpdateVisibilityImpossible, Error.EventAlreadyCancelled]);
+
+        Visibility = newVisibility;
+
+        if (Equals(Status, EventStatus.Ready))
+            Status = EventStatus.Draft;
+
+        return Result.Success();
+    }
+
+    public Result Ready()
+    {
+        if (Equals(Status, EventStatus.Active))
+            return Result.Failure(Error.EventAlreadyActive);
+
+        if (Equals(Status, EventStatus.Cancelled))
+            return Result.Failure(Error.EventAlreadyCancelled);
+
+        if (TimeRange == null)
+            return Result.Failure(Error.EventTimeRangeMissing);
+
+        Status = EventStatus.Ready;
+
+        return Result.Success();
+    }
 }

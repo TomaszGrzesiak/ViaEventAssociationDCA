@@ -1,5 +1,5 @@
 ﻿using System;
-using ViaEventAssociation.Core.Domain.Invitations.ValueObjects;
+using ViaEventAssociation.Core.Domain.Aggregates.Events;
 using Xunit;
 
 public class MaxGuestsTests

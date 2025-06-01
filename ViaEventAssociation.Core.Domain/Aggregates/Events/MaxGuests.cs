@@ -1,7 +1,7 @@
-﻿using ViaEventAssociation.Core.Tools.OperationResult;
-using ViaEventAssociation.Core.Domain.Common.Bases;
+﻿using ViaEventAssociation.Core.Domain.Common.Bases;
+using ViaEventAssociation.Core.Tools.OperationResult;
 
-namespace ViaEventAssociation.Core.Domain.Invitations.ValueObjects;
+namespace ViaEventAssociation.Core.Domain.Aggregates.Events;
 
 public class MaxGuests : ValueObject
 {
@@ -27,4 +27,9 @@ public class MaxGuests : ValueObject
     }
 
     public override string ToString() => Value.ToString();
+
+    public static MaxGuests Default()
+    {
+        return new MaxGuests(5);
+    }
 }

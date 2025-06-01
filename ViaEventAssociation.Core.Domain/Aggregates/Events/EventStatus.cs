@@ -26,7 +26,5 @@ namespace ViaEventAssociation.Core.Domain.Aggregates.Events
             GetAll<EventStatus>().FirstOrDefault(s => string.Equals(s.Name, name, StringComparison.OrdinalIgnoreCase)) is { } match
                 ? Result<EventStatus>.Success(match)
                 : Result<EventStatus>.Failure(Error.InvalidEventStatus);
-
-        public override string ToString() => Name;
     }
 }
