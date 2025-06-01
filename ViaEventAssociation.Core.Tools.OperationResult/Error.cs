@@ -11,7 +11,6 @@ public sealed class Error
     public static readonly Error EventTitleMustBeBetween3And75Characters =
         Create(102, "Event title must be between 3 and 75 characters long, excluding white space.");
 
-    public static readonly Error EventDescriptionCannotBeNull = Create(104, "Description cannot be null.");
     public static readonly Error EventDescriptionCannotExceed250Characters = Create(105, "Description cannot be more than 250 characters.");
     public static readonly Error InvalidFirstOrLastName = Create(106, "Both First and Last name must be 2–25 letters (a–z only).");
     public static readonly Error InvalidInvitationStatus = Create(107, "Invalid invitation status.");

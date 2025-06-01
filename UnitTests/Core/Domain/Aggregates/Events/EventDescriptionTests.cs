@@ -27,16 +27,6 @@ public class EventDescriptionTests
     }
 
     [Fact]
-    public void Create_WithNull_ReturnsFailure()
-    {
-        var result = EventDescription.Create(null);
-
-        Assert.True(result.IsFailure);
-        Assert.Single(result.Errors);
-        Assert.Equal(Error.EventDescriptionCannotBeNull, result.Errors[0]);
-    }
-
-    [Fact]
     public void Create_WithTooLongDescription_ReturnsFailure()
     {
         var longText = new string('x', 251);

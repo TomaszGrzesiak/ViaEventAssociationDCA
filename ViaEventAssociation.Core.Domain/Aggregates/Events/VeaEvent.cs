@@ -82,7 +82,10 @@ public sealed class VeaEvent : AggregateRoot<EventId>
 
     public Result UpdateDescription(EventDescription newDescription)
     {
+        if (Status.Equals(EventStatus.Active) || Status.Equals(EventStatus.Cancelled))
+            return Result.Failure(Error.ActiveOrCanceledEventCannotBeModified);
         Description = newDescription;
+        Status = EventStatus.Draft;
         return Result.Success();
     }
 

@@ -1,4 +1,5 @@
-﻿using ViaEventAssociation.Core.Domain.Common.Bases;
+﻿using System.Diagnostics.CodeAnalysis;
+using ViaEventAssociation.Core.Domain.Common.Bases;
 using ViaEventAssociation.Core.Tools.OperationResult;
 
 namespace ViaEventAssociation.Core.Domain.Aggregates.Events;
@@ -68,4 +69,10 @@ public sealed class EventTimeRange : ValueObject
 
     public override string ToString() =>
         $"{StartTime:yyyy-MM-dd HH:mm} to {EndTime:yyyy-MM-dd HH:mm}";
+
+    public static EventTimeRange Default()
+    {
+        var start = DateTime.Today.AddDays(1).AddHours(8);
+        return new EventTimeRange(start, start.AddHours(3));
+    }
 }
