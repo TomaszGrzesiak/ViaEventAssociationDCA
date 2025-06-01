@@ -1,0 +1,82 @@
+﻿namespace ViaEventAssociation.Core.Tools.OperationResult;
+
+public sealed class Error
+{
+    private static readonly HashSet<int> UsedCodes = new();
+
+    // single or doublet errors (100-139)
+    public static readonly Error UnParsableGuid = Create(100, "Could not parse the given Guid.");
+    public static readonly Error GuestsMaxNumberTooSmall = Create(101, "Too small number of guests. Must be at least 5.");
+
+    public static readonly Error EventTitleMustBeBetween3And75Characters =
+        Create(102, "Event title must be between 3 and 75 characters long, excluding white space.");
+
+    public static readonly Error EventDescriptionCannotBeNull = Create(104, "Description cannot be null.");
+    public static readonly Error EventDescriptionCannotExceed250Characters = Create(105, "Description cannot be more than 250 characters.");
+    public static readonly Error InvalidFirstOrLastName = Create(106, "Both First and Last name must be 2–25 letters (a–z only).");
+    public static readonly Error InvalidInvitationStatus = Create(107, "Invalid invitation status.");
+    public static readonly Error InvalidEventStatus = Create(108, "Invalid event status.");
+    public static readonly Error InvalidEventVisibility = Create(109, "Invalid event visibility.");
+
+
+    // email errors (codes 140 - 149)
+    public static readonly Error EmailRequired = Create(140, "Email is required.");
+    public static readonly Error EmailNotEndingWithViaDk = Create(141, "Email must end with '@via.dk'.");
+    public static readonly Error EmailDoesNotFollowFormatText1AtText2DotText3 = Create(142, "Email must be in the format <text1>@<text2>.<text3>.");
+    public static readonly Error EmailPartBeforeAtMustBeBetween3And6CharactersLong = Create(143, "The part before @ must be between 3 and 6 characters long.");
+    public static readonly Error EmailPartBeforeAtMustBeEither3Or4LettersOr6Digits = Create(144, "The part before @ must be either 3–4 letters or 6 digits.");
+
+
+    // time range errors (150-159)
+    public static readonly Error EventTimeRangeMissing = Create(150, "Either start or end time is missing.");
+    public static readonly Error EventTimeStartAfterEndTime = Create(151, "Start time cannot be after end time.");
+    public static readonly Error EventTimeDurationTooShort = Create(152, "Time duration must be at least 1 hour.");
+    public static readonly Error EventTimeDurationTooLong = Create(153, "Time duration cannot be more than 10 hours.");
+    public static readonly Error EventTimeInvalidEndTimeWindow = Create(154, "End time must be before 23:59 on same day or before 01:00 on the next day.");
+    public static readonly Error EventTimeInvalidStartTime = Create(155, "Start time must be after 08:00.");
+
+    // url errors (160-169)
+    public static readonly Error InvalidProfilePictureUrlEmpty = Create(160, "Profile picture URL cannot empty.");
+    public static readonly Error InvalidProfilePictureUrlOther = Create(161, "Profile picture URL is invalid.");
+    public static readonly Error OnlyHttpOrHttpsAllowed = Create(162, "Only Url starting from http or https is allowed for profile pictures.");
+
+    // invitation errors (170–179)
+    public static readonly Error InvitationAlreadyApproved = Create(170, "Invitation is already approved.");
+    public static readonly Error InvitationAlreadyRejected = Create(171, "Invitation is already rejected.");
+
+    // Event-related errors (codes 180-199)
+    public static readonly Error GuestAlreadyInvited = Create(180, "This guest is already invited to the event.");
+    public static readonly Error GuestListFull = Create(181, "Cannot invite more guests. The guest list is full.");
+    public static readonly Error EventAlreadyActive = Create(182, "The event is already active.");
+    public static readonly Error EventAlreadyCancelled = Create(183, "The event is already cancelled.");
+    public static readonly Error EventIsNotPublic = Create(184, "Only public events allow guests to join freely.");
+    public static readonly Error GuestAlreadyJoined = Create(185, "This guest has already joined the event.");
+    public static readonly Error UpdateMaxGuestsImpossible = Create(186, "Update max guests is impossible.");
+    public static readonly Error UpdateVisibilityImpossible = Create(187, "Update event visibility is impossible.");
+    public static readonly Error ActivateFailure = Create(188, "Could not activate the event.");
+    public static readonly Error ActiveOrCanceledEventCannotBeModified = Create(189, "Active or canceled event cannot be modified.");
+
+
+    private Error(int code, string message)
+    {
+        Code = code;
+        Message = message;
+    }
+
+    private static Error Create(int code, string message) =>
+        UsedCodes.Add(code)
+            ? new Error(code, message)
+            : throw new InvalidOperationException($"Duplicate error code detected: {code}");
+
+
+    public int Code { get; }
+    public string Message { get; }
+
+
+#if DEBUG
+    public static Error CustomForUnitTestsOnly(int code, string message)
+    {
+        return new Error(code, message);
+    }
+#endif
+}
