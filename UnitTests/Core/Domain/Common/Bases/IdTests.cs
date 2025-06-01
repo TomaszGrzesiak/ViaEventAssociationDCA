@@ -2,7 +2,7 @@
 
 namespace UnitTests.Core.Domain.Common.Bases;
 
-public class SampleId(Guid value) : Id(value);
+public class SampleId(Guid value) : Id<SampleId>(value);
 
 public class IdTests
 {
