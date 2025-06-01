@@ -19,3 +19,5 @@ riderModule.iml
 /dataSources/
 /dataSources.local.xml
 ViaEventAssociation.sln.DotSettings.user
+*.DotSettings.user
+*.user
