@@ -12,21 +12,24 @@ public sealed class Error
         Create(102, "Event title must be between 3 and 75 characters long, excluding white space.");
 
     public static readonly Error EventDescriptionCannotExceed250Characters = Create(105, "Description cannot be more than 250 characters.");
-    public static readonly Error InvalidFirstOrLastName = Create(106, "Both First and Last name must be 2–25 letters (a–z only).");
+    public static readonly Error InvalidNameFormat = Create(106, "Invalid name(s). Both First and Last name must be 2–25 letters (a–z only).");
     public static readonly Error InvalidInvitationStatus = Create(107, "Invalid invitation status.");
     public static readonly Error InvalidEventStatus = Create(108, "Invalid event status.");
     public static readonly Error InvalidEventVisibility = Create(109, "Invalid event visibility.");
     public static readonly Error GuestsMaxNumberTooGreat = Create(110, "Too large number of guests. Must be max 50.");
 
+    public static readonly Error InvalidProfilePictureUrlEmpty =
+        Create(111, "Profile picture URL is invalid or empty. Please provide a valid URL starting with http or https. ");
+
     // email errors (codes 140 - 149)
     public static readonly Error EmailRequired = Create(140, "Email is required.");
-    public static readonly Error EmailNotEndingWithViaDk = Create(141, "Email must end with '@via.dk'.");
-    public static readonly Error EmailDoesNotFollowFormatText1AtText2DotText3 = Create(142, "Email must be in the format <text1>@<text2>.<text3>.");
-    public static readonly Error EmailPartBeforeAtMustBeBetween3And6CharactersLong = Create(143, "The part before @ must be between 3 and 6 characters long.");
-    public static readonly Error EmailPartBeforeAtMustBeEither3Or4LettersOr6Digits = Create(144, "The part before @ must be either 3–4 letters or 6 digits.");
+    public static readonly Error EmailMustEndWithViaDomain = Create(141, "Email must end with '@via.dk'.");
+
+    public static readonly Error EmailInvalidFormat =
+        Create(142, "Email must be in the format <text1>@<text2>.<text3>. The part before @ must be either 3–4 letters or 6 digits.");
 
 
-    // time range errors (150-159)
+    // time range errors (150-169)
     public static readonly Error EventTimeRangeMissing = Create(150, "Either start or end time is missing.");
     public static readonly Error EventTimeStartAfterEndTime = Create(151, "Start time cannot be after end time.");
     public static readonly Error EventTimeStartDateAfterEndDate = Create(152, "Start date cannot be after end date.");
@@ -38,16 +41,11 @@ public sealed class Error
     public static readonly Error EventTimeCannotSpan01To08 = Create(158, "Event cannot span between 01:00 and 08:00.");
     public static readonly Error EventTimeRangeCannotBeDefault = Create(159, "Event time range cannot remain default.");
 
-    // url errors (160-169)
-    public static readonly Error InvalidProfilePictureUrlEmpty = Create(160, "Profile picture URL cannot empty.");
-    public static readonly Error InvalidProfilePictureUrlOther = Create(161, "Profile picture URL is invalid.");
-    public static readonly Error OnlyHttpOrHttpsAllowed = Create(162, "Only Url starting from http or https is allowed for profile pictures.");
-
     // invitation errors (170–179)
     public static readonly Error InvitationAlreadyApproved = Create(170, "Invitation is already approved.");
     public static readonly Error InvitationAlreadyRejected = Create(171, "Invitation is already rejected.");
 
-    // Event-related errors (codes 180-199)
+    // Event-related errors (codes 180-249)
     public static readonly Error GuestAlreadyInvited = Create(180, "This guest is already invited to the event.");
     public static readonly Error GuestListFull = Create(181, "Cannot invite more guests. The guest list is full.");
     public static readonly Error EventAlreadyActive = Create(182, "The event is already active.");
@@ -64,6 +62,10 @@ public sealed class Error
     public static readonly Error EventDescriptionCannotBeDefault = Create(194, "Event description cannot remain default or not set. Please change it first.");
     public static readonly Error EventVisibilityMustBeSet = Create(195, "Event visibility is not set. Please set it first.");
     public static readonly Error CannotReadyPastEvent = Create(196, "An event in the past cannot be made ready.");
+
+    // Guest-related error (codes  250-299)
+    public static readonly Error GuestNotFound = Create(250, "Guest not found.");
+    public static readonly Error EmailAlreadyRegistered = Create(251, "The email is already registered.");
 
     private Error(int code, string message)
     {
