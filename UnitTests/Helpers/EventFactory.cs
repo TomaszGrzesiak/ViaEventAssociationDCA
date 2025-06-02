@@ -1,5 +1,6 @@
 ﻿using System;
 using ViaEventAssociation.Core.Domain.Aggregates.Events;
+using ViaEventAssociation.Core.Domain.Aggregates.Guests;
 using ViaEventAssociation.Core.Tools.OperationResult;
 
 namespace UnitTests.Helpers;
@@ -10,9 +11,10 @@ public class EventFactory
     private EventDescription? _description = EventDescription.Default();
     private EventTimeRange? _timeRange = EventTimeRange.Default();
     private EventVisibility? _visibility = null;
-    private MaxGuests? _maxGuests = MaxGuests.Create(100);
+    private MaxGuests? _maxGuests = MaxGuests.Create(50);
     private EventStatus? _status = EventStatus.Draft;
     private int _locationMaxCapacity = 500;
+    private List<GuestId> _guests = [];
 
     public static EventFactory Init() => new();
 
@@ -61,7 +63,7 @@ public class EventFactory
 
     public VeaEvent Build()
     {
-        return VeaEvent.Create(_title, _description, _timeRange!, _visibility, _maxGuests, _status, _locationMaxCapacity).Payload!;
+        return VeaEvent.Create(_title, _description, _timeRange!, _visibility, _maxGuests!, _status, _locationMaxCapacity, _guests).Payload!;
     }
 
     public EventFactory WithValidTitle()
@@ -73,6 +75,12 @@ public class EventFactory
     public EventFactory WithValidDescription()
     {
         _description = EventDescription.Create("Valid description").Payload!;
+        return this;
+    }
+
+    public EventFactory WithGuest(GuestId createUnique)
+    {
+        _guests.Add(createUnique);
         return this;
     }
 }

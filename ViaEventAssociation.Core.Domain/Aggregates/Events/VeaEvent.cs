@@ -18,20 +18,21 @@ public sealed class VeaEvent : AggregateRoot<EventId>
     private readonly List<Invitation> _invitations = new();
     public IReadOnlyCollection<Invitation> Invitations => _invitations.AsReadOnly();
 
-    private readonly List<GuestId> _guestList = new();
+    private readonly List<GuestId> _guestList = new(); // temporary storage for the guests
     public IReadOnlyCollection<GuestId> GuestList => _guestList.AsReadOnly();
 
     public int LocationMaxCapacity { get; private set; }
 
     private VeaEvent(
         EventId id,
-        EventTitle title,
-        EventDescription description,
+        EventTitle? title,
+        EventDescription? description,
         EventTimeRange? timeRange,
         EventVisibility? visibility,
         MaxGuests maxGuestsNo,
         EventStatus? status,
-        int? locationMaxCapacity)
+        int? locationMaxCapacity,
+        List<GuestId> guests)
         : base(id)
     {
         Title = title;
@@ -41,6 +42,7 @@ public sealed class VeaEvent : AggregateRoot<EventId>
         MaxGuestsNo = maxGuestsNo;
         Status = status ?? EventStatus.Draft;
         LocationMaxCapacity = locationMaxCapacity ?? 500;
+        _guestList.AddRange(guests);
     }
 
     public static Result<VeaEvent> Create()
@@ -53,7 +55,8 @@ public sealed class VeaEvent : AggregateRoot<EventId>
             EventVisibility.Private,
             MaxGuests.Default(),
             EventStatus.Draft,
-            500);
+            500,
+            []);
 
         return Result<VeaEvent>.Success(newEvent);
     }
@@ -97,22 +100,28 @@ public sealed class VeaEvent : AggregateRoot<EventId>
             return Result.Failure(Error.GuestAlreadyInvited);
 
         if (_invitations.Count >= MaxGuestsNo.Value)
-            return Result.Failure(Error.GuestListFull);
+            return Result.Failure(Error.NoMoreRoom);
 
         _invitations.Add(invitation);
         return Result.Success();
     }
 
-    public Result JoinAsGuest(GuestId guestId)
+    public Result Participate(GuestId guestId)
     {
-        if (!Equals(Visibility, EventVisibility.Public))
-            return Result.Failure(Error.EventIsNotPublic);
-
         if (_guestList.Contains(guestId))
             return Result.Failure(Error.GuestAlreadyJoined);
 
+        if (!Equals(Visibility, EventVisibility.Public))
+            return Result.Failure(Error.EventIsNotPublic);
+
+        if (!Equals(Status, EventStatus.Active))
+            return Result.Failure(Error.OnlyActiveEventsCanBeJoined);
+
         if (_guestList.Count >= MaxGuestsNo.Value)
-            return Result.Failure(Error.GuestListFull);
+            return Result.Failure(Error.NoMoreRoom);
+
+        if (TimeRange!.StartTime < DateTime.Now) // TimeRange cannot be null here because Active events have a valid TimeRange
+            return Result.Failure(Error.TooLate);
 
         _guestList.Add(guestId);
         return Result.Success();
@@ -204,8 +213,8 @@ public sealed class VeaEvent : AggregateRoot<EventId>
         return Result.Success();
     }
 
-    public static Result<VeaEvent> Create(EventTitle title, EventDescription description, EventTimeRange timeRange, EventVisibility? visibility,
-        MaxGuests maxGuests, EventStatus? status, int locationMaxCapacity)
+    public static Result<VeaEvent> Create(EventTitle? title, EventDescription? description, EventTimeRange timeRange, EventVisibility? visibility,
+        MaxGuests maxGuests, EventStatus? status, int locationMaxCapacity, List<GuestId> guests)
     {
         var newEvent = new VeaEvent(
             EventId.CreateUnique(),
@@ -215,7 +224,8 @@ public sealed class VeaEvent : AggregateRoot<EventId>
             visibility,
             maxGuests,
             status,
-            locationMaxCapacity);
+            locationMaxCapacity,
+            guests);
 
         return Result<VeaEvent>.Success(newEvent);
     }

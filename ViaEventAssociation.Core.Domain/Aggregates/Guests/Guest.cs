@@ -10,7 +10,7 @@ public sealed class Guest : AggregateRoot<GuestId>
     public GuestName LastName { get; private set; }
     public ProfilePictureUrl ProfilePictureUrlAddress { get; private set; }
 
-    private static readonly List<Guest> _guests = []; // temporary storage for the guests
+    private static readonly List<Guest> Guests = []; // temporary storage for the guests
 
     private Guest(GuestId id, EmailAddress email, GuestName firstName, GuestName lastName, ProfilePictureUrl profilePictureUrlAddress)
         : base(id)
@@ -39,9 +39,9 @@ public sealed class Guest : AggregateRoot<GuestId>
 
         // if no errors:
         var newGuest = new Guest(GuestId.CreateUnique(), email, firstName, lastName, profilePicture);
-        if (_guests.Any(g => g.Email.Value == email.Value)) return Result<Guest>.Failure(Error.EmailAlreadyRegistered);
+        if (Guests.Any(g => g.Email.Value == email.Value)) return Result<Guest>.Failure(Error.EmailAlreadyRegistered);
 
-        _guests.Add(newGuest);
+        Guests.Add(newGuest);
         return Result<Guest>.Success(newGuest);
     }
 

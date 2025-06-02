@@ -47,7 +47,7 @@ public sealed class Error
 
     // Event-related errors (codes 180-249)
     public static readonly Error GuestAlreadyInvited = Create(180, "This guest is already invited to the event.");
-    public static readonly Error GuestListFull = Create(181, "Cannot invite more guests. The guest list is full.");
+    public static readonly Error NoMoreRoom = Create(181, "There is no more room for guests in the event.");
     public static readonly Error EventAlreadyActive = Create(182, "The event is already active.");
     public static readonly Error EventAlreadyCancelled = Create(183, "The event is already cancelled and cannot be modified any further.");
     public static readonly Error EventIsNotPublic = Create(184, "Only public events allow guests to join freely.");
@@ -62,10 +62,11 @@ public sealed class Error
     public static readonly Error EventDescriptionCannotBeDefault = Create(194, "Event description cannot remain default or not set. Please change it first.");
     public static readonly Error EventVisibilityMustBeSet = Create(195, "Event visibility is not set. Please set it first.");
     public static readonly Error CannotReadyPastEvent = Create(196, "An event in the past cannot be made ready.");
+    public static readonly Error OnlyActiveEventsCanBeJoined = Create(197, "Only active events can be joined.");
+    public static readonly Error TooLate = Create(198, "Too late. Next time be quicker to join the event!");
 
     // Guest-related error (codes  250-299)
-    public static readonly Error GuestNotFound = Create(250, "Guest not found.");
-    public static readonly Error EmailAlreadyRegistered = Create(251, "The email is already registered.");
+    public static readonly Error EmailAlreadyRegistered = Create(250, "The email is already registered.");
 
     private Error(int code, string message)
     {
