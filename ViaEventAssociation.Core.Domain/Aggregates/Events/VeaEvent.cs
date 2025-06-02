@@ -27,7 +27,8 @@ public sealed class VeaEvent : AggregateRoot<EventId>
         EventDescription description,
         EventTimeRange? timeRange,
         EventVisibility visibility,
-        MaxGuests maxGuests)
+        MaxGuests maxGuests,
+        EventStatus? status)
         : base(id)
     {
         Title = title;
@@ -35,7 +36,7 @@ public sealed class VeaEvent : AggregateRoot<EventId>
         TimeRange = timeRange;
         Visibility = visibility;
         MaxGuests = maxGuests;
-        Status = EventStatus.Draft;
+        Status = status ?? EventStatus.Draft;
     }
 
     public static Result<VeaEvent> Create(
@@ -51,22 +52,37 @@ public sealed class VeaEvent : AggregateRoot<EventId>
             description,
             timeRange,
             visibility,
-            maxGuests);
+            maxGuests,
+            null);
 
         return Result<VeaEvent>.Success(newEvent);
     }
 
     public static Result<VeaEvent> Create()
     {
-        var errors = new List<Error>();
-        var title = EventTitle.Default();
         var newEvent = new VeaEvent(
             EventId.CreateUnique(),
             EventTitle.Default(),
             EventDescription.Default(),
             null,
             EventVisibility.Private,
-            MaxGuests.Default());
+            MaxGuests.Default(),
+            null);
+
+        return Result<VeaEvent>.Success(newEvent);
+    }
+
+    public static Result<VeaEvent> Create(EventTitle title, EventStatus status)
+    {
+        var errors = new List<Error>();
+        var newEvent = new VeaEvent(
+            EventId.CreateUnique(),
+            title,
+            EventDescription.Default(),
+            null,
+            EventVisibility.Private,
+            MaxGuests.Default(),
+            status);
 
         return Result<VeaEvent>.Success(newEvent);
     }
@@ -167,16 +183,10 @@ public sealed class VeaEvent : AggregateRoot<EventId>
 
     public Result UpdateVisibility(EventVisibility newVisibility)
     {
-        if (Equals(Status, EventStatus.Active))
-            return Result.Failure([Error.UpdateVisibilityImpossible, Error.EventAlreadyActive]);
-
         if (Equals(Status, EventStatus.Cancelled))
             return Result.Failure([Error.UpdateVisibilityImpossible, Error.EventAlreadyCancelled]);
 
         Visibility = newVisibility;
-
-        if (Equals(Status, EventStatus.Ready))
-            Status = EventStatus.Draft;
 
         return Result.Success();
     }
