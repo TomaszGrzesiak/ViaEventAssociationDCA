@@ -1,25 +1,18 @@
-﻿using ViaEventAssociation.Core.Domain.Aggregates.Events;
+﻿using UnitTests.Helpers;
+using ViaEventAssociation.Core.Domain.Aggregates.Events;
 using ViaEventAssociation.Core.Tools.OperationResult;
 
 namespace UnitTests.Core.Domain.Aggregates.Events.UseCasesTests;
 
 public class EventTestsId5
 {
-    private VeaEvent CreateBaseEvent(string statusString)
-    {
-        var title = EventTitle.Create("Test Event").Payload!;
-        var status = EventStatus.FromName(statusString);
-        Assert.True(status.IsSuccess);
-        return VeaEvent.Create(title, status.Payload!).Payload!;
-    }
-
     [Theory]
     [InlineData("Draft")]
     [InlineData("Ready")]
     [InlineData("Active")]
     public void Id5_S1_EventCanBeMadePublic(string statusString)
     {
-        var ev = CreateBaseEvent(statusString);
+        var ev = EventFactory.Init().WithStatus(EventStatus.FromName(statusString).Payload!).WithTitle("Test Event.").Build();
         var result = ev.UpdateVisibility(EventVisibility.Public);
 
         Assert.True(result.IsSuccess);
@@ -30,7 +23,7 @@ public class EventTestsId5
     [Fact]
     public void Id5_F1_Cancelled_EventCannotBeMadePublic()
     {
-        var ev = CreateBaseEvent("Draft");
+        var ev = EventFactory.Init().WithStatus(EventStatus.Draft).WithTitle("Test Event.").Build();
         ev.Cancel();
 
         var result = ev.UpdateVisibility(EventVisibility.Public);

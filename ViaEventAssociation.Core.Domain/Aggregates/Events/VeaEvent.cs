@@ -186,7 +186,11 @@ public sealed class VeaEvent : AggregateRoot<EventId>
         if (Equals(Status, EventStatus.Cancelled))
             return Result.Failure([Error.UpdateVisibilityImpossible, Error.EventAlreadyCancelled]);
 
+        if (Visibility.Equals(EventVisibility.Public) && newVisibility.Equals(EventVisibility.Private))
+            Status = EventStatus.Draft;
+
         Visibility = newVisibility;
+
 
         return Result.Success();
     }
@@ -205,5 +209,20 @@ public sealed class VeaEvent : AggregateRoot<EventId>
         Status = EventStatus.Ready;
 
         return Result.Success();
+    }
+
+    public static Result<VeaEvent> Create(EventTitle title, EventDescription description, EventTimeRange timeRange, EventVisibility visibility,
+        MaxGuests maxGuests, EventStatus? status)
+    {
+        var newEvent = new VeaEvent(
+            EventId.CreateUnique(),
+            title,
+            description,
+            timeRange,
+            visibility,
+            maxGuests,
+            status);
+
+        return Result<VeaEvent>.Success(newEvent);
     }
 }

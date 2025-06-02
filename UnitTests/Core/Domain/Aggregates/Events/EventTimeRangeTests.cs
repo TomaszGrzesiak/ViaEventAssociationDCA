@@ -1,30 +1,27 @@
-﻿using System;
-using ViaEventAssociation.Core.Domain.Aggregates.Events;
+﻿using ViaEventAssociation.Core.Domain.Aggregates.Events;
 using ViaEventAssociation.Core.Tools.OperationResult;
-using Xunit;
+
+namespace UnitTests.Core.Domain.Aggregates.Events;
 
 public class EventTimeRangeTests
 {
+    private readonly DateTime _start = new DateTime(2026, 6, 1, 22, 0, 0);
+    private readonly DateTime _end = new DateTime(2026, 6, 2, 0, 30, 0);
+
     [Fact]
     public void Create_WithValidSameDayTime_ReturnsSuccess()
     {
-        var start = new DateTime(2025, 6, 1, 10, 0, 0);
-        var end = new DateTime(2025, 6, 1, 18, 0, 0);
-
-        var result = EventTimeRange.Create(start, end);
+        var result = EventTimeRange.Create(_start, _end);
 
         Assert.True(result.IsSuccess);
-        Assert.Equal(start, result.Payload.StartTime);
-        Assert.Equal(end, result.Payload.EndTime);
+        Assert.Equal(_start, result.Payload!.StartTime);
+        Assert.Equal(_end, result.Payload.EndTime);
     }
 
     [Fact]
     public void Create_WithValidCrossDayTime_ReturnsSuccess()
     {
-        var start = new DateTime(2025, 6, 1, 22, 0, 0);
-        var end = new DateTime(2025, 6, 2, 0, 30, 0);
-
-        var result = EventTimeRange.Create(start, end);
+        var result = EventTimeRange.Create(_start, _end);
 
         Assert.True(result.IsSuccess);
     }
@@ -45,24 +42,18 @@ public class EventTimeRangeTests
     }
 
     [Fact]
-    public void Create_WhenStartTimeAfterEndTime_ReturnsFailure()
+    public void Create_WhenStartDateTimeAfterEndDateTime_ReturnsFailure()
     {
-        var start = new DateTime(2025, 6, 1, 15, 0, 0);
-        var end = new DateTime(2025, 6, 1, 10, 0, 0);
-
-        var result = EventTimeRange.Create(start, end);
+        var result = EventTimeRange.Create(_start.AddDays(2), _end);
 
         Assert.True(result.IsFailure);
-        Assert.Contains(Error.EventTimeStartAfterEndTime, result.Errors);
+        Assert.Contains(Error.EventTimeStartDateAfterEndDate, result.Errors);
     }
 
     [Fact]
     public void Create_WhenDurationTooShort_ReturnsFailure()
     {
-        var start = new DateTime(2025, 6, 1, 18, 0, 0);
-        var end = new DateTime(2025, 6, 1, 18, 30, 0);
-
-        var result = EventTimeRange.Create(start, end);
+        var result = EventTimeRange.Create(_start, _start.AddMinutes(30));
 
         Assert.True(result.IsFailure);
         Assert.Contains(Error.EventTimeDurationTooShort, result.Errors);
@@ -71,10 +62,7 @@ public class EventTimeRangeTests
     [Fact]
     public void Create_WhenDurationTooLong_ReturnsFailure()
     {
-        var start = new DateTime(2025, 6, 1, 10, 0, 0);
-        var end = new DateTime(2025, 6, 1, 21, 0, 0);
-
-        var result = EventTimeRange.Create(start, end);
+        var result = EventTimeRange.Create(_start, _end.AddHours(10));
 
         Assert.True(result.IsFailure);
         Assert.Contains(Error.EventTimeDurationTooLong, result.Errors);
@@ -83,10 +71,8 @@ public class EventTimeRangeTests
     [Fact]
     public void Create_WhenStartTimeTooEarly_ReturnsFailure()
     {
-        var start = new DateTime(2025, 6, 1, 7, 30, 0);
-        var end = new DateTime(2025, 6, 1, 10, 0, 0);
-
-        var result = EventTimeRange.Create(start, end);
+        var start = new DateTime(2026, 6, 2, 2, 0, 0);
+        var result = EventTimeRange.Create(start, _end);
 
         Assert.True(result.IsFailure);
         Assert.Contains(Error.EventTimeStartMustBeAfter8Am, result.Errors);
@@ -95,10 +81,7 @@ public class EventTimeRangeTests
     [Fact]
     public void Create_WhenEndTimeInvalid_ReturnsFailure()
     {
-        var start = new DateTime(2025, 6, 1, 23, 30, 0);
-        var end = new DateTime(2025, 6, 2, 2, 0, 0);
-
-        var result = EventTimeRange.Create(start, end);
+        var result = EventTimeRange.Create(_start, _end.AddHours(2));
 
         Assert.True(result.IsFailure);
         Assert.Contains(Error.EventTimeInvalidEndTimeWindow, result.Errors);
@@ -107,11 +90,8 @@ public class EventTimeRangeTests
     [Fact]
     public void Equality_WorksForIdenticalStartAndEnd()
     {
-        var start = new DateTime(2025, 6, 1, 10, 0, 0);
-        var end = new DateTime(2025, 6, 1, 12, 0, 0);
-
-        var r1 = EventTimeRange.Create(start, end).Payload;
-        var r2 = EventTimeRange.Create(start, end).Payload;
+        var r1 = EventTimeRange.Create(_start, _end).Payload;
+        var r2 = EventTimeRange.Create(_start, _end).Payload;
 
         Assert.Equal(r1, r2);
     }

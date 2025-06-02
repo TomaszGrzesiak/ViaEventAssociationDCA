@@ -1,4 +1,5 @@
-﻿using ViaEventAssociation.Core.Domain.Aggregates.Events;
+﻿using UnitTests.Helpers;
+using ViaEventAssociation.Core.Domain.Aggregates.Events;
 using ViaEventAssociation.Core.Tools.OperationResult;
 
 namespace UnitTests.Core.Domain.Aggregates.Events.UseCasesTests;
@@ -94,8 +95,7 @@ public class EventTestsId2
     {
         // First, we need to make the event Active - and that is predicated by certain steps. SEE USE CASE ID:9
         // To Activate the Event, it needs to be in draft status, and the following data is set with valid values: title, description, times, visibility, maximum guests
-        var ev = VeaEvent.Create().Payload!;
-        ev.Activate();
+        var ev = EventFactory.Init().WithStatus(EventStatus.Active).Build();
 
         var title = EventTitle.Create("New Title").Payload!;
         var result = ev.UpdateTitle(title);
