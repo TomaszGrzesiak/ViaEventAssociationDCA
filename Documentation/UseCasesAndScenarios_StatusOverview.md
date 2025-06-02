@@ -93,12 +93,12 @@
     * [x] S1
     * [x] S2
     * [x] F1
-* [ ] UC13 - Invite guest to event
-    * [ ] S1
-    * [ ] F1
-    * [ ] F2
-    * [ ] F3
-    * [ ] F4
+* [x] UC13 - Invite guest to event
+    * [x] S1
+    * [x] F1
+    * [x] F2
+    * [x] F3
+    * [x] F4
 * [ ] UC14 - Guest accepts invitation
     * [ ] S1
     * [ ] F1

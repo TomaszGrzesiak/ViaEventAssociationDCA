@@ -1,5 +1,6 @@
 ﻿using System;
 using ViaEventAssociation.Core.Domain.Aggregates.Events;
+using ViaEventAssociation.Core.Domain.Aggregates.Events.Entities;
 using ViaEventAssociation.Core.Domain.Aggregates.Guests;
 using ViaEventAssociation.Core.Tools.OperationResult;
 
@@ -79,6 +80,12 @@ public class EventFactory
     }
 
     public EventFactory WithGuest(GuestId guestIds)
+    {
+        _guests.Add(guestIds);
+        return this;
+    }
+
+    public EventFactory WithInvitation(GuestId guestIds)
     {
         _guests.Add(guestIds);
         return this;

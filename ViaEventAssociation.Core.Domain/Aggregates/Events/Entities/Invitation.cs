@@ -17,10 +17,9 @@ namespace ViaEventAssociation.Core.Domain.Aggregates.Events.Entities
             Status = status;
         }
 
-        public static Result<Invitation> Create(GuestId guestId, EventId eventId)
+        public static Invitation Create(GuestId guestId, EventId eventId)
         {
-            var invitation = new Invitation(InvitationId.CreateUnique(), guestId, eventId, InvitationStatus.Pending);
-            return Result<Invitation>.Success(invitation);
+            return new Invitation(InvitationId.CreateUnique(), guestId, eventId, InvitationStatus.Pending);
         }
 
         public Result Approve()

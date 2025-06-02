@@ -64,6 +64,7 @@ public sealed class Error
     public static readonly Error CannotReadyPastEvent = Create(196, "An event in the past cannot be made ready.");
     public static readonly Error OnlyActiveEventsCanBeJoined = Create(197, "Only active events can be joined.");
     public static readonly Error TooLate = Create(198, "Too late. Next time be quicker to join the event!");
+    public static readonly Error CanOnlyInviteToReadyOrActiveEvent = Create(199, "Guests can only be invited to the event, when the event is ready or active.");
 
     // Guest-related error (codes  250-299)
     public static readonly Error EmailAlreadyRegistered = Create(250, "The email is already registered.");
