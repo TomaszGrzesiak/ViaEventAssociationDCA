@@ -95,4 +95,10 @@ public sealed class EventTimeRange : ValueObject
         var start = DateTime.Today.AddDays(1).AddHours(8);
         return new EventTimeRange(start, start.AddHours(3));
     }
+
+    public static EventTimeRange ValidNonDefault()
+    {
+        var start = DateTime.Today.AddDays(2).AddHours(8);
+        return new EventTimeRange(start, start.AddHours(3));
+    }
 }

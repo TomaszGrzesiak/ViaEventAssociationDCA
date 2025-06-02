@@ -12,7 +12,7 @@ public sealed class VeaEvent : AggregateRoot<EventId>
     public EventDescription Description { get; private set; }
     public EventTimeRange? TimeRange { get; private set; }
     public EventStatus Status { get; private set; }
-    public EventVisibility Visibility { get; private set; }
+    public EventVisibility? Visibility { get; private set; }
     public MaxGuests MaxGuests { get; private set; }
 
     private readonly List<Invitation> _invitations = new();
@@ -192,6 +192,15 @@ public sealed class VeaEvent : AggregateRoot<EventId>
 
     public Result Ready()
     {
+        if (Equals(EventTitle.Default(), Title))
+            return Result.Failure(Error.EventTitleCannotBeDefault);
+
+        if (Equals(EventDescription.Default(), Description))
+            return Result.Failure(Error.EventDescriptionCannotBeDefault);
+
+        if (Equals(EventTimeRange.Default(), TimeRange))
+            return Result.Failure(Error.EventTimeRangeCannotBeDefault);
+
         if (Equals(Status, EventStatus.Active))
             return Result.Failure(Error.EventAlreadyActive);
 
@@ -206,7 +215,7 @@ public sealed class VeaEvent : AggregateRoot<EventId>
         return Result.Success();
     }
 
-    public static Result<VeaEvent> Create(EventTitle title, EventDescription description, EventTimeRange timeRange, EventVisibility visibility,
+    public static Result<VeaEvent> Create(EventTitle title, EventDescription description, EventTimeRange timeRange, EventVisibility? visibility,
         MaxGuests maxGuests, EventStatus? status, int locationMaxCapacity)
     {
         var newEvent = new VeaEvent(

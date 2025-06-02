@@ -36,6 +36,7 @@ public sealed class Error
     public static readonly Error EventTimeStartMustBeAfter8Am = Create(156, "Start time must be after 08:00.");
     public static readonly Error EventTimeCannotStartInPast = Create(157, "Start must not be in the past.");
     public static readonly Error EventTimeCannotSpan01To08 = Create(158, "Event cannot span between 01:00 and 08:00.");
+    public static readonly Error EventTimeRangeCannotBeDefault = Create(159, "Event time range cannot remain default.");
 
     // url errors (160-169)
     public static readonly Error InvalidProfilePictureUrlEmpty = Create(160, "Profile picture URL cannot empty.");
@@ -59,6 +60,8 @@ public sealed class Error
     public static readonly Error ActiveOrCanceledEventCannotBeModified = Create(189, "Active or canceled event cannot be modified.");
     public static readonly Error DecreaseMaxGuestsImpossible = Create(190, "Decrease max guests is impossible.");
     public static readonly Error MaxGuestAboveLocationCapacity = Create(191, "You cannot have more people at an event than there is room for.");
+    public static readonly Error EventTitleCannotBeDefault = Create(192, "Event title cannot remain default. Please change it first.");
+    public static readonly Error EventDescriptionCannotBeDefault = Create(193, "Event description cannot remain default. Please change it first.");
 
     private Error(int code, string message)
     {

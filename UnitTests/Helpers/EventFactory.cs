@@ -6,10 +6,10 @@ namespace UnitTests.Helpers;
 
 public class EventFactory
 {
-    private EventTitle _title = EventTitle.Create("Default Title").Payload!;
+    private EventTitle _title = EventTitle.Default();
     private EventDescription _description = EventDescription.Default();
     private EventTimeRange? _timeRange = null;
-    private EventVisibility _visibility = EventVisibility.Private;
+    private EventVisibility? _visibility = null;
     private MaxGuests _maxGuests = MaxGuests.Create(100).Payload!;
     private EventStatus? _status = EventStatus.Draft;
     private int _locationMaxCapacity = 500;
@@ -40,9 +40,9 @@ public class EventFactory
         return this;
     }
 
-    public EventFactory WithTimeRange(DateTime start, DateTime end)
+    public EventFactory WithTimeRange(EventTimeRange timeRange)
     {
-        _timeRange = EventTimeRange.Create(start, end).Payload;
+        _timeRange = timeRange;
         return this;
     }
 
@@ -61,5 +61,17 @@ public class EventFactory
     public VeaEvent Build()
     {
         return VeaEvent.Create(_title, _description, _timeRange!, _visibility, _maxGuests, _status, _locationMaxCapacity).Payload!;
+    }
+
+    public EventFactory WithValidTitle()
+    {
+        _title = EventTitle.Create("Valid title.").Payload!;
+        return this;
+    }
+
+    public EventFactory WithValidDescription()
+    {
+        _description = EventDescription.Create("Valid description").Payload!;
+        return this;
     }
 }
