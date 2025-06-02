@@ -120,7 +120,9 @@ public sealed class VeaEvent : AggregateRoot<EventId>
 
     public Result Activate()
     {
-        if (Status != null && !Status.Equals(EventStatus.Ready))
+        if (Equals(EventStatus.Active, Status)) return Result.Success();
+
+        if (!Equals(EventStatus.Ready, Status))
         {
             var readyResult = Ready();
             if (readyResult.IsFailure)
