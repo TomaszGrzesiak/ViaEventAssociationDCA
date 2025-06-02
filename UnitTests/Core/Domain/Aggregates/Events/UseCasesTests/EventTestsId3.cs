@@ -1,4 +1,5 @@
-﻿using ViaEventAssociation.Core.Domain.Aggregates.Events;
+﻿using UnitTests.Helpers;
+using ViaEventAssociation.Core.Domain.Aggregates.Events;
 using ViaEventAssociation.Core.Tools.OperationResult;
 
 namespace UnitTests.Core.Domain.Aggregates.Events.UseCasesTests;
@@ -37,13 +38,7 @@ public class EventTestsId3
     [Fact]
     public void Id3_S3_UpdateDescriptionWhenReady_ShouldSetStatusToDraft()
     {
-        var ev = VeaEvent.Create().Payload!;
-
-        ev.UpdateTimeRange(EventTimeRange.Default());
-        ev.UpdateMaxGuests(MaxGuests.Default());
-        ev.UpdateVisibility(EventVisibility.Public);
-        ev.Ready();
-        Assert.Equal(EventStatus.Ready, ev.Status);
+        var ev = EventFactory.Init().WithStatus(EventStatus.Ready).Build();
 
         var newDesc = EventDescription.Create("This is a valid description update.").Payload!;
         var result = ev.UpdateDescription(newDesc);
@@ -79,17 +74,12 @@ public class EventTestsId3
     [Fact]
     public void Id3_F3_DescriptionUpdateWhenActive_ShouldFail()
     {
-        var ev = VeaEvent.Create().Payload!;
-        ev.UpdateTimeRange(EventTimeRange.Default());
-        ev.UpdateMaxGuests(MaxGuests.Create(10).Payload!);
-        ev.UpdateVisibility(EventVisibility.Public);
-        ev.Ready();
-        ev.Activate();
+        var ev = EventFactory.Init().WithStatus(EventStatus.Active).Build();
 
         var desc = EventDescription.Create("Another description").Payload!;
         var result = ev.UpdateDescription(desc);
 
-        Assert.True(result.IsFailure);
+        Assert.False(result.IsSuccess);
         Assert.Contains(result.Errors, e => e == Error.ActiveOrCanceledEventCannotBeModified);
     }
 }

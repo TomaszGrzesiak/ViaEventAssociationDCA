@@ -19,53 +19,53 @@
     * [x] F4
     * [x] F5
     * [x] F6
-* [ ] UC3 - Update event description
-    * [ ] S1
-    * [ ] S2
-    * [ ] S3
-    * [ ] F1
-    * [ ] F2
-    * [ ] F3
-* [ ] UC4 - Update event start and end time
-    * [ ] S1
-    * [ ] S2
-    * [ ] S3
-    * [ ] S4
-    * [ ] S5
-    * [ ] F1
-    * [ ] F2
-    * [ ] F3
-    * [ ] F4
-    * [ ] F5
-    * [ ] F6
-    * [ ] F7
-    * [ ] F8
-    * [ ] F9
-    * [ ] F10
-    * [ ] F11
-* [ ] UC5 - Make event public
-    * [ ] S1
-    * [ ] F1
-* [ ] UC6 - Make event private
-    * [ ] S1
-    * [ ] S2
-    * [ ] F1
-    * [ ] F2
-* [ ] UC7 - Set maximum number of guests
-    * [ ] S1
-    * [ ] S2
-    * [ ] S3
-    * [ ] F1
-    * [ ] F2
-    * [ ] F3
-    * [ ] F4
-    * [ ] F5
-* [ ] UC8 - Ready event
-    * [ ] S1
-    * [ ] F1
-    * [ ] F2
-    * [ ] F3
-    * [ ] F4
+* [x] UC3 - Update event description
+    * [x] S1
+    * [x] S2
+    * [x] S3
+    * [x] F1
+    * [x] F2
+    * [x] F3
+* [x] UC4 - Update event start and end time
+    * [x] S1
+    * [x] S2
+    * [x] S3
+    * [x] S4
+    * [x] S5
+    * [x] F1
+    * [x] F2
+    * [x] F3
+    * [x] F4
+    * [x] F5
+    * [x] F6
+    * [x] F7
+    * [x] F8
+    * [x] F9
+    * [x] F10
+    * [x] F11
+* [x] UC5 - Make event public
+    * [x] S1
+    * [x] F1
+* [x] UC6 - Make event private
+    * [x] S1
+    * [x] S2
+    * [x] F1
+    * [x] F2
+* [x] UC7 - Set maximum number of guests
+    * [x] S1
+    * [x] S2
+    * [x] S3
+    * [x] F1
+    * [x] F2
+    * [x] F3
+    * [x] F4
+    * [x] F5
+* [x] UC8 - Ready event
+    * [x] S1
+    * [x] F1
+    * [x] F2
+    * [x] F3
+    * [x] F4
 * [ ] UC9 - Activate event
     * [ ] S1
     * [ ] S2

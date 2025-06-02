@@ -6,25 +6,26 @@ namespace UnitTests.Helpers;
 
 public class EventFactory
 {
-    private EventTitle _title = EventTitle.Default();
-    private EventDescription _description = EventDescription.Default();
-    private EventTimeRange? _timeRange = null;
+    private EventTitle? _title = EventTitle.Default();
+    private EventDescription? _description = EventDescription.Default();
+    private EventTimeRange? _timeRange = EventTimeRange.Default();
     private EventVisibility? _visibility = null;
-    private MaxGuests _maxGuests = MaxGuests.Create(100).Payload!;
+    private MaxGuests? _maxGuests = MaxGuests.Create(100);
     private EventStatus? _status = EventStatus.Draft;
     private int _locationMaxCapacity = 500;
 
     public static EventFactory Init() => new();
 
-    public EventFactory WithTitle(string title)
+    public EventFactory WithTitle(string? title)
     {
-        _title = EventTitle.Create(title).Payload!;
+        if (title != null) _title = EventTitle.Create(title).Payload!;
+        else _title = null;
         return this;
     }
 
-    public EventFactory WithDescription(string desc)
+    public EventFactory WithDescription(string? desc)
     {
-        _description = EventDescription.Create(desc).Payload!;
+        _description = desc != null ? EventDescription.Create(desc).Payload! : null;
         return this;
     }
 
@@ -36,13 +37,13 @@ public class EventFactory
 
     public EventFactory WithMaxGuests(int value)
     {
-        _maxGuests = MaxGuests.Create(value).Payload!;
+        _maxGuests = MaxGuests.Create(value);
         return this;
     }
 
-    public EventFactory WithTimeRange(EventTimeRange timeRange)
+    public EventFactory WithTimeRange(EventTimeRange? timeRange)
     {
-        _timeRange = timeRange;
+        _timeRange = timeRange != null ? timeRange : null;
         return this;
     }
 

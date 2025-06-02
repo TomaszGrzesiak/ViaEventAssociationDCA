@@ -12,7 +12,12 @@ public class MaxGuests : ValueObject
         Value = value;
     }
 
-    public static Result<MaxGuests> Create(int maxGuests)
+    public static MaxGuests Create(int maxGuests)
+    {
+        return new MaxGuests(maxGuests);
+    }
+
+    public static Result<MaxGuests> Validate(int maxGuests)
     {
         return maxGuests switch
         {

@@ -20,11 +20,11 @@ public class EventTestsId7
                 .WithStatus(status)
                 .Build();
 
-            var newMax = MaxGuests.Create(newLimit).Payload!;
+            var newMax = MaxGuests.Create(newLimit);
             var result = veaEvent.UpdateMaxGuests(newMax);
 
             Assert.True(result.IsSuccess);
-            Assert.Equal(newLimit, veaEvent.MaxGuests.Value);
+            Assert.Equal(newLimit, veaEvent.MaxGuestsNo.Value);
         }
     }
 
@@ -38,10 +38,10 @@ public class EventTestsId7
             .Build();
 
 
-        var result = veaEvent.UpdateMaxGuests(MaxGuests.Create(maxGuest + 1).Payload!);
+        var result = veaEvent.UpdateMaxGuests(MaxGuests.Create(maxGuest + 1));
 
         Assert.True(result.IsSuccess);
-        Assert.True(veaEvent.MaxGuests.Value == maxGuest + 1);
+        Assert.True(veaEvent.MaxGuestsNo.Value == maxGuest + 1);
     }
 
     [Fact]
@@ -52,7 +52,7 @@ public class EventTestsId7
             .WithStatus(EventStatus.Active)
             .Build();
 
-        var result = veaEvent.UpdateMaxGuests(MaxGuests.Create(10).Payload!);
+        var result = veaEvent.UpdateMaxGuests(MaxGuests.Create(10));
 
         Assert.True(result.IsFailure);
         Assert.Contains(result.Errors, e => e == Error.DecreaseMaxGuestsImpossible);
@@ -66,7 +66,7 @@ public class EventTestsId7
             .WithStatus(EventStatus.Cancelled)
             .Build();
 
-        var result = veaEvent.UpdateMaxGuests(MaxGuests.Create(25).Payload!);
+        var result = veaEvent.UpdateMaxGuests(MaxGuests.Create(25));
 
         Assert.True(result.IsFailure);
         Assert.Contains(result.Errors, e => e == Error.UpdateMaxGuestsImpossible);
@@ -81,7 +81,7 @@ public class EventTestsId7
         var veaEvent = EventFactory.Init()
             .WithLocationMaxCapacity(locationMax)
             .Build();
-        var result = veaEvent.UpdateMaxGuests(MaxGuests.Create(locationMax + 1).Payload!);
+        var result = veaEvent.UpdateMaxGuests(MaxGuests.Create(locationMax + 1));
 
         Assert.True(result.IsFailure);
         Assert.Contains(result.Errors, e => e == Error.UpdateMaxGuestsImpossible);
@@ -93,9 +93,8 @@ public class EventTestsId7
     [InlineData(4)]
     public void Id7_F4_Failure_WhenBelowMinimumLimit(int value)
     {
-        // Given an existing event with ID ... event isn't necessary to test it, right?
-
-        var result = MaxGuests.Create(value);
+        var ev = EventFactory.Init().Build();
+        var result = ev.UpdateMaxGuests(MaxGuests.Create(value));
 
         Assert.True(result.IsFailure);
         Assert.Contains(result.Errors, e => e == Error.GuestsMaxNumberTooSmall);
@@ -104,7 +103,8 @@ public class EventTestsId7
     [Fact]
     public void Id7_F5_Failure_WhenAboveMaximumLimit()
     {
-        var result = MaxGuests.Create(51);
+        var ev = EventFactory.Init().Build();
+        var result = ev.UpdateMaxGuests(MaxGuests.Create(51));
 
         Assert.True(result.IsFailure);
         Assert.Contains(result.Errors, e => e == Error.GuestsMaxNumberTooGreat);

@@ -8,12 +8,12 @@ namespace ViaEventAssociation.Core.Domain.Aggregates.Events;
 
 public sealed class VeaEvent : AggregateRoot<EventId>
 {
-    public EventTitle Title { get; private set; }
-    public EventDescription Description { get; private set; }
+    public EventTitle? Title { get; private set; }
+    public EventDescription? Description { get; private set; }
     public EventTimeRange? TimeRange { get; private set; }
-    public EventStatus Status { get; private set; }
+    public EventStatus? Status { get; private set; }
     public EventVisibility? Visibility { get; private set; }
-    public MaxGuests MaxGuests { get; private set; }
+    public MaxGuests MaxGuestsNo { get; private set; }
 
     private readonly List<Invitation> _invitations = new();
     public IReadOnlyCollection<Invitation> Invitations => _invitations.AsReadOnly();
@@ -28,8 +28,8 @@ public sealed class VeaEvent : AggregateRoot<EventId>
         EventTitle title,
         EventDescription description,
         EventTimeRange? timeRange,
-        EventVisibility visibility,
-        MaxGuests maxGuests,
+        EventVisibility? visibility,
+        MaxGuests maxGuestsNo,
         EventStatus? status,
         int? locationMaxCapacity)
         : base(id)
@@ -38,30 +38,9 @@ public sealed class VeaEvent : AggregateRoot<EventId>
         Description = description;
         TimeRange = timeRange;
         Visibility = visibility;
-        MaxGuests = maxGuests;
+        MaxGuestsNo = maxGuestsNo;
         Status = status ?? EventStatus.Draft;
         LocationMaxCapacity = locationMaxCapacity ?? 500;
-    }
-
-    public static Result<VeaEvent> Create(
-        EventTitle title,
-        EventDescription description,
-        EventTimeRange timeRange,
-        EventVisibility visibility,
-        MaxGuests maxGuests,
-        int? locationMaxCapacity)
-    {
-        var newEvent = new VeaEvent(
-            EventId.CreateUnique(),
-            title,
-            description,
-            timeRange,
-            visibility,
-            maxGuests,
-            null,
-            locationMaxCapacity);
-
-        return Result<VeaEvent>.Success(newEvent);
     }
 
     public static Result<VeaEvent> Create()
@@ -70,10 +49,10 @@ public sealed class VeaEvent : AggregateRoot<EventId>
             EventId.CreateUnique(),
             EventTitle.Default(),
             EventDescription.Default(),
-            null,
+            EventTimeRange.Default(),
             EventVisibility.Private,
             MaxGuests.Default(),
-            null,
+            EventStatus.Draft,
             500);
 
         return Result<VeaEvent>.Success(newEvent);
@@ -81,7 +60,7 @@ public sealed class VeaEvent : AggregateRoot<EventId>
 
     public Result UpdateTitle(EventTitle newTitle)
     {
-        if (Status.Equals(EventStatus.Active) || Status.Equals(EventStatus.Cancelled))
+        if (Status != null && (Status.Equals(EventStatus.Active) || Status.Equals(EventStatus.Cancelled)))
             return Result.Failure(Error.ActiveOrCanceledEventCannotBeModified);
         Title = newTitle;
         Status = EventStatus.Draft;
@@ -90,7 +69,7 @@ public sealed class VeaEvent : AggregateRoot<EventId>
 
     public Result UpdateDescription(EventDescription newDescription)
     {
-        if (Status.Equals(EventStatus.Active) || Status.Equals(EventStatus.Cancelled))
+        if (Status != null && (Status.Equals(EventStatus.Active) || Status.Equals(EventStatus.Cancelled)))
             return Result.Failure(Error.ActiveOrCanceledEventCannotBeModified);
         Description = newDescription;
         Status = EventStatus.Draft;
@@ -99,10 +78,17 @@ public sealed class VeaEvent : AggregateRoot<EventId>
 
     public Result UpdateTimeRange(EventTimeRange newTimeRange)
     {
-        if (Status.Equals(EventStatus.Active) || Status.Equals(EventStatus.Cancelled))
-            return Result.Failure(Error.ActiveOrCanceledEventCannotBeModified);
-        TimeRange = newTimeRange;
-        return Result.Success();
+        var errors = new List<Error>();
+
+        if (Status != null && (Status.Equals(EventStatus.Active) || Status.Equals(EventStatus.Cancelled)))
+            errors.Add(Error.ActiveOrCanceledEventCannotBeModified);
+
+        var result = EventTimeRange.Validate(newTimeRange);
+
+        if (result.IsSuccess) TimeRange = newTimeRange;
+        if (result.IsFailure) errors.AddRange(result.Errors);
+
+        return errors.Count == 0 ? Result.Success() : Result.Failure(errors.ToArray());
     }
 
     public Result InviteGuest(Invitation invitation)
@@ -110,7 +96,7 @@ public sealed class VeaEvent : AggregateRoot<EventId>
         if (_invitations.Any(i => i.GuestId == invitation.GuestId))
             return Result.Failure(Error.GuestAlreadyInvited);
 
-        if (_invitations.Count >= MaxGuests.Value)
+        if (_invitations.Count >= MaxGuestsNo.Value)
             return Result.Failure(Error.GuestListFull);
 
         _invitations.Add(invitation);
@@ -119,13 +105,13 @@ public sealed class VeaEvent : AggregateRoot<EventId>
 
     public Result JoinAsGuest(GuestId guestId)
     {
-        if (Visibility != EventVisibility.Public)
+        if (!Equals(Visibility, EventVisibility.Public))
             return Result.Failure(Error.EventIsNotPublic);
 
         if (_guestList.Contains(guestId))
             return Result.Failure(Error.GuestAlreadyJoined);
 
-        if (_guestList.Count >= MaxGuests.Value)
+        if (_guestList.Count >= MaxGuestsNo.Value)
             return Result.Failure(Error.GuestListFull);
 
         _guestList.Add(guestId);
@@ -134,7 +120,7 @@ public sealed class VeaEvent : AggregateRoot<EventId>
 
     public Result Activate()
     {
-        if (!Status.Equals(EventStatus.Ready))
+        if (Status != null && !Status.Equals(EventStatus.Ready))
         {
             var readyResult = Ready();
             if (readyResult.IsFailure)
@@ -147,7 +133,7 @@ public sealed class VeaEvent : AggregateRoot<EventId>
 
     public Result Cancel()
     {
-        if (Status.Equals(EventStatus.Cancelled))
+        if (Status != null && Status.Equals(EventStatus.Cancelled))
             return Result.Failure(Error.EventAlreadyCancelled);
 
         Status = EventStatus.Cancelled;
@@ -155,11 +141,11 @@ public sealed class VeaEvent : AggregateRoot<EventId>
     }
 
     public override string ToString() =>
-        $"{Title.ToString()} ({Status.ToString()})";
+        $"{Title?.ToString()} ({Status?.ToString()})";
 
     public Result UpdateMaxGuests(MaxGuests newMaxGuests)
     {
-        if (Equals(Status, EventStatus.Active) && newMaxGuests.Value < MaxGuests.Value)
+        if (Equals(Status, EventStatus.Active) && newMaxGuests.Value < MaxGuestsNo.Value)
             return Result.Failure([Error.DecreaseMaxGuestsImpossible, Error.EventAlreadyActive]);
 
         if (Equals(Status, EventStatus.Cancelled))
@@ -168,12 +154,15 @@ public sealed class VeaEvent : AggregateRoot<EventId>
         if (newMaxGuests.Value > LocationMaxCapacity)
             return Result.Failure([Error.UpdateMaxGuestsImpossible, Error.MaxGuestAboveLocationCapacity]);
 
-        MaxGuests = newMaxGuests;
+        var result = MaxGuests.Validate(newMaxGuests.Value);
+        if (result.IsSuccess)
+        {
+            MaxGuestsNo = newMaxGuests;
+            if (Equals(Status, EventStatus.Ready))
+                Status = EventStatus.Draft;
+        }
 
-        if (Equals(Status, EventStatus.Ready))
-            Status = EventStatus.Draft;
-
-        return Result.Success();
+        return result.IsSuccess ? Result.Success() : Result.Failure(result.Errors.ToArray());
     }
 
     public Result UpdateVisibility(EventVisibility newVisibility)
@@ -181,7 +170,7 @@ public sealed class VeaEvent : AggregateRoot<EventId>
         if (Equals(Status, EventStatus.Cancelled))
             return Result.Failure([Error.UpdateVisibilityImpossible, Error.EventAlreadyCancelled]);
 
-        if (Visibility.Equals(EventVisibility.Public) && newVisibility.Equals(EventVisibility.Private))
+        if (Equals(Visibility, EventVisibility.Public) && newVisibility.Equals(EventVisibility.Private))
             Status = EventStatus.Draft;
 
         Visibility = newVisibility;
@@ -192,26 +181,24 @@ public sealed class VeaEvent : AggregateRoot<EventId>
 
     public Result Ready()
     {
-        if (Equals(EventTitle.Default(), Title))
-            return Result.Failure(Error.EventTitleCannotBeDefault);
+        var errors = new List<Error>();
 
-        if (Equals(EventDescription.Default(), Description))
-            return Result.Failure(Error.EventDescriptionCannotBeDefault);
+        if (Equals(Status, EventStatus.Active)) return Result.Failure(Error.EventAlreadyActive);
+        if (Equals(Status, EventStatus.Cancelled)) return Result.Failure(Error.EventAlreadyCancelled);
 
-        if (Equals(EventTimeRange.Default(), TimeRange))
-            return Result.Failure(Error.EventTimeRangeCannotBeDefault);
+        if (Title is null || Equals(EventTitle.Default(), Title)) errors.Add(Error.EventTitleCannotBeDefaultOrEmpty);
+        if (Description is null || Equals(EventDescription.Default(), Description)) errors.Add(Error.EventDescriptionCannotBeDefault);
+        if (Equals(EventTimeRange.Default(), TimeRange)) errors.Add(Error.EventTimeRangeCannotBeDefault);
+        if (TimeRange == null) errors.Add(Error.EventTimeRangeMissing);
+        if (TimeRange?.StartTime < DateTime.Now) errors.Add(Error.CannotReadyPastEvent);
+        if (Equals(Visibility, null)) errors.Add(Error.EventVisibilityMustBeSet);
+        if (MaxGuests.Validate(MaxGuestsNo.Value) is { IsFailure: true } result) errors.AddRange(result.Errors);
 
-        if (Equals(Status, EventStatus.Active))
-            return Result.Failure(Error.EventAlreadyActive);
+        if (errors.Count > 0)
+            return Result.Failure(errors.ToArray());
 
-        if (Equals(Status, EventStatus.Cancelled))
-            return Result.Failure(Error.EventAlreadyCancelled);
-
-        if (TimeRange == null)
-            return Result.Failure(Error.EventTimeRangeMissing);
-
+        // if no errors:
         Status = EventStatus.Ready;
-
         return Result.Success();
     }
 

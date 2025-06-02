@@ -60,8 +60,10 @@ public sealed class Error
     public static readonly Error ActiveOrCanceledEventCannotBeModified = Create(189, "Active or canceled event cannot be modified.");
     public static readonly Error DecreaseMaxGuestsImpossible = Create(190, "Decrease max guests is impossible.");
     public static readonly Error MaxGuestAboveLocationCapacity = Create(191, "You cannot have more people at an event than there is room for.");
-    public static readonly Error EventTitleCannotBeDefault = Create(192, "Event title cannot remain default. Please change it first.");
-    public static readonly Error EventDescriptionCannotBeDefault = Create(193, "Event description cannot remain default. Please change it first.");
+    public static readonly Error EventTitleCannotBeDefaultOrEmpty = Create(192, "Event title cannot remain default or empty. Please change it first.");
+    public static readonly Error EventDescriptionCannotBeDefault = Create(194, "Event description cannot remain default or not set. Please change it first.");
+    public static readonly Error EventVisibilityMustBeSet = Create(195, "Event visibility is not set. Please set it first.");
+    public static readonly Error CannotReadyPastEvent = Create(196, "An event in the past cannot be made ready.");
 
     private Error(int code, string message)
     {
