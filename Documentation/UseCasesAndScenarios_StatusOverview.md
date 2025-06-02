@@ -66,33 +66,33 @@
     * [x] F2
     * [x] F3
     * [x] F4
-* [*] UC9 - Activate event
-    * [*] S1
-    * [*] S2
-    * [*] S3
-    * [*] F1
-    * [*] F2
-* [*] UC10 - Register new Guest account
-    * [*] S1
-    * [*] F1
-    * [*] F2
-    * [*] F3
-    * [*] F4
-    * [*] F5
-    * [*] F6
-    * [*] F7
-* [*] UC11 - Guest participates in public event
-    * [*] S1
-    * [*] S2
-    * [*] F1
-    * [*] F2
-    * [*] F3
-    * [*] F4
-    * [*] F5
-* [ ] UC12 - Guest cancels event participation
-    * [ ] S1
-    * [ ] S2
-    * [ ] F1
+* [x] UC9 - Activate event
+    * [x] S1
+    * [x] S2
+    * [x] S3
+    * [x] F1
+    * [x] F2
+* [x] UC10 - Register new Guest account
+    * [x] S1
+    * [x] F1
+    * [x] F2
+    * [x] F3
+    * [x] F4
+    * [x] F5
+    * [x] F6
+    * [x] F7
+* [x] UC11 - Guest participates in public event
+    * [x] S1
+    * [x] S2
+    * [x] F1
+    * [x] F2
+    * [x] F3
+    * [x] F4
+    * [x] F5
+* [x] UC12 - Guest cancels event participation
+    * [x] S1
+    * [x] S2
+    * [x] F1
 * [ ] UC13 - Invite guest to event
     * [ ] S1
     * [ ] F1

@@ -229,4 +229,15 @@ public sealed class VeaEvent : AggregateRoot<EventId>
 
         return Result<VeaEvent>.Success(newEvent);
     }
+
+    public Result CancelParticipation(GuestId guestId)
+    {
+        if (TimeRange != null && TimeRange.StartTime < DateTime.Now)
+            return Result.Failure(Error.ActiveOrCanceledEventCannotBeModified);
+
+        if (GuestList.Contains(guestId))
+            _guestList.Remove(guestId);
+
+        return Result.Success();
+    }
 }

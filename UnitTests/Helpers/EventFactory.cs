@@ -78,9 +78,9 @@ public class EventFactory
         return this;
     }
 
-    public EventFactory WithGuest(GuestId createUnique)
+    public EventFactory WithGuest(GuestId guestIds)
     {
-        _guests.Add(createUnique);
+        _guests.Add(guestIds);
         return this;
     }
 }
