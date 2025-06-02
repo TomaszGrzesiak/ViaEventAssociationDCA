@@ -14,9 +14,12 @@ public class MaxGuests : ValueObject
 
     public static Result<MaxGuests> Create(int maxGuests)
     {
-        return maxGuests < 5
-            ? Result<MaxGuests>.Failure(Error.GuestsMaxNumberTooSmall)
-            : Result<MaxGuests>.Success(new MaxGuests(maxGuests));
+        return maxGuests switch
+        {
+            < 5 => Result<MaxGuests>.Failure(Error.GuestsMaxNumberTooSmall),
+            > 50 => Result<MaxGuests>.Failure(Error.GuestsMaxNumberTooGreat),
+            _ => Result<MaxGuests>.Success(new MaxGuests(maxGuests))
+        };
     }
 
     protected override IEnumerable<object> GetEqualityComponents()

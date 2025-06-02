@@ -16,7 +16,7 @@ public sealed class Error
     public static readonly Error InvalidInvitationStatus = Create(107, "Invalid invitation status.");
     public static readonly Error InvalidEventStatus = Create(108, "Invalid event status.");
     public static readonly Error InvalidEventVisibility = Create(109, "Invalid event visibility.");
-
+    public static readonly Error GuestsMaxNumberTooGreat = Create(110, "Too large number of guests. Must be max 50.");
 
     // email errors (codes 140 - 149)
     public static readonly Error EmailRequired = Create(140, "Email is required.");
@@ -57,7 +57,8 @@ public sealed class Error
     public static readonly Error UpdateVisibilityImpossible = Create(187, "Update event visibility is impossible.");
     public static readonly Error ActivateFailure = Create(188, "Could not activate the event.");
     public static readonly Error ActiveOrCanceledEventCannotBeModified = Create(189, "Active or canceled event cannot be modified.");
-
+    public static readonly Error DecreaseMaxGuestsImpossible = Create(190, "Decrease max guests is impossible.");
+    public static readonly Error MaxGuestAboveLocationCapacity = Create(191, "You cannot have more people at an event than there is room for.");
 
     private Error(int code, string message)
     {

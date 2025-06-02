@@ -12,6 +12,7 @@ public class EventFactory
     private EventVisibility _visibility = EventVisibility.Private;
     private MaxGuests _maxGuests = MaxGuests.Create(100).Payload!;
     private EventStatus? _status = EventStatus.Draft;
+    private int _locationMaxCapacity = 500;
 
     public static EventFactory Init() => new();
 
@@ -51,8 +52,14 @@ public class EventFactory
         return this;
     }
 
+    public EventFactory WithLocationMaxCapacity(int value)
+    {
+        _locationMaxCapacity = value;
+        return this;
+    }
+
     public VeaEvent Build()
     {
-        return VeaEvent.Create(_title, _description, _timeRange!, _visibility, _maxGuests, _status).Payload!;
+        return VeaEvent.Create(_title, _description, _timeRange!, _visibility, _maxGuests, _status, _locationMaxCapacity).Payload!;
     }
 }
