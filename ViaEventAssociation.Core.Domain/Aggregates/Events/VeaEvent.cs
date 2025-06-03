@@ -294,4 +294,18 @@ public sealed class VeaEvent : AggregateRoot<EventId>
 
         return invitation.Status.Equals(InvitationStatus.Approved);
     }
+
+    public Result DeclineInvitation(GuestId guestId)
+    {
+        var invitation = Invitations.FirstOrDefault(i => i.GuestId == guestId);
+
+        if (invitation is null)
+            return Result.Failure(Error.InvitationNotFound);
+
+        if (Equals(Status, EventStatus.Cancelled))
+            return Result.Failure(Error.DeclineImpossibleOnCancelledEvent);
+
+        var result = invitation.Reject();
+        return result;
+    }
 }

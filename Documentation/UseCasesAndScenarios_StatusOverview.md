@@ -106,9 +106,9 @@
     * [x] F3
     * [x] F4
     * [x] F5
-* [ ] UC15 - Guest declines invitation
-    * [ ] S1
-    * [ ] S2
-    * [ ] F1
-    * [ ] F2
+* [x] UC15 - Guest declines invitation
+    * [x] S1
+    * [x] S2
+    * [x] F1
+    * [x] F2
 * [ ] Updated Diagram

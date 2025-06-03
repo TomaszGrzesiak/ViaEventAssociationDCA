@@ -45,6 +45,7 @@ public sealed class Error
     // invitation errors (170–179)
     public static readonly Error InvitationAlreadyApproved = Create(170, "Invitation is already approved.");
     public static readonly Error InvitationAlreadyRejected = Create(171, "Invitation is already rejected.");
+    public static readonly Error DeclineImpossibleOnCancelledEvent = Create(172, "Invitations to cancelled events cannot be declined.");
 
     // Event-related errors (codes 180-249)
     public static readonly Error GuestAlreadyInvited = Create(180, "This guest is already invited to the event.");
