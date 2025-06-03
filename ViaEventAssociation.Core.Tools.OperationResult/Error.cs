@@ -73,7 +73,11 @@ public sealed class Error
     public static readonly Error InvitationNotFound = Create(251, "Invitation not found.");
     public static readonly Error CancelledEventsCannotBeJoined = Create(252, "Cancelled events cannot be joined.");
     public static readonly Error JoinUnstartedEventImpossible = Create(253, "Join unstarted event impossible.");
-
+    
+    // Not-grouped error
+    public static readonly Error InvalidGuestId = Create(300, "GuestId must be greater than 0.");
+    public static readonly Error InvalidEventId = Create(301, "EventId must be greater than 0.");
+    
     private Error(int code, string message)
     {
         Code = code;
