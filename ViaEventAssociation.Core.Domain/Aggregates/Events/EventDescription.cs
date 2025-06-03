@@ -15,9 +15,7 @@ public sealed class EventDescription : ValueObject
     public static Result<EventDescription> Create(string? input)
     {
         if (input is null)
-        {
-            return Result<EventDescription>.Failure(Error.EventDescriptionCannotBeNull);
-        }
+            input = "";
 
         if (input.Length > 250)
         {
@@ -27,7 +25,7 @@ public sealed class EventDescription : ValueObject
         return Result<EventDescription>.Success(new EventDescription(input));
     }
 
-    protected override IEnumerable<object?> GetEqualityComponents()
+    protected override IEnumerable<object> GetEqualityComponents()
     {
         yield return Value;
     }
