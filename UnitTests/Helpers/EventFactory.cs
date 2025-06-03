@@ -16,6 +16,7 @@ public class EventFactory
     private EventStatus? _status = EventStatus.Draft;
     private int _locationMaxCapacity = 500;
     private List<GuestId> _guests = [];
+    private List<Invitation> _invitations = [];
 
     public static EventFactory Init() => new();
 
@@ -64,7 +65,7 @@ public class EventFactory
 
     public VeaEvent Build()
     {
-        return VeaEvent.Create(_title, _description, _timeRange!, _visibility, _maxGuests!, _status, _locationMaxCapacity, _guests).Payload!;
+        return VeaEvent.Create(_title, _description, _timeRange!, _visibility, _maxGuests!, _status, _locationMaxCapacity, _guests, _invitations).Payload!;
     }
 
     public EventFactory WithValidTitle()
@@ -79,15 +80,16 @@ public class EventFactory
         return this;
     }
 
-    public EventFactory WithGuest(GuestId guestIds)
+    public EventFactory WithGuest(GuestId guestId)
     {
-        _guests.Add(guestIds);
+        _guests.Add(guestId);
         return this;
     }
 
-    public EventFactory WithInvitation(GuestId guestIds)
+    public EventFactory WithInvitedGuest(GuestId guestId)
     {
-        _guests.Add(guestIds);
+        var invi = Invitation.Create(guestId);
+        _invitations.Add(invi);
         return this;
     }
 }

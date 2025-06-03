@@ -7,6 +7,7 @@ public sealed class Error
     // single or doublet errors (100-139)
     public static readonly Error UnParsableGuid = Create(100, "Could not parse the given Guid.");
     public static readonly Error GuestsMaxNumberTooSmall = Create(101, "Too small number of guests. Must be at least 5.");
+    public static readonly Error UnknownError = Create(911, "Unknown Error");
 
     public static readonly Error EventTitleMustBeBetween3And75Characters =
         Create(102, "Event title must be between 3 and 75 characters long, excluding white space.");
@@ -68,6 +69,9 @@ public sealed class Error
 
     // Guest-related error (codes  250-299)
     public static readonly Error EmailAlreadyRegistered = Create(250, "The email is already registered.");
+    public static readonly Error InvitationNotFound = Create(251, "Invitation not found.");
+    public static readonly Error CancelledEventsCannotBeJoined = Create(252, "Cancelled events cannot be joined.");
+    public static readonly Error JoinUnstartedEventImpossible = Create(253, "Join unstarted event impossible.");
 
     private Error(int code, string message)
     {

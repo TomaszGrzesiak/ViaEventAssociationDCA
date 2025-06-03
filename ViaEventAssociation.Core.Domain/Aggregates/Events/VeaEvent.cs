@@ -32,7 +32,8 @@ public sealed class VeaEvent : AggregateRoot<EventId>
         MaxGuests maxGuestsNo,
         EventStatus? status,
         int? locationMaxCapacity,
-        List<GuestId> guests)
+        List<GuestId> guests,
+        List<Invitation> invitations)
         : base(id)
     {
         Title = title;
@@ -43,6 +44,7 @@ public sealed class VeaEvent : AggregateRoot<EventId>
         Status = status ?? EventStatus.Draft;
         LocationMaxCapacity = locationMaxCapacity ?? 500;
         _guestList.AddRange(guests);
+        _invitations = invitations;
     }
 
     public static Result<VeaEvent> Create()
@@ -56,6 +58,7 @@ public sealed class VeaEvent : AggregateRoot<EventId>
             MaxGuests.Default(),
             EventStatus.Draft,
             500,
+            [],
             []);
 
         return Result<VeaEvent>.Success(newEvent);
@@ -96,10 +99,10 @@ public sealed class VeaEvent : AggregateRoot<EventId>
 
     public Result InviteGuest(GuestId guestId)
     {
-        var invitation = Invitation.Create(guestId, Id);
+        var invitation = Invitation.Create(guestId);
         if (_invitations.Any(i => i.GuestId == invitation.GuestId))
             return Result.Failure(Error.GuestAlreadyInvited);
-        
+
         if (_guestList.Contains(invitation.GuestId))
             return Result.Failure(Error.GuestAlreadyJoined);
 
@@ -221,7 +224,7 @@ public sealed class VeaEvent : AggregateRoot<EventId>
     }
 
     public static Result<VeaEvent> Create(EventTitle? title, EventDescription? description, EventTimeRange timeRange, EventVisibility? visibility,
-        MaxGuests maxGuests, EventStatus? status, int locationMaxCapacity, List<GuestId> guests)
+        MaxGuests maxGuests, EventStatus? status, int locationMaxCapacity, List<GuestId> guests, List<Invitation> invitations)
     {
         var newEvent = new VeaEvent(
             EventId.CreateUnique(),
@@ -232,7 +235,8 @@ public sealed class VeaEvent : AggregateRoot<EventId>
             maxGuests,
             status,
             locationMaxCapacity,
-            guests);
+            guests,
+            invitations);
 
         return Result<VeaEvent>.Success(newEvent);
     }
@@ -252,5 +256,42 @@ public sealed class VeaEvent : AggregateRoot<EventId>
     {
         var acceptedInvitationNo = Invitations.Count(i => i.Status.Equals(InvitationStatus.Approved));
         return _guestList.Count + acceptedInvitationNo >= MaxGuestsNo.Value;
+    }
+
+    public Result AcceptInvitation(GuestId guestId)
+    {
+        var invi = _invitations.FirstOrDefault(i => i.GuestId == guestId);
+        if (invi is null)
+            return Result.Failure(Error.InvitationNotFound);
+
+        if (Equals(Status, EventStatus.Cancelled))
+            return Result.Failure(Error.CancelledEventsCannotBeJoined);
+
+        if (Equals(Status, EventStatus.Ready) || Equals(Status, EventStatus.Draft))
+            return Result.Failure(Error.JoinUnstartedEventImpossible);
+
+        if (TimeRange.StartTime < DateTime.Now)
+            return Result.Failure(Error.TooLate);
+
+        if (invi.Status.Equals(InvitationStatus.Approved))
+            return Result.Failure(Error.InvitationAlreadyApproved);
+
+        if (invi.Status.Equals(InvitationStatus.Rejected))
+            return Result.Failure(Error.InvitationAlreadyRejected);
+
+        if (IsEventFull())
+            return Result.Failure(Error.NoMoreRoom);
+
+        return invi.Approve();
+    }
+
+    public bool HasAcceptedInvitation(GuestId guestId)
+    {
+        var invitation = Invitations.FirstOrDefault(i => i.GuestId == guestId);
+
+        if (invitation is null)
+            return false;
+
+        return invitation.Status.Equals(InvitationStatus.Approved);
     }
 }

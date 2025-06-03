@@ -99,15 +99,16 @@
     * [x] F2
     * [x] F3
     * [x] F4
-* [ ] UC14 - Guest accepts invitation
-    * [ ] S1
-    * [ ] F1
-    * [ ] F2
-    * [ ] F3
-    * [ ] F4
-    * [ ] F5
+* [x] UC14 - Guest accepts invitation
+    * [x] S1
+    * [x] F1
+    * [x] F2
+    * [x] F3
+    * [x] F4
+    * [x] F5
 * [ ] UC15 - Guest declines invitation
     * [ ] S1
     * [ ] S2
     * [ ] F1
     * [ ] F2
+* [ ] Updated Diagram
