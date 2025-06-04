@@ -3,7 +3,7 @@
     using ViaEventAssociation.Core.Domain.Common.Bases;
     using ViaEventAssociation.Core.Tools.OperationResult;
 
-    public sealed class InvitationStatus : Enumeration
+    public class InvitationStatus : Enumeration
     {
         public static readonly InvitationStatus Pending = new(1, "Pending");
         public static readonly InvitationStatus Approved = new(2, "Approved");

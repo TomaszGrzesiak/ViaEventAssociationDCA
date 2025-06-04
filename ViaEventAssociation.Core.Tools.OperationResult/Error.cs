@@ -1,8 +1,26 @@
 ﻿namespace ViaEventAssociation.Core.Tools.OperationResult;
 
-public sealed class Error
+public class Error
 {
+    public int Code { get; }
+    public string Message { get; }
+
     private static readonly HashSet<int> UsedCodes = new();
+
+    private Error(int code, string message)
+    {
+        Code = code;
+        Message = message;
+    }
+
+    private static Error Create(int code, string message) =>
+        UsedCodes.Add(code)
+            ? new Error(code, message)
+            : throw new InvalidOperationException($"-- == :: Duplicate ERROR code detected in Error.cs :: == --: {code}");
+
+    // for testing purposes
+    public static readonly Error TestError1 = Create(1, "Error 1");
+    public static readonly Error TestError2 = Create(2, "Error 2");
 
     // single or doublet errors (100-139)
     public static readonly Error UnParsableGuid = Create(100, "Could not parse the given Guid.");
@@ -73,27 +91,4 @@ public sealed class Error
     public static readonly Error InvitationNotFound = Create(251, "Invitation not found.");
     public static readonly Error CancelledEventsCannotBeJoined = Create(252, "Cancelled events cannot be joined.");
     public static readonly Error JoinUnstartedEventImpossible = Create(253, "Join unstarted event impossible.");
-
-    private Error(int code, string message)
-    {
-        Code = code;
-        Message = message;
-    }
-
-    private static Error Create(int code, string message) =>
-        UsedCodes.Add(code)
-            ? new Error(code, message)
-            : throw new InvalidOperationException($"-- == :: Duplicate ERROR code detected in Error.cs :: == --: {code}");
-
-
-    public int Code { get; }
-    public string Message { get; }
-
-
-#if DEBUG
-    public static Error CustomForUnitTestsOnly(int code, string message)
-    {
-        return new Error(code, message);
-    }
-#endif
 }

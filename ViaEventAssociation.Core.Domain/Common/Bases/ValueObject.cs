@@ -19,7 +19,7 @@ public abstract class ValueObject
     }
 
     // If your object does not override it correctly, you can get inconsistent behavior,
-    // e.g., two equal EmailAddress instances treated as different keys.
+    // e.g., Equal(EmailAddress1, EmailAddress2) can return false, despite their Value is identical.
     public override int GetHashCode()
     {
         return GetEqualityComponents()
