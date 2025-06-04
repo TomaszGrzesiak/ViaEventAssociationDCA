@@ -5,18 +5,18 @@ namespace Application.AppEntry.Commands.Event;
 
 public class UpdateEventTitleCommand
 {
-    public EventId Id { get; set; }
+    public EventId EventId { get; set; }
     public string Title { get; set; }
 
-    public UpdateEventTitleCommand(EventId id, string title)
+    public UpdateEventTitleCommand(EventId eventId, string title)
     {
-        Id = id;
+        EventId = eventId;
         Title = title;
     }
 
-    public static Result<UpdateEventTitleCommand> Create(int id, string title)
+    public static Result<UpdateEventTitleCommand> Create(EventId eventId, string title)
     {
-        var command = new UpdateEventTitleCommand(new EventId(new Guid()), title);
+        var command = new UpdateEventTitleCommand(eventId, title);
 
         return Result<UpdateEventTitleCommand>.Success(command);
     }

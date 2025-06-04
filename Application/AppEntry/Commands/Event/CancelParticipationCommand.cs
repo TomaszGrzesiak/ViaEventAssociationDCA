@@ -15,9 +15,9 @@ public class CancelParticipationCommand
         GuestId = guestId;
     }
 
-    public static Result<CancelParticipationCommand> Create(int id, int guestId)
+    public static Result<CancelParticipationCommand> Create(EventId eventId, GuestId guestId)
     {
-        var command = new CancelParticipationCommand(new EventId(new Guid()), new GuestId(new Guid()));
+        var command = new CancelParticipationCommand(eventId, guestId);
 
         return Result<CancelParticipationCommand>.Success(command);
     }

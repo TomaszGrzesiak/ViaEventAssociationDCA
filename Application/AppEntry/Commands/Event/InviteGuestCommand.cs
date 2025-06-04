@@ -18,6 +18,7 @@ public class InviteGuestCommand
     public static Result<InviteGuestCommand> Create(EventId eventId, GuestId guestId)
     {
         var command = new InviteGuestCommand(eventId,guestId);
+        
         return Result<InviteGuestCommand>.Success(command);
     }
 }

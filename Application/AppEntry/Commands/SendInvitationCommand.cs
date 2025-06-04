@@ -1,6 +1,6 @@
 using ViaEventAssociation.Core.Tools.OperationResult;
 
-namespace Application.AppEntry.CommandDispatching.Creator;
+namespace Application.AppEntry.Commands;
 
 public class SendInvitationCommand
 {
@@ -19,6 +19,5 @@ public class SendInvitationCommand
         return Result<SendInvitationCommand>.Success(new SendInvitationCommand(guestId, eventId));
     }
 
-    private SendInvitationCommand(int guestId, int eventId)
-        => (GuestId, EventId) = (guestId, eventId);
+    private SendInvitationCommand(int guestId, int eventId) => (GuestId, EventId) = (guestId, eventId);
 }

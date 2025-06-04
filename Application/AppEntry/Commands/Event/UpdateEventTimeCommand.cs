@@ -5,20 +5,21 @@ namespace Application.AppEntry.Commands.Event;
 
 public class UpdateEventTimeCommand
 {
-    public EventId Id { get; set; }
+    public EventId EventId { get; set; }
     public DateTime startTime { get; set; }
     public DateTime endTime { get; set; }
 
-    public UpdateEventTimeCommand(EventId id, DateTime startTime, DateTime endTime)
+    public UpdateEventTimeCommand(EventId eventId, DateTime startTime, DateTime endTime)
     {
-        Id = id;
+        EventId = eventId;
         this.startTime = startTime;
         this.endTime = endTime;
     }
 
-    public static Result<UpdateEventTimeCommand> Create(int id, DateTime startTime, DateTime endTime)
+    public static Result<UpdateEventTimeCommand> Create(EventId eventId, DateTime startTime, DateTime endTime)
     {
-        var command = new UpdateEventTimeCommand(new EventId(new Guid()), startTime, endTime);
+        var command = new UpdateEventTimeCommand(eventId, startTime, endTime);
+        
         return Result<UpdateEventTimeCommand>.Success(command);
     }
 }

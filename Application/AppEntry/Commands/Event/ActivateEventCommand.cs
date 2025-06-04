@@ -14,6 +14,8 @@ public class ActivateEventCommand
 
     public static Result<ActivateEventCommand> Create(EventId eventId)
     {
-        
+        var command = new ActivateEventCommand(eventId);
+
+        return Result<ActivateEventCommand>.Success(command);
     }
 }

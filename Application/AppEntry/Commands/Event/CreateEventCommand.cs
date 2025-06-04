@@ -5,18 +5,18 @@ namespace Application.AppEntry.Commands.Event;
 
 public class CreateEventCommand
 {
-    private CreateEventCommand(EventId id)
+    private CreateEventCommand(EventId eventId)
     {
-        Id = id;
+        EventId = eventId;
     }
 
-    public EventId Id { get; set; }
+    public EventId EventId { get; set; }
 
-    public static Result<CreateEventCommand> Create(int id)
+    public static Result<CreateEventCommand> Create(EventId eventId)
     {
-        var command = new CreateEventCommand(new EventId(Guid.NewGuid()));
+        var command = new CreateEventCommand(eventId);
+        
         return Result<CreateEventCommand>.Success(command);
     }
-    
     
 }
