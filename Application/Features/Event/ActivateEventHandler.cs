@@ -1,4 +1,5 @@
 using Application.AppEntry;
+using Application.AppEntry.Commands.Event;
 using ViaEventAssociation.Core.Domain.Aggregates.Events;
 using ViaEventAssociation.Core.Domain.Common;
 using ViaEventAssociation.Core.Domain.Repositories;
@@ -6,7 +7,7 @@ using ViaEventAssociation.Core.Tools.OperationResult;
 
 namespace Application.Features.Event;
 
-public class ActivateEventHandler : ICommandHandler<ActivateEventHandler>
+public class ActivateEventHandler : ICommandHandler<ActivateEventCommand>
 {
     private readonly IEventRepository _repository;
     private readonly IUnitOfWork _unitOfWork;
@@ -17,30 +18,37 @@ public class ActivateEventHandler : ICommandHandler<ActivateEventHandler>
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<Result> Handle(ActivateEventHandler command)
+    public Task<Result> Handle(ActivateEventCommand command)
     {
-        List<string> errorMessage = new List<string>();
+        List<string> errorMessages = new List<string>();
 
         if (command == null)
         {
-            return Result.Failure(Error.CommandCannotBeNull);
+            errorMessages.Add("Command is null");
+            return Task.FromResult(new Result(errorMessages));
         }
 
-        var eventResult = _repository.GetViaEventByIdAsync(new EventId(new Guid()));
+        var eventResult = _repository.GetViaEventByIdAsync(command.EventId);
+
         var @event = eventResult.Result.Payload;
 
         if (@event == null)
         {
-            errorMessage.Add("Event not found");
-            return await Task.FromResult(new Result());
+            errorMessages.Add("Event not found");
+            return Task.FromResult(new Result(errorMessages));
         }
 
-        var activationResult = @event.ActivateTheEvent(new Guid());
+        var activationResult = @event.Activate();
 
         if (!activationResult.IsSuccess)
         {
-            //@TODO implement more 
+            errorMessages.AddRange(activationResult.ErrorMessages);
+            return Task.FromResult(new Result(errorMessages));
         }
-        throw new NotImplementedException();
+
+        _repository.UpdateAsync(@event);
+        _unitOfWork.SaveChangesAsync();
+
+        return Task.FromResult(new Result(errorMessages));
     }
 }

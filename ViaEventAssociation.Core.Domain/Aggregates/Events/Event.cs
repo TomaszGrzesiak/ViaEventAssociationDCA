@@ -131,4 +131,28 @@ public class Event
         Status = "Canceled";
         return Result<Event>.Success(this);
     }
+
+    public Result Activate()
+    {
+        List<string> errorMessages = new List<string>();
+
+        if (Status.Equals(EventStatus.Ready)  || Status.Equals(EventStatus.Active))
+        {
+            Status = EventStatus.Active.ToString();
+            return new Result(errorMessages);
+        }
+
+        if (Title == null || Description == null || TimeRange.Start == null || TimeRange.End == null)
+        {
+            errorMessages.Add("The event has missing properties.");
+            return new Result(errorMessages);
+        }
+
+        if (Status == EventStatus.Cancelled.ToString())
+        {
+            errorMessages.Add("Cannot activate a cancelled event.");
+        }
+
+        return null;
+    }
 }
