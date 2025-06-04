@@ -77,6 +77,7 @@ public sealed class Error
     // Not-grouped error
     public static readonly Error InvalidGuestId = Create(300, "GuestId must be greater than 0.");
     public static readonly Error InvalidEventId = Create(301, "EventId must be greater than 0.");
+    public static readonly Error CommandCannotBeNull = Create(302, "Command cannot be null");
     
     private Error(int code, string message)
     {
