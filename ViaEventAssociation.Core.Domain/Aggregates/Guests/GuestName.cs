@@ -6,44 +6,36 @@ namespace ViaEventAssociation.Core.Domain.Aggregates.Guests;
 
 public sealed class GuestName : ValueObject
 {
-    public string FirstName { get; }
-    public string LastName { get; }
+    public string? Value { get; private set; }
 
-    private GuestName(string firstName, string lastName)
+    private GuestName(string? name)
     {
-        FirstName = firstName;
-        LastName = lastName;
+        Value = name;
     }
 
-    public static Result<GuestName> Create(string? firstName, string? lastName)
+    public static GuestName Create(string? name)
     {
-        if (!IsValidName(firstName) || !IsValidName(lastName))
-            return Result<GuestName>.Failure(Error.InvalidFirstOrLastName);
-
-        string formattedFirst = FormatName(firstName!);
-        string formattedLast = FormatName(lastName!);
-
-        return Result<GuestName>.Success(new GuestName(formattedFirst, formattedLast));
+        return new GuestName(FormatName(name));
     }
 
-    private static bool IsValidName(string? name)
+    public static Result<GuestName> Validate(GuestName guestName)
     {
-        return name is not null &&
-               name.Length is >= 2 and <= 25 &&
-               Regex.IsMatch(name, @"^[a-zA-Z]+$");
+        var name = guestName.Value;
+        if (name is not null && name.Length is >= 2 and <= 25 && Regex.IsMatch(name, @"^[a-zA-Z]+$"))
+            return Result<GuestName>.Success(new GuestName(name));
+        return Result<GuestName>.Failure(Error.InvalidNameFormat);
     }
 
-    private static string FormatName(string name)
+    private static string? FormatName(string? name)
     {
         if (string.IsNullOrEmpty(name)) return name;
         return char.ToUpper(name[0]) + name[1..].ToLower();
     }
 
-    protected override IEnumerable<object?> GetEqualityComponents()
+    protected override IEnumerable<object> GetEqualityComponents()
     {
-        yield return FirstName;
-        yield return LastName;
+        yield return Value ?? "";
     }
 
-    public override string ToString() => $"{FirstName} {LastName}";
+    public override string ToString() => Value ?? "";
 }

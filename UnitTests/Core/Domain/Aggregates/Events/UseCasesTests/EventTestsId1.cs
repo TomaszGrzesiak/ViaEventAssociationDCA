@@ -15,6 +15,6 @@ public class EventTestsId1
         Assert.Equal("", ev.Description.Value);
         Assert.Equal(EventStatus.Draft, ev.Status);
         Assert.Equal(EventVisibility.Private, ev.Visibility);
-        Assert.Equal(5, ev.MaxGuests.Value);
+        Assert.Equal(5, ev.MaxGuestsNo.Value);
     }
 }

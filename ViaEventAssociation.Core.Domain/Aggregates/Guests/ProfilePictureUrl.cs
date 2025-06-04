@@ -5,31 +5,37 @@ namespace ViaEventAssociation.Core.Domain.Aggregates.Guests;
 
 public sealed class ProfilePictureUrl : ValueObject
 {
-    public Uri Value { get; }
+    public string? Value { get; }
 
-    private ProfilePictureUrl(Uri uri)
+    private ProfilePictureUrl(string? url)
     {
-        Value = uri;
+        Value = url;
     }
 
-    public static Result<ProfilePictureUrl> Create(string? input)
+    public static ProfilePictureUrl Create(string? input)
     {
-        if (string.IsNullOrWhiteSpace(input))
+        return new ProfilePictureUrl(input);
+    }
+
+    public static Result<ProfilePictureUrl> Validate(ProfilePictureUrl? pictureUrl)
+    {
+        var url = pictureUrl.Value;
+        if (string.IsNullOrWhiteSpace(url))
             return Result<ProfilePictureUrl>.Failure(Error.InvalidProfilePictureUrlEmpty);
 
-        if (!Uri.TryCreate(input, UriKind.Absolute, out var uri))
-            return Result<ProfilePictureUrl>.Failure(Error.InvalidProfilePictureUrlOther);
+        if (!Uri.TryCreate(url, UriKind.Absolute, out var uri))
+            return Result<ProfilePictureUrl>.Failure(Error.InvalidProfilePictureUrlEmpty);
 
         if ((uri.Scheme != Uri.UriSchemeHttp && uri.Scheme != Uri.UriSchemeHttps))
-            return Result<ProfilePictureUrl>.Failure(Error.OnlyHttpOrHttpsAllowed);
+            return Result<ProfilePictureUrl>.Failure(Error.InvalidProfilePictureUrlEmpty);
 
-        return Result<ProfilePictureUrl>.Success(new ProfilePictureUrl(uri));
+        return Result<ProfilePictureUrl>.Success(new ProfilePictureUrl(url));
     }
 
-    protected override IEnumerable<object?> GetEqualityComponents()
+    protected override IEnumerable<object> GetEqualityComponents()
     {
-        yield return Value;
+        yield return Value ?? "";
     }
 
-    public override string ToString() => Value.ToString();
+    public override string ToString() => Value ?? "";
 }
