@@ -4,7 +4,7 @@ using ViaEventAssociation.Core.Tools.OperationResult;
 
 namespace ViaEventAssociation.Core.Domain.Aggregates.Guests;
 
-public sealed class GuestName : ValueObject
+public class GuestName : ValueObject
 {
     public string? Value { get; private set; }
 

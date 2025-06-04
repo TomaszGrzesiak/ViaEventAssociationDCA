@@ -3,7 +3,7 @@ using ViaEventAssociation.Core.Tools.OperationResult;
 
 namespace ViaEventAssociation.Core.Domain.Aggregates.Events;
 
-public sealed class EventDescription : ValueObject
+public class EventDescription : ValueObject
 {
     public string Value { get; }
 
@@ -13,6 +13,11 @@ public sealed class EventDescription : ValueObject
     }
 
     public static Result<EventDescription> Create(string? input)
+    {
+        return Validate(input);
+    }
+
+    private static Result<EventDescription> Validate(string? input)
     {
         if (input is null)
             input = "";
