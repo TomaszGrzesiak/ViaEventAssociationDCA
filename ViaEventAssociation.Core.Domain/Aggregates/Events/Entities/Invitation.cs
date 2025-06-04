@@ -4,7 +4,7 @@ using ViaEventAssociation.Core.Tools.OperationResult;
 
 namespace ViaEventAssociation.Core.Domain.Aggregates.Events.Entities
 {
-    public sealed class Invitation : Entity<InvitationId>
+    public class Invitation : Entity<InvitationId>
     {
         public GuestId GuestId { get; private set; }
 

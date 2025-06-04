@@ -3,7 +3,7 @@ using ViaEventAssociation.Core.Tools.OperationResult;
 
 namespace ViaEventAssociation.Core.Domain.Aggregates.Guests;
 
-public sealed class ProfilePictureUrl : ValueObject
+public class ProfilePictureUrl : ValueObject
 {
     public string? Value { get; }
 

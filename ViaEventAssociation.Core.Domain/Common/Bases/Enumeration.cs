@@ -1,6 +1,6 @@
 ﻿namespace ViaEventAssociation.Core.Domain.Common.Bases
 {
-    public abstract class Enumeration : IComparable
+    public abstract class Enumeration
     {
         public int Id { get; }
         public string Name { get; }
@@ -32,7 +32,5 @@
                 .Select(f => f.GetValue(null))
                 .Cast<T>();
         }
-
-        public int CompareTo(object? other) => Id.CompareTo(((Enumeration?)other)?.Id);
     }
 }

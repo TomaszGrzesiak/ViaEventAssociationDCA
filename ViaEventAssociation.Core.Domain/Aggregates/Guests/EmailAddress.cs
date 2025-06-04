@@ -13,14 +13,15 @@ public class EmailAddress : ValueObject
 
     public static EmailAddress Create(string? emailAddress)
     {
+        if (emailAddress is not null) emailAddress = emailAddress.Trim().ToLowerInvariant();
         return new EmailAddress(emailAddress);
     }
 
-    public static Result<string> Validate(EmailAddress o)
+    public static Result<EmailAddress> Validate(EmailAddress originalEmail)
     {
-        var emailAddress = o.Value;
+        var emailAddress = originalEmail.Value;
         if (string.IsNullOrWhiteSpace(emailAddress))
-            return Result<string>.Failure(Error.EmailRequired);
+            return Result<EmailAddress>.Failure(Error.EmailRequired);
 
         var errors = new List<Error>();
         // trimming empty spaces and converting to lower case @ID:10 - registering a new Guests account: "And the email is in all lower-case"
@@ -47,9 +48,9 @@ public class EmailAddress : ValueObject
             errors.Add(Error.EmailInvalidFormat);
 
         if (errors.Count > 0)
-            return Result<string>.Failure(errors.ToArray());
+            return Result<EmailAddress>.Failure(errors.ToArray());
 
-        return Result<string>.Success(email);
+        return Result<EmailAddress>.Success(originalEmail);
     }
 
     protected override IEnumerable<object> GetEqualityComponents()

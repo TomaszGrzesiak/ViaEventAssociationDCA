@@ -4,7 +4,7 @@ using ViaEventAssociation.Core.Tools.OperationResult;
 
 namespace ViaEventAssociation.Core.Domain.Aggregates.Events;
 
-public sealed class EventTimeRange : ValueObject
+public class EventTimeRange : ValueObject
 {
     public DateTime StartTime { get; }
     public DateTime EndTime { get; }
