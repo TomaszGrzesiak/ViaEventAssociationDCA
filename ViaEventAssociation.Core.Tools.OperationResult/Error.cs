@@ -74,7 +74,7 @@ public sealed class Error
     public static readonly Error CancelledEventsCannotBeJoined = Create(252, "Cancelled events cannot be joined.");
     public static readonly Error JoinUnstartedEventImpossible = Create(253, "Join unstarted event impossible.");
     
-    // Not-grouped error
+    // Not-grouped errors
     public static readonly Error InvalidGuestId = Create(300, "GuestId must be greater than 0.");
     public static readonly Error InvalidEventId = Create(301, "EventId must be greater than 0.");
     public static readonly Error CommandCannotBeNull = Create(302, "Command cannot be null");
