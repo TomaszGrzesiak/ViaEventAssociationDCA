@@ -11,8 +11,4 @@
       <ProjectReference Include="..\ViaEventAssociation.Core.Tools.OperationResult\ViaEventAssociation.Core.Tools.OperationResult.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="AppEntry\CommandDispatching\" />
-    </ItemGroup>
-
 </Project>
