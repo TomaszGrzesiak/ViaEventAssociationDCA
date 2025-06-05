@@ -111,4 +111,4 @@
     * [x] S2
     * [x] F1
     * [x] F2
-* [ ] Updated Diagram
+* [x] Updated Diagram

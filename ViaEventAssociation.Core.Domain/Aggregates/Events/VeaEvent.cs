@@ -6,7 +6,7 @@ using ViaEventAssociation.Core.Tools.OperationResult;
 
 namespace ViaEventAssociation.Core.Domain.Aggregates.Events;
 
-public sealed class VeaEvent : AggregateRoot<EventId>
+public class VeaEvent : AggregateRoot<EventId>
 {
     public EventTitle? Title { get; private set; }
     public EventDescription? Description { get; private set; }

@@ -3,7 +3,7 @@ using ViaEventAssociation.Core.Tools.OperationResult;
 
 namespace ViaEventAssociation.Core.Domain.Aggregates.Guests;
 
-public sealed class Guest : AggregateRoot<GuestId>
+public class Guest : AggregateRoot<GuestId>
 {
     public EmailAddress Email { get; private set; }
     public GuestName FirstName { get; private set; }

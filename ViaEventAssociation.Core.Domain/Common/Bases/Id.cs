@@ -4,8 +4,7 @@ namespace ViaEventAssociation.Core.Domain.Common.Bases;
 
 // Thanks to <T> we can make InvitationId and other Ids in just 1 Line of code.
 // Otherwise, they could be used interchangeably - which is wrong conceptually.
-
-public abstract class Id<T>(Guid value) : ValueObject where T : Id<T>
+public abstract class Id<T>(Guid value) : ValueObject where T : Id<T> // Ensures that this is illegal "class EventId : Id<object>"  
 {
     public Guid Value { get; } = value;
 
@@ -16,7 +15,7 @@ public abstract class Id<T>(Guid value) : ValueObject where T : Id<T>
         yield return Value;
     }
 
-    protected static Result<Guid> CanParseGuid(string id)
+    private static Result<Guid> CanParseGuid(string id)
     {
         bool canBeParsed = Guid.TryParse(id, out var guid);
         return canBeParsed
