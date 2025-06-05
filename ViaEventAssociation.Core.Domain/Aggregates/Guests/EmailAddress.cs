@@ -5,28 +5,23 @@ namespace ViaEventAssociation.Core.Domain.Aggregates.Guests;
 
 public class EmailAddress : ValueObject
 {
-    public string Value { get; }
+    public string? Value { get; }
 
     // private constructor - to be used by the static methods below
-    private EmailAddress(string emailAddress)
+    private EmailAddress(string? emailAddress)
         => Value = emailAddress;
 
-    public static Result<EmailAddress> Create(string emailAddress)
+    public static EmailAddress Create(string? emailAddress)
     {
-        Result<string> validation = Validate(emailAddress);
-
-        // if validation sees an error in the typed emailAddress, the user gets a Result with an error message:
-        if (validation.IsFailure) return Result<EmailAddress>.Failure(validation.Errors.ToArray());
-
-        // if validation is OK, then the user gets Result with Success and with a payload of an EmailAddress object:
-        EmailAddress value = new EmailAddress(validation.Payload!);
-        return Result<EmailAddress>.Success(value);
+        if (emailAddress is not null) emailAddress = emailAddress.Trim().ToLowerInvariant();
+        return new EmailAddress(emailAddress);
     }
 
-    private static Result<string> Validate(string emailAddress)
+    public static Result<EmailAddress> Validate(EmailAddress originalEmail)
     {
+        var emailAddress = originalEmail.Value;
         if (string.IsNullOrWhiteSpace(emailAddress))
-            return Result<string>.Failure(Error.EmailRequired);
+            return Result<EmailAddress>.Failure(Error.EmailRequired);
 
         var errors = new List<Error>();
         // trimming empty spaces and converting to lower case @ID:10 - registering a new Guests account: "And the email is in all lower-case"
@@ -34,34 +29,34 @@ public class EmailAddress : ValueObject
 
         // Must end with @via.dk
         if (!email.EndsWith("@via.dk"))
-            errors.Add(Error.EmailNotEndingWithViaDk);
+            errors.Add(Error.EmailMustEndWithViaDomain);
 
         // Must match format <text1>@<text2>.<text3>
         var parts = email.Split('@');
         if (parts.Length != 2 || !parts[1].Contains('.'))
-            errors.Add(Error.EmailDoesNotFollowFormatText1AtText2DotText3);
+            errors.Add(Error.EmailInvalidFormat);
 
         var text1 = parts[0];
 
         if (text1.Length < 3 || text1.Length > 6)
-            errors.Add(Error.EmailPartBeforeAtMustBeBetween3And6CharactersLong);
+            errors.Add(Error.EmailInvalidFormat);
 
         bool is3Or4Letters = (text1.Length == 3 || text1.Length == 4) && text1.All(char.IsLetter);
         bool is6Digits = text1.Length == 6 && text1.All(char.IsDigit);
 
         if (!is3Or4Letters && !is6Digits) // If the text1 is not 3-4 letters and also not 6 digits, then it's invalid
-            errors.Add(Error.EmailPartBeforeAtMustBeEither3Or4LettersOr6Digits);
+            errors.Add(Error.EmailInvalidFormat);
 
         if (errors.Count > 0)
-            return Result<string>.Failure(errors.ToArray());
+            return Result<EmailAddress>.Failure(errors.ToArray());
 
-        return Result<string>.Success(email);
+        return Result<EmailAddress>.Success(originalEmail);
     }
 
     protected override IEnumerable<object> GetEqualityComponents()
     {
-        yield return Value;
+        yield return Value ?? "";
     }
 
-    public override string ToString() => Value;
+    public override string ToString() => Value ?? "";
 }

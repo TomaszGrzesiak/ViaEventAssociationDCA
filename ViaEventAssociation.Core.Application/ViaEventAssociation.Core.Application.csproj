@@ -4,6 +4,13 @@
         <TargetFramework>net9.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <AssemblyName>ViaEventAssociation.Core.Application</AssemblyName>
+        <RootNamespace>ViaEventAssociation.Core.Application</RootNamespace>
     </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\ViaEventAssociation.Core.Domain\ViaEventAssociation.Core.Domain.csproj" />
+      <ProjectReference Include="..\ViaEventAssociation.Core.Tools.OperationResult\ViaEventAssociation.Core.Tools.OperationResult.csproj" />
+    </ItemGroup>
 
 </Project>

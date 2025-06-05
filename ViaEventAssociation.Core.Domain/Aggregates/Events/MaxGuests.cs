@@ -12,11 +12,19 @@ public class MaxGuests : ValueObject
         Value = value;
     }
 
-    public static Result<MaxGuests> Create(int maxGuests)
+    public static MaxGuests Create(int maxGuests)
     {
-        return maxGuests < 5
-            ? Result<MaxGuests>.Failure(Error.GuestsMaxNumberTooSmall)
-            : Result<MaxGuests>.Success(new MaxGuests(maxGuests));
+        return new MaxGuests(maxGuests);
+    }
+
+    public static Result<MaxGuests> Validate(int maxGuests)
+    {
+        return maxGuests switch
+        {
+            < 5 => Result<MaxGuests>.Failure(Error.GuestsMaxNumberTooSmall),
+            > 50 => Result<MaxGuests>.Failure(Error.GuestsMaxNumberTooGreat),
+            _ => Result<MaxGuests>.Success(new MaxGuests(maxGuests))
+        };
     }
 
     protected override IEnumerable<object> GetEqualityComponents()

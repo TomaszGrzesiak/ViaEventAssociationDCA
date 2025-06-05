@@ -12,7 +12,12 @@ public class EventTitle : ValueObject
         Value = value;
     }
 
-    public static Result<EventTitle> Create(string title)
+    public static Result<EventTitle> Create(string? title)
+    {
+        return Validate(title);
+    }
+
+    private static Result<EventTitle> Validate(string? title)
     {
         if (string.IsNullOrWhiteSpace(title) || title.Length > 75 || title.Length < 3)
             return Result<EventTitle>.Failure(Error.EventTitleMustBeBetween3And75Characters);

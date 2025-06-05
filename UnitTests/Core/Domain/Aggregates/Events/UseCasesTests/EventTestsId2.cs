@@ -1,4 +1,5 @@
-﻿using ViaEventAssociation.Core.Domain.Aggregates.Events;
+﻿using UnitTests.Helpers;
+using ViaEventAssociation.Core.Domain.Aggregates.Events;
 using ViaEventAssociation.Core.Tools.OperationResult;
 
 namespace UnitTests.Core.Domain.Aggregates.Events.UseCasesTests;
@@ -31,23 +32,12 @@ public class EventTestsId2
     [InlineData("VIA Hackathon")]
     public void Id2_S2_TitleUpdate_WhenReady_ShouldAlsoSetStatusToDraft(string exampleTitle)
     {
-        var ev = VeaEvent.Create().Payload!;
+        var ev = EventFactory.Init().WithStatus(EventStatus.Ready).Build();
 
-        // First, we need to make the event Ready - and that is predicated by certain steps. SEE USE CASE ID:8
-        // To Ready to Event, it needs to be in draft status, and the following data is set with valid values: title, description, times, visibility, maximum guests
-        ev.UpdateDescription(EventDescription.Create("Some desc").Payload!);
-        DateTime start = DateTime.Today.AddYears(1).AddHours(8);
-        DateTime end = DateTime.Today.AddYears(1).AddHours(9);
-        ev.UpdateTimeRange(EventTimeRange.Create(start, end).Payload!);
-        ev.UpdateMaxGuests(MaxGuests.Create(10).Payload!);
-        ev.UpdateVisibility(EventVisibility.Public);
-        ev.Ready();
+        var updateTitle = EventTitle.Create(exampleTitle);
+        var updateEvent = ev.UpdateTitle(updateTitle.Payload!);
+        Assert.True(updateEvent.IsSuccess);
 
-        Assert.Equal(EventStatus.Ready, ev.Status);
-
-        var titleResult = EventTitle.Create(exampleTitle);
-        var updateResult = ev.UpdateTitle(titleResult.Payload!);
-        Assert.True(updateResult.IsSuccess);
         Assert.Equal(exampleTitle, ev.Title.Value);
         Assert.Equal(EventStatus.Draft, ev.Status);
     }
@@ -94,8 +84,7 @@ public class EventTestsId2
     {
         // First, we need to make the event Active - and that is predicated by certain steps. SEE USE CASE ID:9
         // To Activate the Event, it needs to be in draft status, and the following data is set with valid values: title, description, times, visibility, maximum guests
-        var ev = VeaEvent.Create().Payload!;
-        ev.Activate();
+        var ev = EventFactory.Init().WithStatus(EventStatus.Active).Build();
 
         var title = EventTitle.Create("New Title").Payload!;
         var result = ev.UpdateTitle(title);

@@ -4,23 +4,21 @@ using ViaEventAssociation.Core.Tools.OperationResult;
 
 namespace ViaEventAssociation.Core.Domain.Aggregates.Events.Entities
 {
-    public sealed class Invitation : Entity<InvitationId>
+    public class Invitation : Entity<InvitationId>
     {
         public GuestId GuestId { get; private set; }
-        public EventId EventId { get; private set; }
+
         public InvitationStatus Status { get; private set; }
 
-        private Invitation(InvitationId id, GuestId guestId, EventId eventId, InvitationStatus status) : base(id)
+        private Invitation(InvitationId id, GuestId guestId, InvitationStatus status) : base(id)
         {
             GuestId = guestId;
-            EventId = eventId;
             Status = status;
         }
 
-        public static Result<Invitation> Create(GuestId guestId, EventId eventId)
+        public static Invitation Create(GuestId guestId)
         {
-            var invitation = new Invitation(InvitationId.CreateUnique(), guestId, eventId, InvitationStatus.Pending);
-            return Result<Invitation>.Success(invitation);
+            return new Invitation(InvitationId.CreateUnique(), guestId, InvitationStatus.Pending);
         }
 
         public Result Approve()
