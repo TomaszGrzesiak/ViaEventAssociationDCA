@@ -1,7 +1,6 @@
-using ViaEventAssociation.Core.Domain.Aggregates.Guests;
 using ViaEventAssociation.Core.Tools.OperationResult;
 
-namespace ViaEventAssociation.Core.Domain.Repositories;
+namespace ViaEventAssociation.Core.Domain.Aggregates.Guests;
 
 public interface IGuestRepository
 {

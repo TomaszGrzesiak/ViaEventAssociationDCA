@@ -1,6 +1,5 @@
 using System.Collections.ObjectModel;
 using ViaEventAssociation.Core.Domain.Aggregates.Guests;
-using ViaEventAssociation.Core.Domain.Repositories;
 using ViaEventAssociation.Core.Tools.OperationResult;
 
 namespace UnitTests.Fakes;
