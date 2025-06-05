@@ -49,7 +49,7 @@ public class CancelParticipationHandler : ICommandHandler<CancelParticipationCom
             return Task.FromResult(new Result());
         }
 
-        var cancelResult = @event.CancelEvent(Guid.NewGuid());
+        var cancelResult = @event.Cancel();
         if (!cancelResult.IsSuccess)
         {
             return Task.FromResult(new Result());

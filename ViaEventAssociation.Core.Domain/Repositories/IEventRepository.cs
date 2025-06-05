@@ -5,7 +5,7 @@ namespace ViaEventAssociation.Core.Domain.Repositories;
 
 public interface IEventRepository
 {
-    public Task<Result<Event>> AddAsync(Event @event);
-    public Task<Result<Event>> GetViaEventByIdAsync(EventId eventId);
-    public Task<Result<Event>> UpdateAsync(Event @event);
+    public Task<Result<VeaEvent>> AddAsync(VeaEvent @event);
+    public Task<Result<VeaEvent>> GetViaEventByIdAsync(EventId eventId);
+    public Task<Result<VeaEvent>> UpdateAsync(VeaEvent @event);
 }
