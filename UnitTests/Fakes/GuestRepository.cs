@@ -2,21 +2,21 @@ using System.Collections.ObjectModel;
 using ViaEventAssociation.Core.Domain.Aggregates.Guests;
 using ViaEventAssociation.Core.Tools.OperationResult;
 
-namespace ViaEventAssociation.Core.Domain.Repositories;
+namespace UnitTests.Fakes;
 
-public class UserRepository : IUserRepository
+public class DummyGuestRepository : IGuestRepository
 {
-    private Collection<Guest> _guest = new Collection<Guest>();
+    private Collection<Guest> _guests = new Collection<Guest>();
 
     public Task<Result<Guest>> AddAsync(Guest guest)
     {
-        _guest.Add(guest);
+        _guests.Add(guest);
         return Task.FromResult(Result<Guest>.Success(guest));
     }
 
-    public Task<Result<Guest>> GetUserByIdAsync(GuestId guestId)
+    public Task<Result<Guest>> GetGuestByIdAsync(GuestId guestId)
     {
-        var guest = _guest.FirstOrDefault(u => u.Id.Equals(guestId));
+        var guest = _guests.FirstOrDefault(g => g.Id.Equals(guestId));
         return Task.FromResult(Result<Guest>.Success(guest));
     }
 }

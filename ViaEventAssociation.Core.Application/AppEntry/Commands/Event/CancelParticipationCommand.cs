@@ -2,7 +2,7 @@ using ViaEventAssociation.Core.Domain.Aggregates.Events;
 using ViaEventAssociation.Core.Domain.Aggregates.Guests;
 using ViaEventAssociation.Core.Tools.OperationResult;
 
-namespace Application.AppEntry.Commands.Event;
+namespace ViaEventAssociation.Core.Application.AppEntry.Commands.Event;
 
 public class CancelParticipationCommand
 {
@@ -15,9 +15,9 @@ public class CancelParticipationCommand
         GuestId = guestId;
     }
 
-    public static Result<CancelParticipationCommand> Create(int id, int guestId)
+    public static Result<CancelParticipationCommand> Create(EventId eventId, GuestId guestId)
     {
-        var command = new CancelParticipationCommand(new EventId(new Guid()), new GuestId(new Guid()));
+        var command = new CancelParticipationCommand(eventId, guestId);
 
         return Result<CancelParticipationCommand>.Success(command);
     }

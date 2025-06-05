@@ -2,7 +2,7 @@ using System.Collections.ObjectModel;
 using ViaEventAssociation.Core.Domain.Aggregates.Guests;
 using ViaEventAssociation.Core.Tools.OperationResult;
 
-namespace ViaEventAssociation.Core.Domain.Repositories;
+namespace UnitTests.Fakes;
 
 public class DummyGuestRepository : IGuestRepository
 {

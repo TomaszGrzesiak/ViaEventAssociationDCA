@@ -58,7 +58,3 @@ public class Result<T> : Result
     public new static Result<T> Failure(params Error[] errors) =>
         new Result<T>(errors.ToList());
 }
-
-public sealed record None
-{
-}

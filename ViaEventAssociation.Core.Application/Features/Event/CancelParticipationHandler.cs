@@ -1,9 +1,8 @@
 using Application.AppEntry;
-using Application.AppEntry.Commands.Event;
+using ViaEventAssociation.Core.Application.AppEntry.Commands.Event;
 using ViaEventAssociation.Core.Domain.Aggregates.Events;
 using ViaEventAssociation.Core.Domain.Aggregates.Guests;
 using ViaEventAssociation.Core.Domain.Common;
-using ViaEventAssociation.Core.Domain.Repositories;
 using ViaEventAssociation.Core.Tools.OperationResult;
 
 namespace Application.Features.Event;
@@ -49,7 +48,7 @@ public class CancelParticipationHandler : ICommandHandler<CancelParticipationCom
             return Task.FromResult(new Result());
         }
 
-        var cancelResult = @event.CancelEvent(Guid.NewGuid());
+        var cancelResult = @event.Cancel();
         if (!cancelResult.IsSuccess)
         {
             return Task.FromResult(new Result());
