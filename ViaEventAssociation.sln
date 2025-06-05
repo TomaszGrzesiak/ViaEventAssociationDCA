@@ -16,7 +16,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Documentation", "Documentat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ViaEventAssociation.Core.Domain", "ViaEventAssociation.Core.Domain\ViaEventAssociation.Core.Domain.csproj", "{CE724F73-CEC1-40E9-92D7-B6B653C493B3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "Application\Application.csproj", "{E2BC4279-F1D2-448E-A21A-47FAB8C538A0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ViaEventAssociation.Core.Application", "ViaEventAssociation.Core.Application\ViaEventAssociation.Core.Application.csproj", "{E2BC4279-F1D2-448E-A21A-47FAB8C538A0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

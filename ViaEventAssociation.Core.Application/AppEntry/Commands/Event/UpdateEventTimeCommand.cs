@@ -1,7 +1,7 @@
 using ViaEventAssociation.Core.Domain.Aggregates.Events;
 using ViaEventAssociation.Core.Tools.OperationResult;
 
-namespace Application.AppEntry.Commands.Event;
+namespace ViaEventAssociation.Core.Application.AppEntry.Commands.Event;
 
 public class UpdateEventTimeCommand
 {

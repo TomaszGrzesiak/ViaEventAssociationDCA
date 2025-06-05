@@ -1,5 +1,5 @@
 using Application.AppEntry;
-using Application.AppEntry.Commands.Event;
+using ViaEventAssociation.Core.Application.AppEntry.Commands.Event;
 using ViaEventAssociation.Core.Domain.Aggregates.Events;
 using ViaEventAssociation.Core.Domain.Common;
 using ViaEventAssociation.Core.Domain.Repositories;
