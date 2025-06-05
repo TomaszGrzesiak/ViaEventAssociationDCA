@@ -4,10 +4,10 @@ using ViaEventAssociation.Core.Tools.OperationResult;
 
 namespace ViaEventAssociation.Core.Domain.Repositories;
 
-public class GuestRepository : IGuestRepository
+public class DummyGuestRepository : IGuestRepository
 {
     private Collection<Guest> _guests = new Collection<Guest>();
-    
+
     public Task<Result<Guest>> AddAsync(Guest guest)
     {
         _guests.Add(guest);

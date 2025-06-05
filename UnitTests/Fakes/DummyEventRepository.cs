@@ -4,10 +4,10 @@ using ViaEventAssociation.Core.Tools.OperationResult;
 
 namespace ViaEventAssociation.Core.Domain.Repositories;
 
-public class EventRepository : IEventRepository
+public class DummyEventRepository : IEventRepository
 {
     private readonly Collection<Event> _events = new Collection<Event>();
-    
+
     public Task<Result<Event>> AddAsync(Event @event)
     {
         _events.Add(@event);
