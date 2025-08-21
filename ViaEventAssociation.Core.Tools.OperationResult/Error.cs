@@ -58,7 +58,6 @@ public class Error
     public static readonly Error EventTimeStartMustBeAfter8Am = Create(156, "Start time must be after 08:00.");
     public static readonly Error EventTimeCannotStartInPast = Create(157, "Start must not be in the past.");
     public static readonly Error EventTimeCannotSpan01To08 = Create(158, "Event cannot span between 01:00 and 08:00.");
-    public static readonly Error EventTimeRangeCannotBeDefault = Create(159, "Event time range cannot remain default.");
 
     // invitation errors (170–179)
     public static readonly Error InvitationAlreadyApproved = Create(170, "Invitation is already approved.");
@@ -91,10 +90,9 @@ public class Error
     public static readonly Error InvitationNotFound = Create(251, "Invitation not found.");
     public static readonly Error CancelledEventsCannotBeJoined = Create(252, "Cancelled events cannot be joined.");
     public static readonly Error JoinUnstartedEventImpossible = Create(253, "Join unstarted event impossible.");
-    
+
     // Not-grouped errors
     public static readonly Error InvalidGuestId = Create(300, "GuestId must be greater than 0.");
     public static readonly Error InvalidEventId = Create(301, "EventId must be greater than 0.");
     public static readonly Error CommandCannotBeNull = Create(302, "Command cannot be null");
-    
 }

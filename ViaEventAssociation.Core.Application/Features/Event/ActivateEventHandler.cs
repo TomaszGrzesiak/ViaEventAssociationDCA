@@ -2,6 +2,7 @@ using Application.AppEntry;
 using ViaEventAssociation.Core.Application.AppEntry.Commands.Event;
 using ViaEventAssociation.Core.Domain.Aggregates.Events;
 using ViaEventAssociation.Core.Domain.Common;
+using ViaEventAssociation.Core.Domain.Contracts;
 using ViaEventAssociation.Core.Tools.OperationResult;
 
 namespace Application.Features.Event;
@@ -10,11 +11,13 @@ public class ActivateEventHandler : ICommandHandler<ActivateEventCommand>
 {
     private readonly IEventRepository _repository;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly ISystemTime _systemTime;
 
-    public ActivateEventHandler(IEventRepository repository, IUnitOfWork unitOfWork)
+    public ActivateEventHandler(IEventRepository repository, IUnitOfWork unitOfWork, ISystemTime systemTime)
     {
         _repository = repository;
         _unitOfWork = unitOfWork;
+        _systemTime = systemTime;
     }
 
     public Task<Result> Handle(ActivateEventCommand command)
@@ -37,7 +40,7 @@ public class ActivateEventHandler : ICommandHandler<ActivateEventCommand>
             return Task.FromResult(new Result(errorMessages));
         }
 
-        var activationResult = @event.Activate();
+        var activationResult = @event.Activate(systemTime: _systemTime);
 
         if (!activationResult.IsSuccess)
         {

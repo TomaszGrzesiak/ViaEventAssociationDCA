@@ -10,7 +10,7 @@ public class EventFactory
 {
     private EventTitle? _title = EventTitle.Default();
     private EventDescription? _description = EventDescription.Default();
-    private EventTimeRange? _timeRange = EventTimeRange.Default();
+    private EventTimeRange? _timeRange = null;
     private EventVisibility? _visibility = null;
     private MaxGuests? _maxGuests = MaxGuests.Create(50);
     private EventStatus? _status = EventStatus.Draft;
@@ -65,7 +65,7 @@ public class EventFactory
 
     public VeaEvent Build()
     {
-        return VeaEvent.Create(_title, _description, _timeRange!, _visibility, _maxGuests!, _status, _locationMaxCapacity, _guests, _invitations).Payload!;
+        return VeaEvent.Create(_title, _description, _timeRange, _visibility, _maxGuests!, _status, _locationMaxCapacity, _guests, _invitations).Payload!;
     }
 
     public EventFactory WithValidTitle()

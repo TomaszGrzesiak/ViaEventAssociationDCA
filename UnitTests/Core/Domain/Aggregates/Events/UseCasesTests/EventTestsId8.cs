@@ -1,24 +1,29 @@
-﻿using UnitTests.Helpers;
+﻿using UnitTests.Fakes;
+using UnitTests.Helpers;
 using ViaEventAssociation.Core.Domain.Aggregates.Events;
+using ViaEventAssociation.Core.Domain.Contracts;
 using ViaEventAssociation.Core.Tools.OperationResult;
 
 namespace UnitTests.Core.Domain.Aggregates.Events.UseCasesTests;
 
 public class EventTestsId8
 {
+    private static readonly ISystemTime FakeSystemTime = new FakeSystemTime(new DateTime(2023, 8, 10, 12, 0, 0));
+    DateTime today = new DateTime(FakeSystemTime.Now().Year, FakeSystemTime.Now().Month, FakeSystemTime.Now().Day, 0, 0, 0);
+
     [Fact]
     public void Id8_S1_SuccessfullyReadiesEvent_WhenAllFieldsValid()
     {
         var veaEvent = EventFactory.Init()
             .WithTitle("Summer Party")
             .WithDescription("Join us for a summer celebration!")
-            .WithTimeRange(EventTimeRange.ValidNonDefault())
+            .WithTimeRange(EventTimeRange.Default(FakeSystemTime))
             .WithMaxGuests(25)
             .WithVisibility(EventVisibility.Public)
             .WithStatus(EventStatus.Draft)
             .Build();
 
-        var result = veaEvent.Ready();
+        var result = veaEvent.Ready(FakeSystemTime);
 
         Assert.True(result.IsSuccess);
         Assert.Equal(EventStatus.Ready, veaEvent.Status);
@@ -37,7 +42,7 @@ public class EventTestsId8
             .WithMaxGuests(1) //
             .Build();
 
-        var result = eventWithInvalidValues.Ready();
+        var result = eventWithInvalidValues.Ready(FakeSystemTime);
         Assert.False(result.IsSuccess);
 
         Assert.Contains(result.Errors, e => e == Error.EventTitleCannotBeDefaultOrEmpty);
@@ -51,17 +56,16 @@ public class EventTestsId8
             .WithStatus(EventStatus.Draft)
             .WithTitle(EventTitle.Default().Value)
             .WithDescription(EventDescription.Default().Value)
-            .WithTimeRange(EventTimeRange.Default())
+            .WithTimeRange(EventTimeRange.Default(FakeSystemTime))
             // Visibility IS NOT set
             .WithMaxGuests(51) //
             .Build();
 
-        result = eventWithInvalidValues.Ready();
+        result = eventWithInvalidValues.Ready(FakeSystemTime);
         Assert.False(result.IsSuccess);
 
         Assert.Contains(result.Errors, e => e == Error.EventTitleCannotBeDefaultOrEmpty);
         Assert.Contains(result.Errors, e => e == Error.EventDescriptionCannotBeDefault);
-        Assert.Contains(result.Errors, e => e == Error.EventTimeRangeCannotBeDefault);
         Assert.Contains(result.Errors, e => e == Error.EventVisibilityMustBeSet);
         Assert.Contains(result.Errors, e => e == Error.GuestsMaxNumberTooGreat);
     }
@@ -74,7 +78,7 @@ public class EventTestsId8
             .WithStatus(EventStatus.Cancelled)
             .Build();
 
-        var result = veaEvent.Ready();
+        var result = veaEvent.Ready(FakeSystemTime);
 
         Assert.False(result.IsSuccess);
         Assert.Contains(result.Errors, e => e == Error.EventAlreadyCancelled);
@@ -83,7 +87,7 @@ public class EventTestsId8
     [Fact]
     public void Id8_F3_Failure_WhenStartDataTimeIsInThePast()
     {
-        var startInPast = DateTime.Today.AddHours(8).AddDays(-2);
+        var startInPast = today.AddHours(8).AddDays(-2);
         var pastRange = EventTimeRange.Create(
             startInPast,
             startInPast.AddHours(3));
@@ -93,7 +97,7 @@ public class EventTestsId8
             .WithTimeRange(pastRange.Payload)
             .Build();
 
-        var result = veaEvent.Ready();
+        var result = veaEvent.Ready(FakeSystemTime);
 
         Assert.True(result.IsFailure);
         Assert.Contains(result.Errors, e => e == Error.CannotReadyPastEvent);
@@ -106,7 +110,7 @@ public class EventTestsId8
             .WithTitle(EventTitle.Default().ToString())
             .Build();
 
-        var result = veaEvent.Ready();
+        var result = veaEvent.Ready(FakeSystemTime);
 
         Assert.True(result.IsFailure);
         Assert.Contains(result.Errors, e => e == Error.EventTitleCannotBeDefaultOrEmpty);

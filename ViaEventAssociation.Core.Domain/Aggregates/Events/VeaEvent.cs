@@ -1,7 +1,7 @@
-﻿using System.Data;
-using ViaEventAssociation.Core.Domain.Aggregates.Events.Entities;
+﻿using ViaEventAssociation.Core.Domain.Aggregates.Events.Entities;
 using ViaEventAssociation.Core.Domain.Aggregates.Guests;
 using ViaEventAssociation.Core.Domain.Common.Bases;
+using ViaEventAssociation.Core.Domain.Contracts;
 using ViaEventAssociation.Core.Tools.OperationResult;
 
 namespace ViaEventAssociation.Core.Domain.Aggregates.Events;
@@ -15,7 +15,7 @@ public class VeaEvent : AggregateRoot<EventId>
     public EventVisibility? Visibility { get; private set; }
     public MaxGuests MaxGuestsNo { get; private set; }
 
-    private readonly List<Invitation> _invitations = new();
+    private readonly List<Invitation> _invitations;
     public IReadOnlyList<Invitation> Invitations => _invitations.AsReadOnly();
 
     private readonly List<GuestId> _guestList = new(); // temporary storage for the guests
@@ -53,7 +53,7 @@ public class VeaEvent : AggregateRoot<EventId>
             EventId.CreateUnique(),
             EventTitle.Default(),
             EventDescription.Default(),
-            EventTimeRange.Default(),
+            null,
             EventVisibility.Private,
             MaxGuests.Default(),
             EventStatus.Draft,
@@ -82,14 +82,14 @@ public class VeaEvent : AggregateRoot<EventId>
         return Result.Success();
     }
 
-    public Result UpdateTimeRange(EventTimeRange newTimeRange)
+    public Result UpdateTimeRange(EventTimeRange newTimeRange, ISystemTime systemTime)
     {
         var errors = new List<Error>();
 
         if (Status != null && (Status.Equals(EventStatus.Active) || Status.Equals(EventStatus.Cancelled)))
             errors.Add(Error.ActiveOrCanceledEventCannotBeModified);
 
-        var result = EventTimeRange.Validate(newTimeRange);
+        var result = EventTimeRange.Validate(newTimeRange, systemTime);
 
         if (result.IsSuccess) TimeRange = newTimeRange;
         if (result.IsFailure) errors.AddRange(result.Errors);
@@ -116,7 +116,7 @@ public class VeaEvent : AggregateRoot<EventId>
         return Result.Success();
     }
 
-    public Result Participate(GuestId guestId)
+    public Result Participate(GuestId guestId, ISystemTime systemTime)
     {
         if (_guestList.Contains(guestId))
             return Result.Failure(Error.GuestAlreadyJoined);
@@ -130,20 +130,20 @@ public class VeaEvent : AggregateRoot<EventId>
         if (IsEventFull())
             return Result.Failure(Error.NoMoreRoom);
 
-        if (TimeRange!.StartTime < DateTime.Now) // TimeRange cannot be null here because Active events have a valid TimeRange
+        if (TimeRange!.StartTime < systemTime.Now()) // TimeRange cannot be null here because Active events have a valid TimeRange
             return Result.Failure(Error.TooLate);
 
         _guestList.Add(guestId);
         return Result.Success();
     }
 
-    public Result Activate()
+    public Result Activate(ISystemTime systemTime)
     {
         if (Equals(EventStatus.Active, Status)) return Result.Success();
 
         if (!Equals(EventStatus.Ready, Status))
         {
-            var readyResult = Ready();
+            var readyResult = Ready(systemTime);
             if (readyResult.IsFailure)
                 return Result.Failure([Error.ActivateFailure, ..readyResult.Errors]);
         }
@@ -200,7 +200,7 @@ public class VeaEvent : AggregateRoot<EventId>
         return Result.Success();
     }
 
-    public Result Ready()
+    public Result Ready(ISystemTime systemTime)
     {
         var errors = new List<Error>();
 
@@ -209,9 +209,9 @@ public class VeaEvent : AggregateRoot<EventId>
 
         if (Title is null || Equals(EventTitle.Default(), Title)) errors.Add(Error.EventTitleCannotBeDefaultOrEmpty);
         if (Description is null || Equals(EventDescription.Default(), Description)) errors.Add(Error.EventDescriptionCannotBeDefault);
-        if (Equals(EventTimeRange.Default(), TimeRange)) errors.Add(Error.EventTimeRangeCannotBeDefault);
+        //if (Equals(EventTimeRange.Default(), TimeRange)) errors.Add(Error.EventTimeRangeCannotBeDefault);
         if (TimeRange == null) errors.Add(Error.EventTimeRangeMissing);
-        if (TimeRange?.StartTime < DateTime.Now) errors.Add(Error.CannotReadyPastEvent);
+        if (TimeRange?.StartTime < systemTime.Now()) errors.Add(Error.CannotReadyPastEvent);
         if (Equals(Visibility, null)) errors.Add(Error.EventVisibilityMustBeSet);
         if (MaxGuests.Validate(MaxGuestsNo.Value) is { IsFailure: true } result) errors.AddRange(result.Errors);
 
@@ -223,7 +223,7 @@ public class VeaEvent : AggregateRoot<EventId>
         return Result.Success();
     }
 
-    public static Result<VeaEvent> Create(EventTitle? title, EventDescription? description, EventTimeRange timeRange, EventVisibility? visibility,
+    public static Result<VeaEvent> Create(EventTitle? title, EventDescription? description, EventTimeRange? timeRange, EventVisibility? visibility,
         MaxGuests maxGuests, EventStatus? status, int locationMaxCapacity, List<GuestId> guests, List<Invitation> invitations)
     {
         var newEvent = new VeaEvent(
@@ -241,9 +241,9 @@ public class VeaEvent : AggregateRoot<EventId>
         return Result<VeaEvent>.Success(newEvent);
     }
 
-    public Result CancelParticipation(GuestId guestId)
+    public Result CancelParticipation(GuestId guestId, ISystemTime systemTime)
     {
-        if (TimeRange != null && TimeRange.StartTime < DateTime.Now)
+        if (TimeRange != null && TimeRange.StartTime < systemTime.Now())
             return Result.Failure(Error.ActiveOrCanceledEventCannotBeModified);
 
         if (GuestList.Contains(guestId))
@@ -258,7 +258,7 @@ public class VeaEvent : AggregateRoot<EventId>
         return _guestList.Count + acceptedInvitationNo >= MaxGuestsNo.Value;
     }
 
-    public Result AcceptInvitation(GuestId guestId)
+    public Result AcceptInvitation(GuestId guestId, ISystemTime systemTime)
     {
         var invi = _invitations.FirstOrDefault(i => i.GuestId == guestId);
         if (invi is null)
@@ -270,7 +270,7 @@ public class VeaEvent : AggregateRoot<EventId>
         if (Equals(Status, EventStatus.Ready) || Equals(Status, EventStatus.Draft))
             return Result.Failure(Error.JoinUnstartedEventImpossible);
 
-        if (TimeRange.StartTime < DateTime.Now)
+        if (TimeRange.StartTime < systemTime.Now())
             return Result.Failure(Error.TooLate);
 
         if (invi.Status.Equals(InvitationStatus.Approved))

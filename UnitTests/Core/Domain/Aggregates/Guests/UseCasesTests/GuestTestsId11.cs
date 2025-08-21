@@ -1,12 +1,16 @@
-﻿using UnitTests.Helpers;
+﻿using UnitTests.Fakes;
+using UnitTests.Helpers;
 using ViaEventAssociation.Core.Domain.Aggregates.Events;
 using ViaEventAssociation.Core.Domain.Aggregates.Guests;
+using ViaEventAssociation.Core.Domain.Contracts;
 using ViaEventAssociation.Core.Tools.OperationResult;
 
 namespace UnitTests.Core.Domain.Aggregates.Guests.UseCasesTests;
 
 public class EventTestsId11
 {
+    private static readonly ISystemTime FakeSystemTime = new FakeSystemTime(new DateTime(2023, 8, 10, 12, 0, 0));
+
     [Fact]
     public void Id11_S1_SuccessfullyRegisterGuest_ForPublicActiveEvent()
     {
@@ -15,10 +19,10 @@ public class EventTestsId11
             .WithStatus(EventStatus.Active)
             .WithVisibility(EventVisibility.Public)
             .WithMaxGuests(10)
-            .WithTimeRange(EventTimeRange.ValidNonDefault())
+            .WithTimeRange(EventTimeRange.Default(FakeSystemTime))
             .Build();
 
-        var result = veaEvent.Participate(guest.Id);
+        var result = veaEvent.Participate(guest.Id, FakeSystemTime);
 
         Assert.True(result.IsSuccess);
         Assert.Contains(veaEvent.GuestList, id => id == guest.Id);
@@ -37,7 +41,7 @@ public class EventTestsId11
             .WithVisibility(EventVisibility.Public)
             .Build();
 
-        var result = veaEvent.Participate(guest.Id);
+        var result = veaEvent.Participate(guest.Id, FakeSystemTime);
 
         Assert.True(result.IsFailure);
         Assert.Contains(result.Errors, e => e == Error.OnlyActiveEventsCanBeJoined);
@@ -54,7 +58,7 @@ public class EventTestsId11
             .WithGuest(GuestId.CreateUnique()) // already 1 guest
             .Build();
 
-        var result = veaEvent.Participate(guest.Id);
+        var result = veaEvent.Participate(guest.Id, FakeSystemTime);
 
         Assert.True(result.IsFailure);
         Assert.Contains(result.Errors, e => e == Error.NoMoreRoom);
@@ -64,7 +68,7 @@ public class EventTestsId11
     public void Id11_F3_Failure_WhenEventAlreadyStarted()
     {
         var guest = GuestFactory.Init().Build();
-        var time = EventTimeRange.Default();
+        var time = EventTimeRange.Default(FakeSystemTime);
         var pastTime = EventTimeRange.Create(
             time.StartTime.AddDays(-2),
             time.EndTime.AddDays(-2)
@@ -76,7 +80,7 @@ public class EventTestsId11
             .WithTimeRange(pastTime)
             .Build();
 
-        var result = veaEvent.Participate(guest.Id);
+        var result = veaEvent.Participate(guest.Id, FakeSystemTime);
 
         Assert.True(result.IsFailure);
         Assert.Contains(result.Errors, e => e == Error.TooLate);
@@ -90,7 +94,7 @@ public class EventTestsId11
             .WithVisibility(EventVisibility.Private)
             .Build();
 
-        var result = veaEvent.Participate(guest.Id);
+        var result = veaEvent.Participate(guest.Id, FakeSystemTime);
 
         Assert.True(result.IsFailure);
         Assert.Contains(result.Errors, e => e == Error.EventIsNotPublic);
@@ -104,7 +108,7 @@ public class EventTestsId11
             .WithGuest(guest.Id)
             .Build();
 
-        var result = veaEvent.Participate(guest.Id);
+        var result = veaEvent.Participate(guest.Id, FakeSystemTime);
 
         Assert.True(result.IsFailure);
         Assert.Contains(result.Errors, e => e == Error.GuestAlreadyJoined);
