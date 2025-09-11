@@ -30,17 +30,15 @@ public class ActivateEventHandler : ICommandHandler<ActivateEventCommand>
             return Task.FromResult(new Result(errorMessages));
         }
 
-        var eventResult = _repository.GetViaEventByIdAsync(command.EventId);
+        var veaEvent = _repository.GetAsync(command.EventId);
 
-        var @event = eventResult.Result.Payload;
-
-        if (@event == null)
+        if (veaEvent == null)
         {
             errorMessages.Add("Event not found");
             return Task.FromResult(new Result(errorMessages));
         }
 
-        var activationResult = @event.Activate(systemTime: _systemTime);
+        var activationResult = veaEvent.Activate(systemTime: _systemTime);
 
         if (!activationResult.IsSuccess)
         {
@@ -48,7 +46,6 @@ public class ActivateEventHandler : ICommandHandler<ActivateEventCommand>
             return Task.FromResult(new Result(errorMessages));
         }
 
-        _repository.UpdateAsync(@event);
         _unitOfWork.SaveChangesAsync();
 
         return Task.FromResult(new Result(errorMessages));

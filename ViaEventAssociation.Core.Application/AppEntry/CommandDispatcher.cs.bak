@@ -19,10 +19,10 @@ public class CommandDispatcher
 
         if (service == null)
         {
-            throw new InvalidOperationException($"Handle for {typeof(TCommand).Name} not found");
+            throw new InvalidOperationException($"HandleAsync for {typeof(TCommand).Name} not found");
         }
 
         ICommandHandler<TCommand> handler = (ICommandHandler<TCommand>)service;
-        return handler.Handle(command);
+        return handler.HandleAsync(command);
     }
 }

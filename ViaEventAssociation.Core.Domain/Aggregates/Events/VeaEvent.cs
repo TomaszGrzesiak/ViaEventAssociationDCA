@@ -47,10 +47,10 @@ public class VeaEvent : AggregateRoot<EventId>
         _invitations = invitations;
     }
 
-    public static Result<VeaEvent> Create()
+    public static Result<VeaEvent> Create(EventId? eventId = null)
     {
         var newEvent = new VeaEvent(
-            EventId.CreateUnique(),
+            eventId ?? EventId.CreateUnique(),
             EventTitle.Default(),
             EventDescription.Default(),
             null,

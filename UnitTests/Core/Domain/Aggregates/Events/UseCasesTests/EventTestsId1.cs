@@ -1,4 +1,5 @@
-﻿using ViaEventAssociation.Core.Domain.Aggregates.Events;
+﻿using ViaEventAssociation.Core.Application.AppEntry.Commands.Event;
+using ViaEventAssociation.Core.Domain.Aggregates.Events;
 
 namespace UnitTests.Core.Domain.Aggregates.Events.UseCasesTests;
 

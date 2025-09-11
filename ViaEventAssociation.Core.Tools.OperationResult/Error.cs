@@ -95,4 +95,5 @@ public class Error
     public static readonly Error InvalidGuestId = Create(300, "GuestId must be greater than 0.");
     public static readonly Error InvalidEventId = Create(301, "EventId must be greater than 0.");
     public static readonly Error CommandCannotBeNull = Create(302, "Command cannot be null");
+    public static readonly Error GuidIsRequired = Create(303, "Guid is required.");
 }

@@ -5,18 +5,19 @@ namespace ViaEventAssociation.Core.Application.AppEntry.Commands.Event;
 
 public class CreateEventCommand
 {
+    public EventId _eventId;
+
     private CreateEventCommand(EventId eventId)
     {
-        EventId = eventId;
+        _eventId = eventId;
     }
 
-    public EventId EventId { get; set; }
-
-    public static Result<CreateEventCommand> Create(EventId eventId)
+    public static Result<CreateEventCommand> Create(string guid)
     {
-        var command = new CreateEventCommand(eventId);
-        
-        return Result<CreateEventCommand>.Success(command);
+        var result = EventId.FromString(guid);
+        if (result.IsFailure) return Result<CreateEventCommand>.Failure(result.Errors.ToArray());
+
+        var eventId = result.Payload!;
+        return Result<CreateEventCommand>.Success(new CreateEventCommand(eventId));
     }
-    
 }

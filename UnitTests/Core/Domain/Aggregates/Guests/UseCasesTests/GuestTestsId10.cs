@@ -102,6 +102,7 @@ public class GuestTestsId10
         Assert.Contains(result.Errors, e => e == Error.InvalidNameFormat);
     }
 
+    // todo: You need to save it to some sort of store. But it can't be in domain. So there must be a domain contract, that allows injecting a an email checker. 
     [Fact]
     public void Id10_F5_Failure_WhenEmailAlreadyRegistered()
     {

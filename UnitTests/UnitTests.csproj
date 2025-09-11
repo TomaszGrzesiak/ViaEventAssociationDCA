@@ -22,11 +22,13 @@
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\ViaEventAssociation.Core.Application\ViaEventAssociation.Core.Application.csproj"/>
         <ProjectReference Include="..\ViaEventAssociation.Core.Domain\ViaEventAssociation.Core.Domain.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Core\Application\"/>
+        <Folder Include="Core\Application\AppEntry\Commands\"/>
+        <Folder Include="Core\Application\Features\Guest\"/>
         <Folder Include="Features\"/>
     </ItemGroup>
 

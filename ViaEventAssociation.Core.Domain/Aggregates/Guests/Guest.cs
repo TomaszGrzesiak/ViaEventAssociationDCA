@@ -10,6 +10,7 @@ public class Guest : AggregateRoot<GuestId>
     public GuestName LastName { get; private set; }
     public ProfilePictureUrl ProfilePictureUrlAddress { get; private set; }
 
+    // todo: repository needs to be moved somewhere outside the domain.
     private static readonly List<Guest> Guests = []; // temporary storage for the guests
 
     private Guest(GuestId id, EmailAddress email, GuestName firstName, GuestName lastName, ProfilePictureUrl profilePictureUrlAddress)
