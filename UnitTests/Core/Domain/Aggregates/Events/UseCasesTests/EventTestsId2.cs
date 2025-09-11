@@ -86,7 +86,7 @@ public class EventTestsId2
         // To Activate the Event, it needs to be in draft status, and the following data is set with valid values: title, description, times, visibility, maximum guests
         var ev = EventFactory.Init().WithStatus(EventStatus.Active).Build();
 
-        var title = EventTitle.Create("New Title").Payload!;
+        var title = EventTitle.Create("New NewTitle").Payload!;
         var result = ev.UpdateTitle(title);
 
         Assert.False(result.IsSuccess);
@@ -100,7 +100,7 @@ public class EventTestsId2
         var cancelResult = ev.Cancel();
         Assert.True(cancelResult.IsSuccess);
 
-        var title = EventTitle.Create("New Title").Payload!;
+        var title = EventTitle.Create("New NewTitle").Payload!;
         var result = ev.UpdateTitle(title);
 
         Assert.True(result.IsFailure);
