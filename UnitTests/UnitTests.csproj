@@ -27,7 +27,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Core\Application\AppEntry\Commands\"/>
         <Folder Include="Core\Application\Features\Guest\"/>
         <Folder Include="Features\"/>
     </ItemGroup>

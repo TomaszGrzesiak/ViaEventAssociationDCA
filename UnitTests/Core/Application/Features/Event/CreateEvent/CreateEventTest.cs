@@ -25,9 +25,17 @@ public class CreateEventTest
         var newEvent = await repo.GetAsync(EventId.FromGuid(guid));
         Assert.NotNull(newEvent);
         Assert.Equal(newEvent.Id, EventId.FromGuid(guid));
-        // Optional: assert repo now contains exactly one event, with default values.
-        // (Depends on your InMem repo API)
-    }
 
-    // No failure test: command has no inputs; domain sets defaults and cannot fail here.
+        // S1
+        Assert.Equal(newEvent.Status, EventStatus.Draft);
+
+        // S2
+        Assert.Equal("Working title.", newEvent.Title?.ToString());
+
+        // S3
+        Assert.Equal("", newEvent.Description?.ToString());
+
+        // S4
+        Assert.Equal(newEvent.Visibility, EventVisibility.Private);
+    }
 }

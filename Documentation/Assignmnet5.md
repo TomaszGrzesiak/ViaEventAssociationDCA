@@ -2,14 +2,14 @@
 
 ### Completed Features Status
 
-* [ ] UC1
-    * [ ] command
-    * [ ] handler
+* [x] UC1
+    * [x] command
+    * [x] handler
 * [ ] UC2
     * [ ] command
     * [ ] handler
 * [ ] UC3
     * [ ] command
     * [ ] handler
-  
+
 ...
