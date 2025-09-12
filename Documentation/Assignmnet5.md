@@ -5,9 +5,9 @@
 * [x] UC1
     * [x] command
     * [x] handler
-* [ ] UC2
-    * [ ] command
-    * [ ] handler
+* [x] UC2
+    * [x] command
+    * [x] handler
 * [ ] UC3
     * [ ] command
     * [ ] handler
