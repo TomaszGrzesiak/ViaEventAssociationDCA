@@ -3,7 +3,7 @@ using ViaEventAssociation.Core.Domain.Aggregates.Events;
 
 namespace UnitTests.Core.Application.AppEntry.Commands;
 
-public class CreateEventCommandTest
+public class CreateEventCommandTests
 {
     [Fact]
     public void Create_Succeeds_And_Parses_Id()

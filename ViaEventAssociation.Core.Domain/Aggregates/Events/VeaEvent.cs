@@ -223,11 +223,12 @@ public class VeaEvent : AggregateRoot<EventId>
         return Result.Success();
     }
 
-    public static Result<VeaEvent> Create(EventTitle? title, EventDescription? description, EventTimeRange? timeRange, EventVisibility? visibility,
+    public static Result<VeaEvent> Create(EventId? eventId, EventTitle? title, EventDescription? description, EventTimeRange? timeRange,
+        EventVisibility? visibility,
         MaxGuests maxGuests, EventStatus? status, int locationMaxCapacity, List<GuestId> guests, List<Invitation> invitations)
     {
         var newEvent = new VeaEvent(
-            EventId.CreateUnique(),
+            eventId ?? EventId.CreateUnique(),
             title,
             description,
             timeRange,

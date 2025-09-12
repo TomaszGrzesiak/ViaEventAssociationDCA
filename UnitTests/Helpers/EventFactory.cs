@@ -8,6 +8,7 @@ namespace UnitTests.Helpers;
 
 public class EventFactory
 {
+    private EventId _eventId = EventId.CreateUnique();
     private EventTitle? _title = EventTitle.Default();
     private EventDescription? _description = EventDescription.Default();
     private EventTimeRange? _timeRange = null;
@@ -19,6 +20,12 @@ public class EventFactory
     private List<Invitation> _invitations = [];
 
     public static EventFactory Init() => new();
+
+    public EventFactory WithId(EventId eventId)
+    {
+        _eventId = eventId;
+        return this;
+    }
 
     public EventFactory WithTitle(string? title)
     {
@@ -65,7 +72,8 @@ public class EventFactory
 
     public VeaEvent Build()
     {
-        return VeaEvent.Create(_title, _description, _timeRange, _visibility, _maxGuests!, _status, _locationMaxCapacity, _guests, _invitations).Payload!;
+        return VeaEvent.Create(_eventId, _title, _description, _timeRange, _visibility, _maxGuests!, _status, _locationMaxCapacity, _guests, _invitations)
+            .Payload!;
     }
 
     public EventFactory WithValidTitle()

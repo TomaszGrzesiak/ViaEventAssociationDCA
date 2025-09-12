@@ -16,7 +16,7 @@ public class Result
     // params allows to use Result.Failure(error1, error2, error3); instead of Result.Failure(new[] { error1, error2, error3 });
     public static Result Failure(params Error[] errors) => new Result() { Errors = errors.ToList() };
 
-    public static Result Combine(Result original, params Error[] errors)
+    public static Result CombineErrors(Result original, params Error[] errors)
     {
         var combined = original.Errors.Concat(errors).ToList();
         return new Result { Errors = combined };
@@ -48,4 +48,14 @@ public class Result<T> : Result
 
     public new static Result<T> Failure(params Error[] errors) =>
         new Result<T>(errors.ToList());
+
+    public static Result<T> CombineErrors(Result<T> original, List<Error> errors)
+    {
+        var combined = original.Errors.Concat(errors).ToList();
+        return new Result<T>(combined);
+    }
+}
+
+public class None
+{
 }
