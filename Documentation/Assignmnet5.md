@@ -9,7 +9,7 @@
     * [x] command
     * [x] handler
 * [ ] UC3
-    * [ ] command
+    * [x] command
     * [ ] handler
 
 ...

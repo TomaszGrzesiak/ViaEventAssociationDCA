@@ -7,7 +7,7 @@ namespace UnitTests.Core.Application.AppEntry.Commands;
 public sealed class UpdateEventDescriptionCommandTests
 {
     [Fact]
-    public void Create_Succeeds_WithValidInputs()
+    public void Update_Succeeds_WithValidInputs()
     {
         // Arrange
         var guid = Guid.NewGuid().ToString();
