@@ -95,9 +95,7 @@ public class EventTestsId7
     [InlineData(4)]
     public void Id7_F4_Failure_WhenBelowMinimumLimit(int value)
     {
-        var ev = EventFactory.Init().Build();
-        var result = ev.UpdateMaxGuests(MaxGuests.Create(value).Payload!);
-
+        var result = MaxGuests.Create(value);
         Assert.True(result.IsFailure);
         Assert.Contains(result.Errors, e => e == Error.GuestsMaxNumberTooSmall);
     }
@@ -105,8 +103,9 @@ public class EventTestsId7
     [Fact]
     public void Id7_F5_Failure_WhenAboveMaximumLimit()
     {
-        var ev = EventFactory.Init().Build();
-        var result = ev.UpdateMaxGuests(MaxGuests.Create(51).Payload!);
+        var value = 51;
+        var result = MaxGuests.Create(value);
+        Assert.True(result.IsFailure);
 
         Assert.True(result.IsFailure);
         Assert.Contains(result.Errors, e => e == Error.GuestsMaxNumberTooGreat);

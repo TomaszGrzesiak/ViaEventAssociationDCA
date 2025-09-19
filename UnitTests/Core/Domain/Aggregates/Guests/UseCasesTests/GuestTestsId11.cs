@@ -54,8 +54,8 @@ public class EventTestsId11
         var veaEvent = EventFactory.Init()
             .WithStatus(EventStatus.Active)
             .WithVisibility(EventVisibility.Public)
-            .WithMaxGuests(1)
-            .WithGuest(GuestId.CreateUnique()) // already 1 guest
+            .WithMaxGuests(5)
+            .WithGhostGuests(5) // already 5 guest
             .Build();
 
         var result = veaEvent.Participate(guest.Id, FakeSystemTime);

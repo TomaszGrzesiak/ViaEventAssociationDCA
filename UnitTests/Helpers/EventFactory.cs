@@ -94,6 +94,12 @@ public class EventFactory
         return this;
     }
 
+    public EventFactory WithGhostGuests(int amountOfGhostGuests)
+    {
+        for (int i = 0; i < amountOfGhostGuests; i++) _guests.Add(GuestId.CreateUnique());
+        return this;
+    }
+
     public EventFactory WithInvitedGuest(GuestId guestId)
     {
         var invi = Invitation.Create(guestId);

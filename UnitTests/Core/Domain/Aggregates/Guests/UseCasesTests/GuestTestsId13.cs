@@ -46,9 +46,9 @@ public class EventTestsId13
     {
         var guest = GuestFactory.Init().Build();
         var veaEvent = EventFactory.Init()
-            .WithMaxGuests(1)
+            .WithMaxGuests(5)
             .WithStatus(EventStatus.Active)
-            .WithGuest(GuestId.CreateUnique())
+            .WithGhostGuests(5)
             .Build();
 
         var result = veaEvent.InviteGuest(guest.Id);

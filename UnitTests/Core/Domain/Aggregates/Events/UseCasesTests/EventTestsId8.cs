@@ -23,7 +23,7 @@ public class EventTestsId8
             .WithStatus(EventStatus.Draft)
             .Build();
 
-        var result = veaEvent.Ready(FakeSystemTime);
+        var result = veaEvent.ReadyEvent(FakeSystemTime);
 
         Assert.True(result.IsSuccess);
         Assert.Equal(EventStatus.Ready, veaEvent.Status);
@@ -39,17 +39,15 @@ public class EventTestsId8
             .WithDescription(null) // OR default
             .WithTimeRange(null) // OR default
             // Visibility IS NOT set
-            .WithMaxGuests(1) //
             .Build();
 
-        var result = eventWithInvalidValues.Ready(FakeSystemTime);
+        var result = eventWithInvalidValues.ReadyEvent(FakeSystemTime);
         Assert.False(result.IsSuccess);
 
         Assert.Contains(result.Errors, e => e == Error.EventTitleCannotBeDefaultOrEmpty);
         Assert.Contains(result.Errors, e => e == Error.EventDescriptionCannotBeDefault);
         Assert.Contains(result.Errors, e => e == Error.EventTimeRangeMissing);
         Assert.Contains(result.Errors, e => e == Error.EventVisibilityMustBeSet);
-        Assert.Contains(result.Errors, e => e == Error.GuestsMaxNumberTooSmall);
 
         // with default values
         eventWithInvalidValues = EventFactory.Init()
@@ -58,16 +56,14 @@ public class EventTestsId8
             .WithDescription(EventDescription.Default().Value)
             .WithTimeRange(EventTimeRange.Default(FakeSystemTime))
             // Visibility IS NOT set
-            .WithMaxGuests(51) //
             .Build();
 
-        result = eventWithInvalidValues.Ready(FakeSystemTime);
+        result = eventWithInvalidValues.ReadyEvent(FakeSystemTime);
         Assert.False(result.IsSuccess);
 
         Assert.Contains(result.Errors, e => e == Error.EventTitleCannotBeDefaultOrEmpty);
         Assert.Contains(result.Errors, e => e == Error.EventDescriptionCannotBeDefault);
         Assert.Contains(result.Errors, e => e == Error.EventVisibilityMustBeSet);
-        Assert.Contains(result.Errors, e => e == Error.GuestsMaxNumberTooGreat);
     }
 
 
@@ -78,7 +74,7 @@ public class EventTestsId8
             .WithStatus(EventStatus.Cancelled)
             .Build();
 
-        var result = veaEvent.Ready(FakeSystemTime);
+        var result = veaEvent.ReadyEvent(FakeSystemTime);
 
         Assert.False(result.IsSuccess);
         Assert.Contains(result.Errors, e => e == Error.EventAlreadyCancelled);
@@ -97,7 +93,7 @@ public class EventTestsId8
             .WithTimeRange(pastRange.Payload)
             .Build();
 
-        var result = veaEvent.Ready(FakeSystemTime);
+        var result = veaEvent.ReadyEvent(FakeSystemTime);
 
         Assert.True(result.IsFailure);
         Assert.Contains(result.Errors, e => e == Error.CannotReadyPastEvent);
@@ -110,7 +106,7 @@ public class EventTestsId8
             .WithTitle(EventTitle.Default().ToString())
             .Build();
 
-        var result = veaEvent.Ready(FakeSystemTime);
+        var result = veaEvent.ReadyEvent(FakeSystemTime);
 
         Assert.True(result.IsFailure);
         Assert.Contains(result.Errors, e => e == Error.EventTitleCannotBeDefaultOrEmpty);

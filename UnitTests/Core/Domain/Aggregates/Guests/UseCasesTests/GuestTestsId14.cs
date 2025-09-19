@@ -50,9 +50,9 @@ public class GuestTestsId14
         var guest = GuestFactory.Init().Build();
         var veaEvent = EventFactory.Init()
             .WithStatus(EventStatus.Active)
-            .WithMaxGuests(1)
+            .WithMaxGuests(5)
             .WithInvitedGuest(guest.Id)
-            .WithGuest(GuestId.CreateUnique())
+            .WithGhostGuests(5)
             .WithTimeRange(EventTimeRange.Default(FakeSystemTime))
             .Build();
 

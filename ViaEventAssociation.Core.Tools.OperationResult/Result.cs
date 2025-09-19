@@ -49,6 +49,9 @@ public class Result<T> : Result
     public new static Result<T> Failure(params Error[] errors) =>
         new Result<T>(errors.ToList());
 
+    public new static Result<T> Failure(IReadOnlyList<Error> errors) =>
+        new Result<T>(errors.ToList());
+
     public static Result<T> CombineErrors(Result<T> original, List<Error> errors)
     {
         var combined = original.Errors.Concat(errors).ToList();

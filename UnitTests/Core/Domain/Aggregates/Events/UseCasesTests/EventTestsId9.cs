@@ -62,7 +62,6 @@ public class EventTestsId9
             .WithTitle(null)
             .WithDescription(null)
             .WithTimeRange(null)
-            .WithMaxGuests(1)
             .Build();
 
         var result = veaEvent.Activate(FakeSystemTime);
@@ -72,7 +71,6 @@ public class EventTestsId9
         Assert.Contains(result.Errors, e => e == Error.EventTitleCannotBeDefaultOrEmpty);
         Assert.Contains(result.Errors, e => e == Error.EventDescriptionCannotBeDefault);
         Assert.Contains(result.Errors, e => e == Error.EventTimeRangeMissing);
-        Assert.Contains(result.Errors, e => e == Error.GuestsMaxNumberTooSmall);
     }
 
     [Fact]

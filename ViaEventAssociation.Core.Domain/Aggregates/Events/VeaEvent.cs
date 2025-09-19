@@ -143,7 +143,7 @@ public class VeaEvent : AggregateRoot<EventId>
 
         if (!Equals(EventStatus.Ready, Status))
         {
-            var readyResult = Ready(systemTime);
+            var readyResult = ReadyEvent(systemTime);
             if (readyResult.IsFailure)
                 return Result.Failure([Error.ActivateFailure, ..readyResult.Errors]);
         }
@@ -196,7 +196,7 @@ public class VeaEvent : AggregateRoot<EventId>
         return Result.Success();
     }
 
-    public Result Ready(ISystemTime systemTime)
+    public Result ReadyEvent(ISystemTime systemTime)
     {
         var errors = new List<Error>();
 
@@ -209,6 +209,8 @@ public class VeaEvent : AggregateRoot<EventId>
         if (TimeRange == null) errors.Add(Error.EventTimeRangeMissing);
         if (TimeRange?.StartTime < systemTime.Now()) errors.Add(Error.CannotReadyPastEvent);
         if (Equals(Visibility, null)) errors.Add(Error.EventVisibilityMustBeSet);
+        if (MaxGuestsNo.Value < 5) errors.Add(Error.GuestsMaxNumberTooSmall);
+        if (MaxGuestsNo.Value > 50) errors.Add(Error.GuestsMaxNumberTooGreat);
 
         if (errors.Count > 0)
             return Result.Failure(errors.ToArray());

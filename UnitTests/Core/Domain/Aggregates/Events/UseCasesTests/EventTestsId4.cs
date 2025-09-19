@@ -52,7 +52,7 @@ public class EventTestsId4
             .WithMaxGuests(10)
             .WithVisibility(EventVisibility.Public)
             .Build();
-        ev.Ready(FakeSystemTime);
+        ev.ReadyEvent(FakeSystemTime);
 
         var range = EventTimeRange.Create(DateTime.Parse("2023-08-25 12:00"), DateTime.Parse("2023-08-25 18:00")).Payload!;
         var result = ev.UpdateTimeRange(range, FakeSystemTime);
