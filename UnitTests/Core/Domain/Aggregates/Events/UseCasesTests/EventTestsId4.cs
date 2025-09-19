@@ -47,9 +47,11 @@ public class EventTestsId4
     [Fact]
     public void Id4_S3_UpdateWhenReady_ShouldResetStatusToDraft()
     {
-        var ev = EventFactory.Init().WithStatus(EventStatus.Draft).Build();
-        ev.UpdateMaxGuests(MaxGuests.Create(10));
-        ev.UpdateVisibility(EventVisibility.Public);
+        var ev = EventFactory.Init()
+            .WithStatus(EventStatus.Draft)
+            .WithMaxGuests(10)
+            .WithVisibility(EventVisibility.Public)
+            .Build();
         ev.Ready(FakeSystemTime);
 
         var range = EventTimeRange.Create(DateTime.Parse("2023-08-25 12:00"), DateTime.Parse("2023-08-25 18:00")).Payload!;

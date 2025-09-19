@@ -19,6 +19,6 @@ public class CreateEventCommandTests
         Assert.NotNull(result.Payload);
 
         var cmd = result.Payload as CreateEventCommand;
-        Assert.Equal(cmd._eventId.ToString(), guidText);
+        Assert.Equal(cmd.EventId.ToString(), guidText);
     }
 }

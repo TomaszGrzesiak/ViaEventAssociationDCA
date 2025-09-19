@@ -5,9 +5,9 @@ using ViaEventAssociation.Core.Application.Features.Event;
 using ViaEventAssociation.Core.Domain.Aggregates.Events;
 using ViaEventAssociation.Core.Tools.OperationResult;
 
-namespace UnitTests.Core.Application.Features.Event.CreateEvent;
+namespace UnitTests.Core.Application.Features.Event;
 
-public class UpdateEventTitleTests
+public class UpdateEventTitleHandlerTests
 {
     [Fact]
     public async Task HandleAsync_Updates_Title_When_Event_Exists()
@@ -47,7 +47,7 @@ public class UpdateEventTitleTests
         var result = await handler.HandleAsync(cmd);
 
         Assert.True(result.IsFailure);
-        Assert.Contains(result.Errors, e => e == Error.CantFindEventWithThisId);
+        Assert.Contains(result.Errors, e => e == Error.EventNotFound);
     }
 
     [Fact]

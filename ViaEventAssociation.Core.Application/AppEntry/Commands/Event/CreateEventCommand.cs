@@ -5,11 +5,11 @@ namespace ViaEventAssociation.Core.Application.AppEntry.Commands.Event;
 
 public class CreateEventCommand
 {
-    public EventId _eventId;
+    public readonly EventId EventId;
 
     private CreateEventCommand(EventId eventId)
     {
-        _eventId = eventId;
+        EventId = eventId;
     }
 
     public static Result<CreateEventCommand> Create(string guid)

@@ -22,7 +22,7 @@ public class UpdateEventDescriptionHandler : ICommandHandler<UpdateEventDescript
         // Load
         var ev = await _eventRepository.GetAsync(command.EventId);
         if (ev == null)
-            return Result.Failure(Error.CantFindEventWithThisId);
+            return Result.Failure(Error.EventNotFound);
 
         // Business change in aggregate
         var result = ev.UpdateDescription(command.EventDescription);

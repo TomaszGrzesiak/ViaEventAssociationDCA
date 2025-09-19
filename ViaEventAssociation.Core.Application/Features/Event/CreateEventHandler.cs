@@ -19,7 +19,7 @@ public class CreateEventHandler : ICommandHandler<CreateEventCommand>
 
     public async Task<Result> HandleAsync(CreateEventCommand command)
     {
-        var result = VeaEvent.Create(command._eventId);
+        var result = VeaEvent.Create(command.EventId);
         if (result.IsFailure) return result;
 
         // if success

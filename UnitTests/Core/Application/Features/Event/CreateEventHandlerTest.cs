@@ -3,9 +3,9 @@ using UnitTests.Fakes;
 using ViaEventAssociation.Core.Application.AppEntry.Commands.Event;
 using ViaEventAssociation.Core.Domain.Aggregates.Events;
 
-namespace UnitTests.Core.Application.Features.Event.CreateEvent;
+namespace UnitTests.Core.Application.Features.Event;
 
-public class CreateEventTest
+public class CreateEventHandlerTest
 {
     [Fact]
     public async Task HandleAsync_CreatesEvent_AndSaves()

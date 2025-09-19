@@ -13,7 +13,7 @@ public class EventFactory
     private EventDescription? _description = EventDescription.Default();
     private EventTimeRange? _timeRange = null;
     private EventVisibility? _visibility = null;
-    private MaxGuests? _maxGuests = MaxGuests.Create(50);
+    private MaxGuests? _maxGuests = MaxGuests.Create(50).Payload;
     private EventStatus? _status = EventStatus.Draft;
     private int _locationMaxCapacity = 500;
     private List<GuestId> _guests = [];
@@ -46,9 +46,9 @@ public class EventFactory
         return this;
     }
 
-    public EventFactory WithMaxGuests(int value)
+    public EventFactory WithMaxGuests(int maxGuests)
     {
-        _maxGuests = MaxGuests.Create(value);
+        _maxGuests = MaxGuests.Create(maxGuests).Payload;
         return this;
     }
 

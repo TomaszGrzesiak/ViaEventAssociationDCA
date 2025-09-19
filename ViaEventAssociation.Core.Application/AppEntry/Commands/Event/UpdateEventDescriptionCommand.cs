@@ -5,10 +5,10 @@ namespace ViaEventAssociation.Core.Application.AppEntry.Commands.Event;
 
 public class UpdateEventDescriptionCommand
 {
-    public EventId EventId { get; set; }
-    public EventDescription EventDescription { get; set; }
+    public EventId EventId { get; }
+    public EventDescription EventDescription { get; }
 
-    public UpdateEventDescriptionCommand(EventId eventId, EventDescription eventDescription)
+    private UpdateEventDescriptionCommand(EventId eventId, EventDescription eventDescription)
     {
         EventId = eventId;
         EventDescription = eventDescription;
@@ -18,20 +18,24 @@ public class UpdateEventDescriptionCommand
     {
         Error[] errors = [];
 
+        // try to create EventId
         var resultEventId = EventId.FromString(guid);
         if (resultEventId.IsFailure)
             errors = [..errors, ..resultEventId.Errors];
 
-        var eventId = resultEventId.Payload!;
-
+        // try to create EventDescription
         var resultEventDescription = EventDescription.Create(title);
         if (resultEventDescription.IsFailure)
             errors = [..errors, ..resultEventDescription.Errors];
 
-        var newDescription = resultEventDescription.Payload!;
+        // if any errors - return them
         if (errors.Length > 0) return Result<UpdateEventDescriptionCommand>.Failure(errors);
 
+        // if no errors, finish the rest
+        var newDescription = resultEventDescription.Payload!;
+        var eventId = resultEventId.Payload!;
         var cmd = new UpdateEventDescriptionCommand(eventId, newDescription);
+
         return Result<UpdateEventDescriptionCommand>.Success(cmd);
     }
 }

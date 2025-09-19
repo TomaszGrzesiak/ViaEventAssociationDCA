@@ -175,15 +175,11 @@ public class VeaEvent : AggregateRoot<EventId>
         if (newMaxGuests.Value > LocationMaxCapacity)
             return Result.Failure([Error.UpdateMaxGuestsImpossible, Error.MaxGuestAboveLocationCapacity]);
 
-        var result = MaxGuests.Validate(newMaxGuests.Value);
-        if (result.IsSuccess)
-        {
-            MaxGuestsNo = newMaxGuests;
-            if (Equals(Status, EventStatus.Ready))
-                Status = EventStatus.Draft;
-        }
+        MaxGuestsNo = newMaxGuests;
+        if (Equals(Status, EventStatus.Ready))
+            Status = EventStatus.Draft;
 
-        return result.IsSuccess ? Result.Success() : Result.Failure(result.Errors.ToArray());
+        return Result.Success();
     }
 
     public Result UpdateVisibility(EventVisibility newVisibility)
@@ -213,7 +209,6 @@ public class VeaEvent : AggregateRoot<EventId>
         if (TimeRange == null) errors.Add(Error.EventTimeRangeMissing);
         if (TimeRange?.StartTime < systemTime.Now()) errors.Add(Error.CannotReadyPastEvent);
         if (Equals(Visibility, null)) errors.Add(Error.EventVisibilityMustBeSet);
-        if (MaxGuests.Validate(MaxGuestsNo.Value) is { IsFailure: true } result) errors.AddRange(result.Errors);
 
         if (errors.Count > 0)
             return Result.Failure(errors.ToArray());
