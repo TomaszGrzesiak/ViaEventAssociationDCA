@@ -14,12 +14,12 @@ public class SetMaxNumberOfGuestsCommand
         MaxGuests = maxGuests;
     }
 
-    public static Result<SetMaxNumberOfGuestsCommand> Create(string guid, int maxGuestsNo)
+    public static Result<SetMaxNumberOfGuestsCommand> Create(string guidString, int maxGuestsNo)
     {
         Error[] errors = [];
 
         // try to create EventId
-        var resultEventId = EventId.FromString(guid);
+        var resultEventId = EventId.FromString(guidString);
         if (resultEventId.IsFailure)
             errors = [..errors, ..resultEventId.Errors];
 

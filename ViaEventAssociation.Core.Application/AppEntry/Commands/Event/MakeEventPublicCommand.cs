@@ -12,9 +12,9 @@ public class MakeEventPublicCommand
         EventId = eventId;
     }
 
-    public static Result<MakeEventPublicCommand> Create(string guid)
+    public static Result<MakeEventPublicCommand> Create(string guidString)
     {
-        var resultEventId = EventId.FromString(guid);
+        var resultEventId = EventId.FromString(guidString);
         if (resultEventId.IsFailure) return Result<MakeEventPublicCommand>.Failure(resultEventId.Errors.ToArray());
 
         var eventId = resultEventId.Payload!;

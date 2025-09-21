@@ -26,9 +26,9 @@
 * [x] UC8
     * [x] command
     * [x] handler
-* [ ] UC9
-    * [ ] command
-    * [ ] handler
+* [x] UC9
+    * [x] command
+    * [x] handler
 * [ ] UC10
     * [ ] command
     * [ ] handler

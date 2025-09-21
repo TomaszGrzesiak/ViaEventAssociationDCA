@@ -12,9 +12,9 @@ public class CreateEventCommand
         EventId = eventId;
     }
 
-    public static Result<CreateEventCommand> Create(string guid)
+    public static Result<CreateEventCommand> Create(string guidString)
     {
-        var result = EventId.FromString(guid);
+        var result = EventId.FromString(guidString);
         if (result.IsFailure) return Result<CreateEventCommand>.Failure(result.Errors.ToArray());
 
         var eventId = result.Payload!;

@@ -14,12 +14,12 @@ public class UpdateEventTimeRangeCommand
         EventTimeRange = eventTimeRange;
     }
 
-    public static Result<UpdateEventTimeRangeCommand> Create(string guid, string? startTime, string? endTime)
+    public static Result<UpdateEventTimeRangeCommand> Create(string guidString, string? startTime, string? endTime)
     {
         var errors = new List<Error>();
 
         // try to create EventId
-        var resultEventId = EventId.FromString(guid);
+        var resultEventId = EventId.FromString(guidString);
         if (resultEventId.IsFailure) errors.AddRange(resultEventId.Errors);
 
         // try to create EventTimeRange

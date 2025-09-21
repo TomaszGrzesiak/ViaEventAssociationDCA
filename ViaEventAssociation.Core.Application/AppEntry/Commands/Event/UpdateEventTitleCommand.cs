@@ -14,12 +14,12 @@ public class UpdateEventTitleCommand
         NewTitle = newTitle;
     }
 
-    public static Result<UpdateEventTitleCommand> Create(string guid, string title)
+    public static Result<UpdateEventTitleCommand> Create(string guidString, string title)
     {
         Error[] errors = [];
 
         // try to create EventId
-        var resultEventId = EventId.FromString(guid);
+        var resultEventId = EventId.FromString(guidString);
         if (resultEventId.IsFailure)
             errors = [..errors, ..resultEventId.Errors];
 

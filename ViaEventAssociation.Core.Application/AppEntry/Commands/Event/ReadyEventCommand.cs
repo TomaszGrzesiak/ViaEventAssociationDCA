@@ -12,13 +12,12 @@ public class ReadyEventCommand
         EventId = eventId;
     }
 
-    public static Result<ReadyEventCommand> Create(string guid)
+    public static Result<ReadyEventCommand> Create(string guidString)
     {
-        var result = EventId.FromString(guid);
+        var result = EventId.FromString(guidString);
         if (result.IsFailure) return Result<ReadyEventCommand>.Failure(result.Errors);
 
         var cmd = new ReadyEventCommand(result.Payload!);
-
         return Result<ReadyEventCommand>.Success(cmd);
     }
 }
