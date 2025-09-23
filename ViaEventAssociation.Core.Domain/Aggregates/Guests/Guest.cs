@@ -1,4 +1,5 @@
 ﻿using ViaEventAssociation.Core.Domain.Common.Bases;
+using ViaEventAssociation.Core.Domain.Contracts;
 using ViaEventAssociation.Core.Tools.OperationResult;
 
 namespace ViaEventAssociation.Core.Domain.Aggregates.Guests;
@@ -10,9 +11,6 @@ public class Guest : AggregateRoot<GuestId>
     public GuestName LastName { get; private set; }
     public ProfilePictureUrl ProfilePictureUrlAddress { get; private set; }
 
-    // todo: repository needs to be moved somewhere outside the domain.
-    private static readonly List<Guest> Guests = []; // temporary storage for the guests
-
     private Guest(GuestId id, EmailAddress email, GuestName firstName, GuestName lastName, ProfilePictureUrl profilePictureUrlAddress)
         : base(id)
     {
@@ -22,27 +20,20 @@ public class Guest : AggregateRoot<GuestId>
         ProfilePictureUrlAddress = profilePictureUrlAddress;
     }
 
-    public static Result<Guest> Register(
-        EmailAddress email,
+    public static async Task<Result<Guest>> Register(
+        EmailAddress emailAddress,
         GuestName firstName,
         GuestName lastName,
-        ProfilePictureUrl profilePicture)
+        ProfilePictureUrl profilePicture,
+        IEmailUnusedChecker checker
+    )
     {
-        var errors = new List<Error>();
+        // F5 – uniqueness (domain rule via port)
+        var isUnique = await checker.IsUniqueAsync(emailAddress);
+        if (!isUnique) return Result<Guest>.Failure(Error.EmailAlreadyRegistered);
 
-        if (EmailAddress.Validate(email) is { IsFailure: true } result1) errors.AddRange(result1.Errors);
-        if (GuestName.Validate(firstName) is { IsFailure: true } result2) errors.AddRange(result2.Errors);
-        if (GuestName.Validate(lastName) is { IsFailure: true } result3) errors.AddRange(result3.Errors);
-        if (ProfilePictureUrl.Validate(profilePicture) is { IsFailure: true } result4) errors.AddRange(result4.Errors);
+        var newGuest = new Guest(GuestId.CreateUnique(), emailAddress, firstName, lastName, profilePicture);
 
-        if (errors.Count > 0)
-            return Result<Guest>.Failure(errors.ToArray());
-
-        // if no errors:
-        var newGuest = new Guest(GuestId.CreateUnique(), email, firstName, lastName, profilePicture);
-        if (Guests.Any(g => g.Email.Value == email.Value)) return Result<Guest>.Failure(Error.EmailAlreadyRegistered);
-
-        Guests.Add(newGuest);
         return Result<Guest>.Success(newGuest);
     }
 

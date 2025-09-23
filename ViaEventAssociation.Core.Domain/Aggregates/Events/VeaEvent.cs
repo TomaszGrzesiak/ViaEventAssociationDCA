@@ -18,7 +18,7 @@ public class VeaEvent : AggregateRoot<EventId>
     private readonly List<Invitation> _invitations;
     public IReadOnlyList<Invitation> Invitations => _invitations.AsReadOnly();
 
-    private readonly List<GuestId> _guestList = new(); // temporary storage for the guests
+    private readonly List<GuestId> _guestList = new();
     public IReadOnlyList<GuestId> GuestList => _guestList.AsReadOnly();
 
     public int LocationMaxCapacity { get; private set; }

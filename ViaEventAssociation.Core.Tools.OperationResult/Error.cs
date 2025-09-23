@@ -41,7 +41,7 @@ public class Error
         Create(111, "Profile picture URL is invalid or empty. Please provide a valid URL starting with http or https. ");
 
     // email errors (codes 140 - 149)
-    public static readonly Error EmailRequired = Create(140, "Email is required.");
+    public static readonly Error EmailCannotBeEmpty = Create(140, "Email cannot be empty.");
     public static readonly Error EmailMustEndWithViaDomain = Create(141, "Email must end with '@via.dk'.");
 
     public static readonly Error EmailInvalidFormat =
