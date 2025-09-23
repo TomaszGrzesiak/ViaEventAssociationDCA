@@ -12,9 +12,9 @@ public class EventTestsId12
     DateTime today = new DateTime(FakeSystemTime.Now().Year, FakeSystemTime.Now().Month, FakeSystemTime.Now().Day, 0, 0, 0);
 
     [Fact]
-    public void Id12_S1_RemovesParticipation_WhenGuestIsParticipating()
+    public async void Id12_S1_RemovesParticipation_WhenGuestIsParticipating()
     {
-        var guest = GuestFactory.Init().Build();
+        var guest = await GuestFactory.Init().Build();
         var veaEvent = EventFactory.Init()
             .WithGuest(guest.Id)
             .Build();
@@ -27,9 +27,9 @@ public class EventTestsId12
     }
 
     [Fact]
-    public void Id12_S2_Noop_WhenGuestIsNotParticipating()
+    public async void Id12_S2_Noop_WhenGuestIsNotParticipating()
     {
-        var guest = GuestFactory.Init().Build();
+        var guest = await GuestFactory.Init().Build();
         var veaEvent = EventFactory.Init()
             .Build();
 
@@ -41,12 +41,12 @@ public class EventTestsId12
     }
 
     [Fact]
-    public void Id12_F1_Failure_WhenEventStartedAlready()
+    public async void Id12_F1_Failure_WhenEventStartedAlready()
     {
         var pastStart = EventTimeRange.Default(FakeSystemTime).StartTime.AddDays(-2);
         var pastDateTime = EventTimeRange.Create(pastStart, pastStart.AddHours(2)).Payload!;
 
-        var guest = GuestFactory.Init().Build();
+        var guest = await GuestFactory.Init().Build();
         var veaEvent = EventFactory.Init()
             .WithGuest(guest.Id)
             .WithTimeRange(pastDateTime)

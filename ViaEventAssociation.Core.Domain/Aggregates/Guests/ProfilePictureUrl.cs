@@ -7,19 +7,18 @@ public class ProfilePictureUrl : ValueObject
 {
     public string? Value { get; }
 
-    private ProfilePictureUrl(string? url)
+    private ProfilePictureUrl(string url)
     {
         Value = url;
     }
 
-    public static ProfilePictureUrl Create(string? input)
+    public static Result<ProfilePictureUrl> Create(string? input)
     {
-        return new ProfilePictureUrl(input);
+        return Validate(input);
     }
 
-    public static Result<ProfilePictureUrl> Validate(ProfilePictureUrl? pictureUrl)
+    private static Result<ProfilePictureUrl> Validate(string? url)
     {
-        var url = pictureUrl.Value;
         if (string.IsNullOrWhiteSpace(url))
             return Result<ProfilePictureUrl>.Failure(Error.InvalidProfilePictureUrlEmpty);
 

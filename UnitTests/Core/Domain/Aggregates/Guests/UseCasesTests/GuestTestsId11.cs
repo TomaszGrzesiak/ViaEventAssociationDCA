@@ -12,9 +12,9 @@ public class EventTestsId11
     private static readonly ISystemTime FakeSystemTime = new FakeSystemTime(new DateTime(2023, 8, 10, 12, 0, 0));
 
     [Fact]
-    public void Id11_S1_SuccessfullyRegisterGuest_ForPublicActiveEvent()
+    public async void Id11_S1_SuccessfullyRegisterGuest_ForPublicActiveEvent()
     {
-        var guest = GuestFactory.Init().Build();
+        var guest = await GuestFactory.Init().Build();
         var veaEvent = EventFactory.Init()
             .WithStatus(EventStatus.Active)
             .WithVisibility(EventVisibility.Public)
@@ -32,10 +32,10 @@ public class EventTestsId11
     [InlineData("Draft")]
     [InlineData("Ready")]
     [InlineData("Cancelled")]
-    public void Id11_F1_Failure_WhenEventIsNotActive(string statusString)
+    public async void Id11_F1_Failure_WhenEventIsNotActive(string statusString)
     {
         var status = EventStatus.FromName(statusString).Payload!;
-        var guest = GuestFactory.Init().Build();
+        var guest = await GuestFactory.Init().Build();
         var veaEvent = EventFactory.Init()
             .WithStatus(status)
             .WithVisibility(EventVisibility.Public)
@@ -48,9 +48,9 @@ public class EventTestsId11
     }
 
     [Fact]
-    public void Id11_F2_Failure_WhenEventIsFull()
+    public async void Id11_F2_Failure_WhenEventIsFull()
     {
-        var guest = GuestFactory.Init().Build();
+        var guest = await GuestFactory.Init().Build();
         var veaEvent = EventFactory.Init()
             .WithStatus(EventStatus.Active)
             .WithVisibility(EventVisibility.Public)
@@ -65,9 +65,9 @@ public class EventTestsId11
     }
 
     [Fact]
-    public void Id11_F3_Failure_WhenEventAlreadyStarted()
+    public async void Id11_F3_Failure_WhenEventAlreadyStarted()
     {
-        var guest = GuestFactory.Init().Build();
+        var guest = await GuestFactory.Init().Build();
         var time = EventTimeRange.Default(FakeSystemTime);
         var pastTime = EventTimeRange.Create(
             time.StartTime.AddDays(-2),
@@ -87,9 +87,9 @@ public class EventTestsId11
     }
 
     [Fact]
-    public void Id11_F4_Failure_WhenEventIsPrivate()
+    public async void Id11_F4_Failure_WhenEventIsPrivate()
     {
-        var guest = GuestFactory.Init().Build();
+        var guest = await GuestFactory.Init().Build();
         var veaEvent = EventFactory.Init()
             .WithVisibility(EventVisibility.Private)
             .Build();
@@ -101,9 +101,9 @@ public class EventTestsId11
     }
 
     [Fact]
-    public void Id11_F5_Failure_WhenGuestAlreadyParticipating()
+    public async void Id11_F5_Failure_WhenGuestAlreadyParticipating()
     {
-        var guest = GuestFactory.Init().Build();
+        var guest = await GuestFactory.Init().Build();
         var veaEvent = EventFactory.Init()
             .WithGuest(guest.Id)
             .Build();

@@ -12,9 +12,9 @@ public class GuestTestsId15
     private static readonly ISystemTime FakeSystemTime = new FakeSystemTime(new DateTime(2023, 8, 10, 12, 0, 0));
 
     [Fact]
-    public void Id15_S1_Success_WhenInvitationIsPending()
+    public async void Id15_S1_Success_WhenInvitationIsPending()
     {
-        var guest = GuestFactory.Init().Build();
+        var guest = await GuestFactory.Init().Build();
         var veaEvent = EventFactory.Init()
             .WithStatus(EventStatus.Active)
             .WithInvitedGuest(guest.Id)
@@ -29,9 +29,9 @@ public class GuestTestsId15
     }
 
     [Fact]
-    public void Id15_S2_Success_WhenInvitationIsAlreadyAccepted()
+    public async void Id15_S2_Success_WhenInvitationIsAlreadyAccepted()
     {
-        var guest = GuestFactory.Init().Build();
+        var guest = await GuestFactory.Init().Build();
         var veaEvent = EventFactory.Init()
             .WithStatus(EventStatus.Active)
             .WithInvitedGuest(guest.Id)
@@ -50,9 +50,9 @@ public class GuestTestsId15
     }
 
     [Fact]
-    public void Id15_F1_Failure_WhenInvitationNotFound()
+    public async void Id15_F1_Failure_WhenInvitationNotFound()
     {
-        var guest = GuestFactory.Init().Build();
+        var guest = await GuestFactory.Init().Build();
         var veaEvent = EventFactory.Init()
             .WithStatus(EventStatus.Active)
             .Build();
@@ -64,9 +64,9 @@ public class GuestTestsId15
     }
 
     [Fact]
-    public void Id15_F2_Failure_WhenEventIsCancelled()
+    public async void Id15_F2_Failure_WhenEventIsCancelled()
     {
-        var guest = GuestFactory.Init().Build();
+        var guest = await GuestFactory.Init().Build();
         var veaEvent = EventFactory.Init()
             .WithInvitedGuest(guest.Id)
             .WithStatus(EventStatus.Cancelled)

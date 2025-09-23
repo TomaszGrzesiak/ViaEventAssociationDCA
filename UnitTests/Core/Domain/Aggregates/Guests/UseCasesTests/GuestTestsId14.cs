@@ -13,9 +13,9 @@ public class GuestTestsId14
     DateTime today = new DateTime(FakeSystemTime.Now().Year, FakeSystemTime.Now().Month, FakeSystemTime.Now().Day, 0, 0, 0);
 
     [Fact]
-    public void Id14_S1_SuccessfullyAcceptInvitation_WhenAllConditionsMet()
+    public async void Id14_S1_SuccessfullyAcceptInvitation_WhenAllConditionsMet()
     {
-        var guest = GuestFactory.Init().Build();
+        var guest = await GuestFactory.Init().Build();
         var veaEvent = EventFactory.Init()
             .WithStatus(EventStatus.Active)
             .WithTimeRange(EventTimeRange.Default(FakeSystemTime))
@@ -31,9 +31,9 @@ public class GuestTestsId14
     }
 
     [Fact]
-    public void Id14_F1_Failure_WhenInvitationNotFound()
+    public async void Id14_F1_Failure_WhenInvitationNotFound()
     {
-        var guest = GuestFactory.Init().Build();
+        var guest = await GuestFactory.Init().Build();
         var veaEvent = EventFactory.Init()
             .WithStatus(EventStatus.Active)
             .Build();
@@ -45,9 +45,9 @@ public class GuestTestsId14
     }
 
     [Fact]
-    public void Id14_F2_Failure_WhenTooManyGuests()
+    public async void Id14_F2_Failure_WhenTooManyGuests()
     {
-        var guest = GuestFactory.Init().Build();
+        var guest = await GuestFactory.Init().Build();
         var veaEvent = EventFactory.Init()
             .WithStatus(EventStatus.Active)
             .WithMaxGuests(5)
@@ -63,9 +63,9 @@ public class GuestTestsId14
     }
 
     [Fact]
-    public void Id14_F3_Failure_WhenEventIsCancelled()
+    public async void Id14_F3_Failure_WhenEventIsCancelled()
     {
-        var guest = GuestFactory.Init().Build();
+        var guest = await GuestFactory.Init().Build();
         var veaEvent = EventFactory.Init()
             .WithStatus(EventStatus.Cancelled)
             .WithInvitedGuest(guest.Id)
@@ -78,9 +78,9 @@ public class GuestTestsId14
     }
 
     [Fact]
-    public void Id14_F4_Failure_WhenEventIsReady()
+    public async void Id14_F4_Failure_WhenEventIsReady()
     {
-        var guest = GuestFactory.Init().Build();
+        var guest = await GuestFactory.Init().Build();
         var veaEvent = EventFactory.Init()
             .WithStatus(EventStatus.Ready)
             .WithInvitedGuest(guest.Id)
@@ -93,9 +93,9 @@ public class GuestTestsId14
     }
 
     [Fact]
-    public void Id14_F5_Failure_WhenEventIsInThePast()
+    public async void Id14_F5_Failure_WhenEventIsInThePast()
     {
-        var guest = GuestFactory.Init().Build();
+        var guest = await GuestFactory.Init().Build();
 
         var pastStartTime = EventTimeRange.Default(FakeSystemTime).StartTime.AddDays(-2);
         var pastTimeRange = EventTimeRange.Create(pastStartTime, pastStartTime.AddHours(2)).Payload!;
