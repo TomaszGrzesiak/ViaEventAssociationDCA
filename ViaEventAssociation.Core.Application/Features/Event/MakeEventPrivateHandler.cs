@@ -1,11 +1,12 @@
-﻿using ViaEventAssociation.Core.Application.AppEntry.Commands.Event;
+﻿using Application.AppEntry;
+using ViaEventAssociation.Core.Application.AppEntry.Commands.Event;
 using ViaEventAssociation.Core.Domain.Aggregates.Events;
 using ViaEventAssociation.Core.Domain.Common;
 using ViaEventAssociation.Core.Tools.OperationResult;
 
 namespace ViaEventAssociation.Core.Application.Features.Event;
 
-public class MakeEventPrivateHandler(IEventRepository eventRepository, IUnitOfWork unitOfWork)
+public class MakeEventPrivateHandler(IEventRepository eventRepository, IUnitOfWork unitOfWork) : ICommandHandler<MakeEventPrivateCommand>
 {
     public async Task<Result> HandleAsync(MakeEventPrivateCommand command)
     {

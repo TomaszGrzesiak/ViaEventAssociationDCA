@@ -12,7 +12,7 @@ public class EventTestsId11
     private static readonly ISystemTime FakeSystemTime = new FakeSystemTime(new DateTime(2023, 8, 10, 12, 0, 0));
 
     [Fact]
-    public async void Id11_S1_SuccessfullyRegisterGuest_ForPublicActiveEvent()
+    public async void Id11_S1_GuestSuccessfullyParticipates_ForPublicActiveEvent()
     {
         var guest = await GuestFactory.Init().Build();
         var veaEvent = EventFactory.Init()

@@ -100,4 +100,5 @@ public class Error
     // Commands and handlers (codes 350 - 400)
     public static readonly Error EventNotFound = Create(304, "The system can't find any event with this id.");
     public static readonly Error TimeNotParsable = Create(305, "Given Start or End Time is not parsable from string to DateTime format.");
+    public static readonly Error GuestNotFound = Create(306, "Guest not found.");
 }
