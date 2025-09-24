@@ -16,8 +16,7 @@ public class GuestTestsId10
     private GuestName _lastName = GuestName.Create(Lm).Payload!;
     private ProfilePictureUrl _pictureUrl = ProfilePictureUrl.Create(Ppu).Payload!;
 
-    public static List<Guest> GuestStore = [];
-    public static readonly IEmailUnusedChecker EmailUnusedChecker = new FakeUniqueEmailChecker(GuestStore);
+    private IEmailUnusedChecker _emailUnusedChecker = new FakeUniqueEmailChecker([]);
 
     private string Normalize(string input, bool capitalizeFirstLetter = true)
     {
@@ -36,7 +35,7 @@ public class GuestTestsId10
     [Fact]
     public async void Id10_S1_SuccessfullyRegistersGuest_WhenAllDataValid()
     {
-        var result = await Guest.Register(GuestId.CreateUnique(), _email, _firstName, _lastName, _pictureUrl, EmailUnusedChecker);
+        var result = await Guest.Register(GuestId.CreateUnique(), _email, _firstName, _lastName, _pictureUrl, _emailUnusedChecker);
 
         Assert.True(result.IsSuccess);
         var guest = result.Payload!;
@@ -95,20 +94,19 @@ public class GuestTestsId10
         Assert.Contains(result.Errors, e => e == Error.InvalidNameFormat);
     }
 
-    // todo: You need to save it to some sort of store. But it can't be in domain. So there must be a domain contract, that allows injecting a an email checker. 
     [Fact]
     public async void Id10_F5_Failure_WhenEmailAlreadyRegistered()
     {
-        _email = EmailAddress.Create("989898@via.dk").Payload!;
-        var result = await Guest.Register(GuestId.CreateUnique(), _email, _firstName, _lastName, _pictureUrl, EmailUnusedChecker);
-        Assert.True(result.IsSuccess);
+        // Arrange
+        _emailUnusedChecker = new FakeUniqueEmailChecker(["308817@via.dk"]);
+        _email = EmailAddress.Create("308817@via.dk").Payload!;
 
-        GuestStore.Add(result.Payload!);
+        // Act
+        var result = await Guest.Register(GuestId.CreateUnique(), _email, _firstName, _lastName, _pictureUrl, _emailUnusedChecker);
 
-        var duplicateResult = await Guest.Register(GuestId.CreateUnique(), _email, _firstName, _lastName, _pictureUrl, EmailUnusedChecker);
-
-        Assert.True(duplicateResult.IsFailure);
-        Assert.Contains(duplicateResult.Errors, e => e == Error.EmailAlreadyRegistered);
+        // Assert
+        Assert.True(result.IsFailure);
+        Assert.Contains(result.Errors, e => e == Error.EmailAlreadyRegistered);
     }
 
     [Theory]

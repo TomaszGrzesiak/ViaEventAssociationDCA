@@ -3,11 +3,11 @@ using ViaEventAssociation.Core.Domain.Contracts;
 
 namespace UnitTests.Fakes;
 
-public class FakeUniqueEmailChecker(List<Guest> guests) : IEmailUnusedChecker
+public class FakeUniqueEmailChecker(List<string> takenEmails) : IEmailUnusedChecker
 {
     public Task<bool> IsUniqueAsync(EmailAddress emailAddress)
     {
-        var isUnique = !guests.Any(g => g.Email.Equals(emailAddress));
+        var isUnique = !takenEmails.Any(t => t.Equals(emailAddress.ToString()));
         return Task.FromResult(isUnique);
     }
 }
