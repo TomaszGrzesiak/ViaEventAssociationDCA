@@ -119,8 +119,9 @@ public class UpdateEventTitleHandlerTests
         var repo = new InMemEventRepoStub();
         var uow = new FakeUoW();
         var handler = new UpdateEventTitleHandler(repo, uow);
+        var eventId = EventId.FromGuid(Guid.NewGuid());
 
-        var ev = VeaEvent.Create().Payload!;
+        var ev = VeaEvent.Create(eventId).Payload!;
         ev.Cancel();
         await repo.AddAsync(ev);
 

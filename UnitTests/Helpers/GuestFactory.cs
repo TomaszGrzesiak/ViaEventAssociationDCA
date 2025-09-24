@@ -1,5 +1,6 @@
 ﻿using UnitTests.Fakes;
 using ViaEventAssociation.Core.Domain.Aggregates.Guests;
+using ViaEventAssociation.Core.Domain.Contracts;
 
 namespace UnitTests.Helpers;
 
@@ -10,9 +11,17 @@ public class GuestFactory
     private GuestName _firstName = GuestName.Create("Geralt").Payload!;
     private GuestName _lastName = GuestName.Create("Gwynbleidd").Payload!;
     private ProfilePictureUrl _picture = ProfilePictureUrl.Create("https://static.wikia.nocookie.net/witcher/images/9/9b/Geralt-cool.jpg").Payload!;
+    private GuestId _guestId = GuestId.CreateUnique();
+    private IEmailUnusedChecker _checker = new FakeUniqueEmailChecker([]);
 
 
     public static GuestFactory Init() => new();
+
+    public GuestFactory WithId(string guid)
+    {
+        _guestId = GuestId.FromString(guid).Payload!;
+        return this;
+    }
 
     public GuestFactory WithEmail(string email)
     {
@@ -38,10 +47,16 @@ public class GuestFactory
         return this;
     }
 
+    public GuestFactory WithChecker(IEmailUnusedChecker checker)
+    {
+        _checker = checker;
+        return this;
+    }
+
+
     public async Task<Guest> Build()
     {
-        var checker = new FakeUniqueEmailChecker([]);
-        var guest = await Guest.Register(_email, _firstName, _lastName, _picture, checker);
+        var guest = await Guest.Register(_guestId, _email, _firstName, _lastName, _picture, _checker);
         return guest.Payload!;
     }
 }

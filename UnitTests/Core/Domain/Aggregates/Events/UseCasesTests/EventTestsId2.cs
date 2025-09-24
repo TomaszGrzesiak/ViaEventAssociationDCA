@@ -12,7 +12,8 @@ public class EventTestsId2
     [InlineData("VIA Hackathon")]
     public void Id2_S1_TitleUpdate_WhenDraftOrReadyAndValidLength_ShouldSucceed(string exampleTitle)
     {
-        var eventResult = VeaEvent.Create();
+        var eventId = EventId.FromGuid(Guid.NewGuid());
+        var eventResult = VeaEvent.Create(eventId);
         Assert.True(eventResult.IsSuccess);
         var ev = eventResult.Payload!;
 
@@ -96,7 +97,8 @@ public class EventTestsId2
     [Fact]
     public void Id2_F6_TitleUpdateOnCancelledEvent_ShouldFail()
     {
-        var ev = VeaEvent.Create().Payload!;
+        var eventId = EventId.FromGuid(Guid.NewGuid());
+        var ev = VeaEvent.Create(eventId).Payload!;
         var cancelResult = ev.Cancel();
         Assert.True(cancelResult.IsSuccess);
 

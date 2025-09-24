@@ -21,6 +21,7 @@ public class Guest : AggregateRoot<GuestId>
     }
 
     public static async Task<Result<Guest>> Register(
+        GuestId guestId,
         EmailAddress emailAddress,
         GuestName firstName,
         GuestName lastName,
@@ -32,7 +33,7 @@ public class Guest : AggregateRoot<GuestId>
         var isUnique = await checker.IsUniqueAsync(emailAddress);
         if (!isUnique) return Result<Guest>.Failure(Error.EmailAlreadyRegistered);
 
-        var newGuest = new Guest(GuestId.CreateUnique(), emailAddress, firstName, lastName, profilePicture);
+        var newGuest = new Guest(guestId, emailAddress, firstName, lastName, profilePicture);
 
         return Result<Guest>.Success(newGuest);
     }

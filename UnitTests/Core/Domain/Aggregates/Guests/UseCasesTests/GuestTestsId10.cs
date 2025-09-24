@@ -36,7 +36,7 @@ public class GuestTestsId10
     [Fact]
     public async void Id10_S1_SuccessfullyRegistersGuest_WhenAllDataValid()
     {
-        var result = await Guest.Register(_email, _firstName, _lastName, _pictureUrl, EmailUnusedChecker);
+        var result = await Guest.Register(GuestId.CreateUnique(), _email, _firstName, _lastName, _pictureUrl, EmailUnusedChecker);
 
         Assert.True(result.IsSuccess);
         var guest = result.Payload!;
@@ -76,7 +76,7 @@ public class GuestTestsId10
     [Theory]
     [InlineData("A")]
     [InlineData("abcdefghijklmnopqrstuvwxyz")] // 26 letters
-    public async void Id10_F3_Failure_WhenFirstNameInvalid(string name)
+    public void Id10_F3_Failure_WhenFirstNameInvalid(string name)
     {
         var result = GuestName.Create(name);
 
@@ -87,7 +87,7 @@ public class GuestTestsId10
     [Theory]
     [InlineData("A")]
     [InlineData("abcdefghijklmnopqrstuvwxyz")] // 26 letters
-    public async void Id10_F4_Failure_WhenLastNameInvalid(string name)
+    public void Id10_F4_Failure_WhenLastNameInvalid(string name)
     {
         var result = GuestName.Create(name);
 
@@ -100,12 +100,12 @@ public class GuestTestsId10
     public async void Id10_F5_Failure_WhenEmailAlreadyRegistered()
     {
         _email = EmailAddress.Create("989898@via.dk").Payload!;
-        var result = await Guest.Register(_email, _firstName, _lastName, _pictureUrl, EmailUnusedChecker);
+        var result = await Guest.Register(GuestId.CreateUnique(), _email, _firstName, _lastName, _pictureUrl, EmailUnusedChecker);
         Assert.True(result.IsSuccess);
 
         GuestStore.Add(result.Payload!);
 
-        var duplicateResult = await Guest.Register(_email, _firstName, _lastName, _pictureUrl, EmailUnusedChecker);
+        var duplicateResult = await Guest.Register(GuestId.CreateUnique(), _email, _firstName, _lastName, _pictureUrl, EmailUnusedChecker);
 
         Assert.True(duplicateResult.IsFailure);
         Assert.Contains(duplicateResult.Errors, e => e == Error.EmailAlreadyRegistered);

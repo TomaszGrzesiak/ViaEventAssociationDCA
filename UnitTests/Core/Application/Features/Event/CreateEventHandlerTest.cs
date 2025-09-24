@@ -1,6 +1,6 @@
-﻿using Application.Features.Event;
-using UnitTests.Fakes;
+﻿using UnitTests.Fakes;
 using ViaEventAssociation.Core.Application.AppEntry.Commands.Event;
+using ViaEventAssociation.Core.Application.Features.Event;
 using ViaEventAssociation.Core.Domain.Aggregates.Events;
 
 namespace UnitTests.Core.Application.Features.Event;
