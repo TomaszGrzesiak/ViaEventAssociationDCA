@@ -31,10 +31,10 @@ namespace ViaEventAssociation.Core.Domain.Aggregates.Events.Entities
 
         public Result Reject()
         {
-            if (Status.Equals(InvitationStatus.Rejected))
+            if (Status.Equals(InvitationStatus.Declined))
                 return Result.Failure(Error.InvitationAlreadyRejected);
 
-            Status = InvitationStatus.Rejected;
+            Status = InvitationStatus.Declined;
             return Result.Success();
         }
     }

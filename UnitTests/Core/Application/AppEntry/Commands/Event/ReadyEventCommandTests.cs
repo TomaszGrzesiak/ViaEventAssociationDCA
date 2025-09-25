@@ -1,9 +1,7 @@
-﻿using UnitTests.Fakes;
-using ViaEventAssociation.Core.Application.AppEntry.Commands.Event;
-using ViaEventAssociation.Core.Domain.Contracts;
+﻿using ViaEventAssociation.Core.Application.AppEntry.Commands.Event;
 using ViaEventAssociation.Core.Tools.OperationResult;
 
-namespace UnitTests.Core.Application.AppEntry.Commands;
+namespace UnitTests.Core.Application.AppEntry.Commands.Event;
 
 public class ReadyEventCommandTests
 {

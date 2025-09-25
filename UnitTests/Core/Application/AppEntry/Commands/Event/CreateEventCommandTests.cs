@@ -1,7 +1,6 @@
 ﻿using ViaEventAssociation.Core.Application.AppEntry.Commands.Event;
-using ViaEventAssociation.Core.Domain.Aggregates.Events;
 
-namespace UnitTests.Core.Application.AppEntry.Commands;
+namespace UnitTests.Core.Application.AppEntry.Commands.Event;
 
 public class CreateEventCommandTests
 {

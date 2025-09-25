@@ -2,7 +2,7 @@
 using ViaEventAssociation.Core.Domain.Aggregates.Events;
 using ViaEventAssociation.Core.Tools.OperationResult;
 
-namespace UnitTests.Core.Application.AppEntry.Commands;
+namespace UnitTests.Core.Application.AppEntry.Commands.Event;
 
 public sealed class UpdateEventDescriptionCommandTests
 {

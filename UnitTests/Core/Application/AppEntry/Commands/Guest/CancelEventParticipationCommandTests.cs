@@ -1,9 +1,9 @@
 ﻿using ViaEventAssociation.Core.Application.AppEntry.Commands.Guest;
 using ViaEventAssociation.Core.Tools.OperationResult;
 
-namespace UnitTests.Core.Application.AppEntry.Commands;
+namespace UnitTests.Core.Application.AppEntry.Commands.Guest;
 
-public class InviteGuestCommandTests
+public class CancelEventParticipationCommandTests
 {
     [Fact]
     public void Create_Succeeds_And_Parses_Id()
@@ -13,7 +13,7 @@ public class InviteGuestCommandTests
         var guestGuid = Guid.NewGuid().ToString();
 
         // Act
-        var result = InviteGuestCommand.Create(eventGuid, guestGuid);
+        var result = CancelEventParticipationCommand.Create(eventGuid, guestGuid);
 
         // Assert
         Assert.True(result.IsSuccess);
@@ -32,7 +32,7 @@ public class InviteGuestCommandTests
         var guestGuid = "not-a-guid";
 
         // Act
-        var result = InviteGuestCommand.Create(eventGuid, guestGuid);
+        var result = CancelEventParticipationCommand.Create(eventGuid, guestGuid);
 
         // Assert
         Assert.True(result.IsFailure);

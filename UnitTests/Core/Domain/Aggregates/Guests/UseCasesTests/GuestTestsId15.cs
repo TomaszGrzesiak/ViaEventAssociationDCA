@@ -25,7 +25,7 @@ public class GuestTestsId15
         Assert.True(result.IsSuccess);
         var invitation = veaEvent.Invitations.FirstOrDefault(i => i.GuestId == guest.Id);
         Assert.NotNull(invitation);
-        Assert.Equal(InvitationStatus.Rejected, invitation!.Status);
+        Assert.Equal(InvitationStatus.Declined, invitation!.Status);
     }
 
     [Fact]
@@ -46,7 +46,7 @@ public class GuestTestsId15
 
         var invitation = veaEvent.Invitations.FirstOrDefault(i => i.GuestId == guest.Id);
         Assert.NotNull(invitation);
-        Assert.Equal(InvitationStatus.Rejected, invitation!.Status);
+        Assert.Equal(InvitationStatus.Declined, invitation!.Status);
     }
 
     [Fact]

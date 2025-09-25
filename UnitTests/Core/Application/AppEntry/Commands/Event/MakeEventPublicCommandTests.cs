@@ -1,9 +1,9 @@
 ﻿using ViaEventAssociation.Core.Application.AppEntry.Commands.Event;
 using ViaEventAssociation.Core.Tools.OperationResult;
 
-namespace UnitTests.Core.Application.AppEntry.Commands;
+namespace UnitTests.Core.Application.AppEntry.Commands.Event;
 
-public class MakeEventPrivateCommandTests
+public class MakeEventPublicCommandTests
 {
     [Fact]
     public void Create_Succeeds_When_Guid_Is_Valid()
@@ -12,7 +12,7 @@ public class MakeEventPrivateCommandTests
         var guid = Guid.NewGuid();
 
         // Act
-        var result = MakeEventPrivateCommand.Create(guid.ToString());
+        var result = MakeEventPublicCommand.Create(guid.ToString());
 
         // Assert
         Assert.True(result.IsSuccess);
@@ -25,7 +25,7 @@ public class MakeEventPrivateCommandTests
         var guid = "invalid";
 
         // Act
-        var result = MakeEventPrivateCommand.Create(guid);
+        var result = MakeEventPublicCommand.Create(guid);
 
         // Assert
         Assert.True(result.IsFailure);

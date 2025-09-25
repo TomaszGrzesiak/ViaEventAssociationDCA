@@ -1,8 +1,7 @@
 ﻿using ViaEventAssociation.Core.Application.AppEntry.Commands.Guest;
-using ViaEventAssociation.Core.Domain.Aggregates.Guests;
 using ViaEventAssociation.Core.Tools.OperationResult;
 
-namespace UnitTests.Core.Application.AppEntry.Commands;
+namespace UnitTests.Core.Application.AppEntry.Commands.Guest;
 
 public class RegisterGuestCommandTests
 {

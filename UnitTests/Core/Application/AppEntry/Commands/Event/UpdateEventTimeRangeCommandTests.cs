@@ -1,11 +1,9 @@
-﻿using UnitTests.Fakes;
-using UnitTests.Helpers;
+﻿using UnitTests.Helpers;
 using ViaEventAssociation.Core.Application.AppEntry.Commands.Event;
 using ViaEventAssociation.Core.Domain.Aggregates.Events;
-using ViaEventAssociation.Core.Domain.Contracts;
 using ViaEventAssociation.Core.Tools.OperationResult;
 
-namespace UnitTests.Core.Application.AppEntry.Commands;
+namespace UnitTests.Core.Application.AppEntry.Commands.Event;
 
 public class UpdateEventTimeRangeCommandTests
 {

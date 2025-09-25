@@ -274,7 +274,7 @@ public class VeaEvent : AggregateRoot<EventId>
         if (invi.Status.Equals(InvitationStatus.Accepted))
             return Result.Failure(Error.InvitationAlreadyApproved);
 
-        if (invi.Status.Equals(InvitationStatus.Rejected))
+        if (invi.Status.Equals(InvitationStatus.Declined))
             return Result.Failure(Error.InvitationAlreadyRejected);
 
         if (IsEventFull())

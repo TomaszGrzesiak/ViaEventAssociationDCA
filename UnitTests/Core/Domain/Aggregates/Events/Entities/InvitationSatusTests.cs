@@ -7,7 +7,7 @@ public class InvitationStatusTests
     [Theory]
     [InlineData(1, "Pending")]
     [InlineData(2, "Accepted")]
-    [InlineData(3, "Rejected")]
+    [InlineData(3, "Declined")]
     public void FromId_WithValidId_ReturnsCorrectStatus(int id, string expectedName)
     {
         var result = InvitationStatus.FromId(id);
@@ -25,7 +25,7 @@ public class InvitationStatusTests
     [Theory]
     [InlineData("pending", 1)]
     [InlineData("ACCEPTED", 2)]
-    [InlineData("Rejected", 3)]
+    [InlineData("Declined", 3)]
     public void FromName_WithValidName_IsCaseInsensitive(string name, int expectedId)
     {
         var result = InvitationStatus.FromName(name);
@@ -58,7 +58,7 @@ public class InvitationStatusTests
     public void Equals_ReturnsFalse_ForDifferentStatus()
     {
         var pending = InvitationStatus.Pending;
-        var rejected = InvitationStatus.Rejected;
+        var rejected = InvitationStatus.Declined;
         Assert.NotEqual(pending, rejected);
     }
 }
