@@ -252,7 +252,7 @@ public class VeaEvent : AggregateRoot<EventId>
 
     private bool IsEventFull()
     {
-        var acceptedInvitationNo = Invitations.Count(i => i.Status.Equals(InvitationStatus.Approved));
+        var acceptedInvitationNo = Invitations.Count(i => i.Status.Equals(InvitationStatus.Accepted));
         return _guestList.Count + acceptedInvitationNo >= MaxGuestsNo.Value;
     }
 
@@ -271,7 +271,7 @@ public class VeaEvent : AggregateRoot<EventId>
         if (TimeRange.StartTime < systemTime.Now())
             return Result.Failure(Error.TooLate);
 
-        if (invi.Status.Equals(InvitationStatus.Approved))
+        if (invi.Status.Equals(InvitationStatus.Accepted))
             return Result.Failure(Error.InvitationAlreadyApproved);
 
         if (invi.Status.Equals(InvitationStatus.Rejected))
@@ -290,7 +290,7 @@ public class VeaEvent : AggregateRoot<EventId>
         if (invitation is null)
             return false;
 
-        return invitation.Status.Equals(InvitationStatus.Approved);
+        return invitation.Status.Equals(InvitationStatus.Accepted);
     }
 
     public Result DeclineInvitation(GuestId guestId)

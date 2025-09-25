@@ -10,7 +10,6 @@ namespace UnitTests.Core.Domain.Aggregates.Guests.UseCasesTests;
 public class GuestTestsId14
 {
     private static readonly ISystemTime FakeSystemTime = new FakeSystemTime(new DateTime(2023, 8, 10, 12, 0, 0));
-    DateTime today = new DateTime(FakeSystemTime.Now().Year, FakeSystemTime.Now().Month, FakeSystemTime.Now().Day, 0, 0, 0);
 
     [Fact]
     public async void Id14_S1_SuccessfullyAcceptInvitation_WhenAllConditionsMet()

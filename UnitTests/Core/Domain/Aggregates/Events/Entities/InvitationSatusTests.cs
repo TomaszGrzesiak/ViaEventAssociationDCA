@@ -6,7 +6,7 @@ public class InvitationStatusTests
 {
     [Theory]
     [InlineData(1, "Pending")]
-    [InlineData(2, "Approved")]
+    [InlineData(2, "Accepted")]
     [InlineData(3, "Rejected")]
     public void FromId_WithValidId_ReturnsCorrectStatus(int id, string expectedName)
     {
@@ -24,7 +24,7 @@ public class InvitationStatusTests
 
     [Theory]
     [InlineData("pending", 1)]
-    [InlineData("APPROVED", 2)]
+    [InlineData("ACCEPTED", 2)]
     [InlineData("Rejected", 3)]
     public void FromName_WithValidName_IsCaseInsensitive(string name, int expectedId)
     {
@@ -49,7 +49,7 @@ public class InvitationStatusTests
     [Fact]
     public void Equals_ReturnsTrue_ForSameInstance()
     {
-        var status1 = InvitationStatus.Approved;
+        var status1 = InvitationStatus.Accepted;
         var status2 = InvitationStatus.FromId(2).Payload!;
         Assert.Equal(status1, status2);
     }

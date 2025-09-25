@@ -22,7 +22,7 @@
 
         public static IEnumerable<T> GetAll<T>() where T : Enumeration
         {
-            // This allows the method to find all public static fields of that type (like in status: Pending, Approved, Rejected)
+            // This allows the method to find all public static fields of that type (like in status: Pending, Accepted, Rejected)
             // and Return them as a collection of f.x. InvitationStatus
             return typeof(T)
                 .GetFields(System.Reflection.BindingFlags.Public |

@@ -23,9 +23,9 @@ namespace ViaEventAssociation.Core.Domain.Aggregates.Events.Entities
 
         public Result Approve()
         {
-            if (Status.Equals(InvitationStatus.Approved))
+            if (Status.Equals(InvitationStatus.Accepted))
                 return Result.Failure(Error.InvitationAlreadyApproved);
-            Status = InvitationStatus.Approved;
+            Status = InvitationStatus.Accepted;
             return Result.Success();
         }
 
