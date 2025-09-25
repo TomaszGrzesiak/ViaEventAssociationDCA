@@ -29,21 +29,21 @@
 * [x] UC9
     * [x] command
     * [x] handler
-* [ ] UC10
-    * [ ] command
-    * [ ] handler
-* [ ] UC11
-    * [ ] command
-    * [ ] handler
-* [ ] UC12
-    * [ ] command
-    * [ ] handler
-* [ ] UC13
-    * [ ] command
-    * [ ] handler
-* [ ] UC14
-    * [ ] command
-    * [ ] handler
-* [ ] UC15
-    * [ ] command
-    * [ ] handler
+* [x] UC10
+    * [x] command
+    * [x] handler
+* [x] UC11
+    * [x] command
+    * [x] handler
+* [x] UC12
+    * [x] command
+    * [x] handler
+* [x] UC13
+    * [x] command
+    * [x] handler
+* [x] UC14
+    * [x] command
+    * [x] handler
+* [x] UC15
+    * [x] command
+    * [x] handler
