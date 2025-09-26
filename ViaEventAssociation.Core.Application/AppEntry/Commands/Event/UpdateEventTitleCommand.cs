@@ -5,18 +5,36 @@ namespace ViaEventAssociation.Core.Application.AppEntry.Commands.Event;
 
 public class UpdateEventTitleCommand
 {
-    public EventId EventId { get; set; }
-    public string Title { get; set; }
+    public EventId EventId { get; }
+    public EventTitle NewTitle { get; }
 
-    public UpdateEventTitleCommand(EventId eventId, string title)
+    private UpdateEventTitleCommand(EventId eventId, EventTitle newTitle)
     {
         EventId = eventId;
-        Title = title;
+        NewTitle = newTitle;
     }
 
-    public static Result<UpdateEventTitleCommand> Create(EventId eventId, string title)
+    public static Result<UpdateEventTitleCommand> Create(string guidString, string title)
     {
-        var command = new UpdateEventTitleCommand(eventId, title);
+        Error[] errors = [];
+
+        // try to create EventId
+        var resultEventId = EventId.FromString(guidString);
+        if (resultEventId.IsFailure)
+            errors = [..errors, ..resultEventId.Errors];
+
+        // try to create EventTitle
+        var resultEventTitle = EventTitle.Create(title);
+        if (resultEventTitle.IsFailure)
+            errors = [..errors, ..resultEventTitle.Errors];
+
+        // if any errors - return them
+        if (errors.Length > 0) return Result<UpdateEventTitleCommand>.Failure(errors);
+
+        // if no errors, finish the rest
+        var newTitle = resultEventTitle.Payload!;
+        var eventId = resultEventId.Payload!;
+        var command = new UpdateEventTitleCommand(eventId, newTitle);
 
         return Result<UpdateEventTitleCommand>.Success(command);
     }

@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using ViaEventAssociation.Core.Domain.Common.Bases;
+using ViaEventAssociation.Core.Domain.Contracts;
 using ViaEventAssociation.Core.Tools.OperationResult;
 
 namespace ViaEventAssociation.Core.Domain.Aggregates.Events;
@@ -26,7 +27,7 @@ public class EventTimeRange : ValueObject
         return Result<EventTimeRange>.Success(instance);
     }
 
-    public static Result<EventTimeRange> Validate(EventTimeRange timeRange)
+    public static Result<EventTimeRange> Validate(EventTimeRange timeRange, ISystemTime systemTime)
     {
         var errors = new List<Error>();
 
@@ -44,7 +45,7 @@ public class EventTimeRange : ValueObject
         if (duration.TotalHours > 10)
             errors.Add(Error.EventTimeDurationTooLong);
 
-        if (timeRange.StartTime < DateTime.Now)
+        if (timeRange.StartTime < systemTime.Now())
             errors.Add(Error.EventTimeCannotStartInPast);
 
         var validStart = timeRange.StartTime.TimeOfDay >= TimeSpan.FromHours(8);
@@ -85,15 +86,11 @@ public class EventTimeRange : ValueObject
     public override string ToString() =>
         $"{StartTime:yyyy-MM-dd HH:mm} to {EndTime:yyyy-MM-dd HH:mm}";
 
-    public static EventTimeRange Default()
+    public static EventTimeRange Default(ISystemTime systemTime)
     {
-        var start = DateTime.Today.AddDays(1).AddHours(8);
-        return new EventTimeRange(start, start.AddHours(3));
-    }
-
-    public static EventTimeRange ValidNonDefault()
-    {
-        var start = new DateTime(2077, 6, 30, 8, 0, 0);
+        var now = systemTime.Now();
+        var today = (new DateTime(now.Year, now.Month, now.Day, 0, 0, 0));
+        var start = today.AddDays(1).AddHours(8);
         return new EventTimeRange(start, start.AddHours(3));
     }
 }

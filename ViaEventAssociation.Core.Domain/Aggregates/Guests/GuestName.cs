@@ -8,27 +8,25 @@ public class GuestName : ValueObject
 {
     public string? Value { get; private set; }
 
-    private GuestName(string? name)
+    private GuestName(string name)
     {
         Value = name;
     }
 
-    public static GuestName Create(string? name)
+    public static Result<GuestName> Create(string? name)
     {
-        return new GuestName(FormatName(name));
+        return Validate(name);
     }
 
-    public static Result<GuestName> Validate(GuestName guestName)
+    private static Result<GuestName> Validate(string? name)
     {
-        var name = guestName.Value;
         if (name is not null && name.Length is >= 2 and <= 25 && Regex.IsMatch(name, @"^[a-zA-Z]+$"))
-            return Result<GuestName>.Success(new GuestName(name));
+            return Result<GuestName>.Success(new GuestName(FormatName(name)));
         return Result<GuestName>.Failure(Error.InvalidNameFormat);
     }
 
-    private static string? FormatName(string? name)
+    private static string FormatName(string name)
     {
-        if (string.IsNullOrEmpty(name)) return name;
         return char.ToUpper(name[0]) + name[1..].ToLower();
     }
 

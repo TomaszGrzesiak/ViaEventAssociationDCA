@@ -2,6 +2,9 @@
 
 namespace ViaEventAssociation.Core.Domain.Aggregates.Guests;
 
-public class GuestId(Guid value) : Id<GuestId>(value)
+public class GuestId : Id<GuestId>
 {
+    protected GuestId(Guid value) : base(value)
+    {
+    }
 }

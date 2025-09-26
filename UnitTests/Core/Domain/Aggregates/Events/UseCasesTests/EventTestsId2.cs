@@ -12,7 +12,8 @@ public class EventTestsId2
     [InlineData("VIA Hackathon")]
     public void Id2_S1_TitleUpdate_WhenDraftOrReadyAndValidLength_ShouldSucceed(string exampleTitle)
     {
-        var eventResult = VeaEvent.Create();
+        var eventId = EventId.FromGuid(Guid.NewGuid());
+        var eventResult = VeaEvent.Create(eventId);
         Assert.True(eventResult.IsSuccess);
         var ev = eventResult.Payload!;
 
@@ -86,7 +87,7 @@ public class EventTestsId2
         // To Activate the Event, it needs to be in draft status, and the following data is set with valid values: title, description, times, visibility, maximum guests
         var ev = EventFactory.Init().WithStatus(EventStatus.Active).Build();
 
-        var title = EventTitle.Create("New Title").Payload!;
+        var title = EventTitle.Create("New NewTitle").Payload!;
         var result = ev.UpdateTitle(title);
 
         Assert.False(result.IsSuccess);
@@ -96,11 +97,12 @@ public class EventTestsId2
     [Fact]
     public void Id2_F6_TitleUpdateOnCancelledEvent_ShouldFail()
     {
-        var ev = VeaEvent.Create().Payload!;
+        var eventId = EventId.FromGuid(Guid.NewGuid());
+        var ev = VeaEvent.Create(eventId).Payload!;
         var cancelResult = ev.Cancel();
         Assert.True(cancelResult.IsSuccess);
 
-        var title = EventTitle.Create("New Title").Payload!;
+        var title = EventTitle.Create("New NewTitle").Payload!;
         var result = ev.UpdateTitle(title);
 
         Assert.True(result.IsFailure);

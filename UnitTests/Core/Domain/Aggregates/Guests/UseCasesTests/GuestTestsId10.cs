@@ -1,26 +1,22 @@
-﻿using ViaEventAssociation.Core.Domain.Aggregates.Guests;
+﻿using UnitTests.Fakes;
+using ViaEventAssociation.Core.Domain.Aggregates.Guests;
+using ViaEventAssociation.Core.Domain.Contracts;
 using ViaEventAssociation.Core.Tools.OperationResult;
 
 namespace UnitTests.Core.Domain.Aggregates.Guests.UseCasesTests;
 
 public class GuestTestsId10
 {
-    string em = "308817@via.dk";
-    string fm = "TomaSZ";
-    string lm = "GRZesiak";
-    string ppu = "https://example.com/pic.jpg";
-    EmailAddress email;
-    GuestName firstName;
-    GuestName lastName;
-    ProfilePictureUrl pictureUrl;
+    private const string Em = "308817@via.dk";
+    private const string Fm = "TomaSZ";
+    private const string Lm = "GRZesiak";
+    private const string Ppu = "https://example.com/pic.jpg";
+    private EmailAddress _email = EmailAddress.Create(Em).Payload!;
+    private GuestName _firstName = GuestName.Create(Fm).Payload!;
+    private GuestName _lastName = GuestName.Create(Lm).Payload!;
+    private ProfilePictureUrl _pictureUrl = ProfilePictureUrl.Create(Ppu).Payload!;
 
-    public GuestTestsId10()
-    {
-        firstName = GuestName.Create(fm);
-        lastName = GuestName.Create(lm);
-        pictureUrl = ProfilePictureUrl.Create(ppu);
-        email = EmailAddress.Create(em);
-    }
+    private IEmailUnusedChecker _emailUnusedChecker = new FakeUniqueEmailChecker([]);
 
     private string Normalize(string input, bool capitalizeFirstLetter = true)
     {
@@ -37,25 +33,24 @@ public class GuestTestsId10
 
 
     [Fact]
-    public void Id10_S1_SuccessfullyRegistersGuest_WhenAllDataValid()
+    public async void Id10_S1_SuccessfullyRegistersGuest_WhenAllDataValid()
     {
-        var result = Guest.Register(email, firstName, lastName, pictureUrl);
+        var result = await Guest.Register(GuestId.CreateUnique(), _email, _firstName, _lastName, _pictureUrl, _emailUnusedChecker);
 
         Assert.True(result.IsSuccess);
         var guest = result.Payload!;
 
         Assert.NotNull(guest.Id);
-        Assert.Equal(Normalize(em, false), guest.Email.Value);
-        Assert.Equal(Normalize(fm), guest.FirstName.Value);
-        Assert.Equal(Normalize(lm), guest.LastName.Value);
-        Assert.Equal(ppu, guest.ProfilePictureUrlAddress.Value);
+        Assert.Equal(Normalize(Em, false), guest.Email.Value);
+        Assert.Equal(Normalize(Fm), guest.FirstName.Value);
+        Assert.Equal(Normalize(Lm), guest.LastName.Value);
+        Assert.Equal(Ppu, guest.ProfilePictureUrlAddress.Value);
     }
 
     [Fact]
     public void Id10_F1_Failure_WhenEmailDomainIncorrect()
     {
-        email = EmailAddress.Create("308817@gmail.com");
-        var result = Guest.Register(email, firstName, lastName, pictureUrl);
+        var result = EmailAddress.Create("308817@gmail.com");
 
         Assert.True(result.IsFailure);
         Assert.Contains(result.Errors, e => e == Error.EmailMustEndWithViaDomain);
@@ -70,8 +65,7 @@ public class GuestTestsId10
     [InlineData("3081@via.dk")]
     public void Id10_F2_Failure_WhenEmailFormatInvalid(string emailAddress) // ()
     {
-        email = EmailAddress.Create(emailAddress);
-        var result = Guest.Register(email, firstName, lastName, pictureUrl);
+        var result = EmailAddress.Create(emailAddress);
 
         Assert.True(result.IsFailure);
         Assert.Contains(result.Errors, e =>
@@ -83,8 +77,7 @@ public class GuestTestsId10
     [InlineData("abcdefghijklmnopqrstuvwxyz")] // 26 letters
     public void Id10_F3_Failure_WhenFirstNameInvalid(string name)
     {
-        firstName = GuestName.Create(name);
-        var result = Guest.Register(email, firstName, lastName, pictureUrl);
+        var result = GuestName.Create(name);
 
         Assert.True(result.IsFailure);
         Assert.Contains(result.Errors, e => e == Error.InvalidNameFormat);
@@ -95,32 +88,34 @@ public class GuestTestsId10
     [InlineData("abcdefghijklmnopqrstuvwxyz")] // 26 letters
     public void Id10_F4_Failure_WhenLastNameInvalid(string name)
     {
-        lastName = GuestName.Create(name);
-        var result = Guest.Register(email, firstName, lastName, pictureUrl);
+        var result = GuestName.Create(name);
 
         Assert.True(result.IsFailure);
         Assert.Contains(result.Errors, e => e == Error.InvalidNameFormat);
     }
 
     [Fact]
-    public void Id10_F5_Failure_WhenEmailAlreadyRegistered()
+    public async void Id10_F5_Failure_WhenEmailAlreadyRegistered()
     {
-        email = EmailAddress.Create("989898@via.dk");
-        var result = Guest.Register(email, firstName, lastName, pictureUrl);
-        Assert.True(result.IsSuccess);
+        // Arrange
+        _emailUnusedChecker = new FakeUniqueEmailChecker(["308817@via.dk"]);
+        _email = EmailAddress.Create("308817@via.dk").Payload!;
 
-        var duplicateResult = Guest.Register(email, firstName, lastName, pictureUrl);
+        // Act
+        var result = await Guest.Register(GuestId.CreateUnique(), _email, _firstName, _lastName, _pictureUrl, _emailUnusedChecker);
 
-        Assert.True(duplicateResult.IsFailure);
-        Assert.Contains(duplicateResult.Errors, e => e == Error.EmailAlreadyRegistered);
+        // Assert
+        Assert.True(result.IsFailure);
+        Assert.Contains(result.Errors, e => e == Error.EmailAlreadyRegistered);
     }
 
-    [Fact]
-    public void Id10_F6_Failure_WhenNamesContainNonLetters()
+    [Theory]
+    [InlineData("Tom1")]
+    [InlineData("Fran!")]
+    [InlineData("12345")]
+    public async void Id10_F6_Failure_WhenNamesContainNonLetters(string invalidName)
     {
-        firstName = GuestName.Create("Tom1"); // invalid first name
-        lastName = GuestName.Create("Fran!"); // invalid last name
-        var result = Guest.Register(email, firstName, lastName, pictureUrl);
+        var result = GuestName.Create(invalidName); // invalid first name
 
         Assert.True(result.IsFailure);
         Assert.Contains(result.Errors, e => e == Error.InvalidNameFormat);
@@ -129,10 +124,9 @@ public class GuestTestsId10
     [Theory]
     [InlineData("htp:/wrong-url")] // invalid URL
     [InlineData("")]
-    public void Id10_F7_Failure_WhenUrlIsInvalid(string badUrl)
+    public async void Id10_F7_Failure_WhenUrlIsInvalid(string badUrl)
     {
-        pictureUrl = ProfilePictureUrl.Create(badUrl);
-        var result = Guest.Register(email, firstName, lastName, pictureUrl);
+        var result = ProfilePictureUrl.Create(badUrl);
 
         Assert.True(result.IsFailure);
         Assert.Contains(result.Errors, e => e == Error.InvalidProfilePictureUrlEmpty);

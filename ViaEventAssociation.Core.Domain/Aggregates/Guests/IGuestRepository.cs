@@ -4,7 +4,7 @@ namespace ViaEventAssociation.Core.Domain.Aggregates.Guests;
 
 public interface IGuestRepository
 {
-    public Task<Result<Guest>> AddAsync(Guest guest);
+    public Task AddAsync(Guest guest);
 
-    public Task<Result<Guest>> GetGuestByIdAsync(GuestId guestId);
+    public Task<Guest?> GetAsync(GuestId guestId);
 }

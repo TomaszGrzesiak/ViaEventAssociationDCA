@@ -1,11 +1,15 @@
-﻿using UnitTests.Helpers;
+﻿using UnitTests.Fakes;
+using UnitTests.Helpers;
 using ViaEventAssociation.Core.Domain.Aggregates.Events;
+using ViaEventAssociation.Core.Domain.Contracts;
 using ViaEventAssociation.Core.Tools.OperationResult;
 
 namespace UnitTests.Core.Domain.Aggregates.Events.UseCasesTests;
 
 public class EventTestsId9
 {
+    private static readonly ISystemTime FakeSystemTime = new FakeSystemTime(new DateTime(2023, 8, 10, 12, 0, 0));
+
     [Fact]
     public void Id9_S1_ActivateEventFromDraft_MakesReadyThenActive()
     {
@@ -13,12 +17,12 @@ public class EventTestsId9
             .WithStatus(EventStatus.Draft)
             .WithValidTitle()
             .WithValidDescription()
-            .WithTimeRange(EventTimeRange.ValidNonDefault())
+            .WithTimeRange(EventTimeRange.Default(FakeSystemTime))
             .WithVisibility(EventVisibility.Public)
             .WithMaxGuests(10)
             .Build();
 
-        var result = veaEvent.Activate();
+        var result = veaEvent.Activate(FakeSystemTime);
 
         Assert.True(result.IsSuccess);
         Assert.Equal(EventStatus.Active, veaEvent.Status);
@@ -31,7 +35,7 @@ public class EventTestsId9
             .WithStatus(EventStatus.Ready)
             .Build();
 
-        var result = veaEvent.Activate();
+        var result = veaEvent.Activate(FakeSystemTime);
 
         Assert.True(result.IsSuccess);
         Assert.Equal(EventStatus.Active, veaEvent.Status);
@@ -44,7 +48,7 @@ public class EventTestsId9
             .WithStatus(EventStatus.Active)
             .Build();
 
-        var result = veaEvent.Activate();
+        var result = veaEvent.Activate(FakeSystemTime);
 
         Assert.True(result.IsSuccess);
         Assert.Equal(EventStatus.Active, veaEvent.Status);
@@ -58,17 +62,15 @@ public class EventTestsId9
             .WithTitle(null)
             .WithDescription(null)
             .WithTimeRange(null)
-            .WithMaxGuests(1)
             .Build();
 
-        var result = veaEvent.Activate();
+        var result = veaEvent.Activate(FakeSystemTime);
 
         Assert.True(result.IsFailure);
         Assert.Contains(result.Errors, e => e == Error.ActivateFailure);
         Assert.Contains(result.Errors, e => e == Error.EventTitleCannotBeDefaultOrEmpty);
         Assert.Contains(result.Errors, e => e == Error.EventDescriptionCannotBeDefault);
         Assert.Contains(result.Errors, e => e == Error.EventTimeRangeMissing);
-        Assert.Contains(result.Errors, e => e == Error.GuestsMaxNumberTooSmall);
     }
 
     [Fact]
@@ -78,7 +80,7 @@ public class EventTestsId9
             .WithStatus(EventStatus.Cancelled)
             .Build();
 
-        var result = veaEvent.Activate();
+        var result = veaEvent.Activate(FakeSystemTime);
 
         Assert.True(result.IsFailure);
         Assert.Contains(result.Errors, e => e == Error.EventAlreadyCancelled);
