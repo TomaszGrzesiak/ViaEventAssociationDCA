@@ -2,5 +2,5 @@
 
 * [x] Command Dispatcher
 * [x] Command Dispatcher Interaction Tests
-* [ ] Decorator (f.x. DispatcherLoggingDecorator)
-* [ ] ***(Bonus)*** Auto-register handlers
+* [x] Decorator (f.x. DispatcherLoggingDecorator)
+* [x] ***(Bonus)*** Auto-register handlers
