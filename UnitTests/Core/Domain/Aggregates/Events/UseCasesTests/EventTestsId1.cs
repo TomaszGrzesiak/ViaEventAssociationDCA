@@ -1,4 +1,5 @@
-﻿using ViaEventAssociation.Core.Domain.Aggregates.Events;
+﻿using ViaEventAssociation.Core.Application.AppEntry.Commands.Event;
+using ViaEventAssociation.Core.Domain.Aggregates.Events;
 
 namespace UnitTests.Core.Domain.Aggregates.Events.UseCasesTests;
 
@@ -7,7 +8,8 @@ public class EventTestsId1
     [Fact]
     public void Id1_S1_To_S4_CreateEvent_ShouldInitializeWithDefaults()
     {
-        var result = VeaEvent.Create();
+        var eventId = EventId.FromGuid(Guid.NewGuid());
+        var result = VeaEvent.Create(eventId);
 
         Assert.True(result.IsSuccess);
         var ev = result.Payload!;

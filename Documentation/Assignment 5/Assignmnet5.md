@@ -1,0 +1,49 @@
+﻿# Assignment 5
+
+### Completed Features Status
+
+* [x] UC1
+    * [x] command
+    * [x] handler
+* [x] UC2
+    * [x] command
+    * [x] handler
+* [x] UC3
+    * [x] command
+    * [x] handler
+* [x] UC4
+    * [x] command
+    * [x] handler
+* [x] UC5
+    * [x] command
+    * [x] handler
+* [x] UC6
+    * [x] command
+    * [x] handler
+* [x] UC7
+    * [x] command
+    * [x] handler
+* [x] UC8
+    * [x] command
+    * [x] handler
+* [x] UC9
+    * [x] command
+    * [x] handler
+* [x] UC10
+    * [x] command
+    * [x] handler
+* [x] UC11
+    * [x] command
+    * [x] handler
+* [x] UC12
+    * [x] command
+    * [x] handler
+* [x] UC13
+    * [x] command
+    * [x] handler
+* [x] UC14
+    * [x] command
+    * [x] handler
+* [x] UC15
+    * [x] command
+    * [x] handler

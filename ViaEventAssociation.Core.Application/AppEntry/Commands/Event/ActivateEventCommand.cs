@@ -5,17 +5,20 @@ namespace ViaEventAssociation.Core.Application.AppEntry.Commands.Event;
 
 public class ActivateEventCommand
 {
-    public EventId EventId { get; set; }
+    public EventId EventId { get; }
 
-    public ActivateEventCommand(EventId eventId)
+    private ActivateEventCommand(EventId eventId)
     {
         EventId = eventId;
     }
 
-    public static Result<ActivateEventCommand> Create(EventId eventId)
+    public static Result<ActivateEventCommand> Create(string guidString)
     {
-        var command = new ActivateEventCommand(eventId);
+        var result = EventId.FromString(guidString);
+        if (result.IsFailure) return Result<ActivateEventCommand>.Failure(result.Errors);
 
+
+        var command = new ActivateEventCommand(result.Payload!);
         return Result<ActivateEventCommand>.Success(command);
     }
 }

@@ -6,8 +6,8 @@
     public class InvitationStatus : Enumeration
     {
         public static readonly InvitationStatus Pending = new(1, "Pending");
-        public static readonly InvitationStatus Approved = new(2, "Approved");
-        public static readonly InvitationStatus Rejected = new(3, "Rejected");
+        public static readonly InvitationStatus Accepted = new(2, "Accepted");
+        public static readonly InvitationStatus Declined = new(3, "Declined");
 
         private InvitationStatus(int id, string name) : base(id, name)
         {

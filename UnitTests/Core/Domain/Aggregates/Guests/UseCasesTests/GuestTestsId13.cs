@@ -10,10 +10,10 @@ public class EventTestsId13
     [Theory]
     [InlineData("Ready")]
     [InlineData("Active")]
-    public void Id13_S1_SuccessfullyInviteGuest_WhenEventReadyOrActive(string statusString)
+    public async void Id13_S1_SuccessfullyInviteGuest_WhenEventReadyOrActive(string statusString)
     {
         var status = EventStatus.FromName(statusString).Payload!;
-        var guest = GuestFactory.Init().Build();
+        var guest = await GuestFactory.Init().Build();
         var veaEvent = EventFactory.Init()
             .WithStatus(status)
             .Build();
@@ -27,10 +27,10 @@ public class EventTestsId13
     [Theory]
     [InlineData("Draft")]
     [InlineData("Cancelled")]
-    public void Id13_F1_Failure_WhenEventIsDraftOrCancelled(string statusString)
+    public async void Id13_F1_Failure_WhenEventIsDraftOrCancelled(string statusString)
     {
         var status = EventStatus.FromName(statusString).Payload!;
-        var guest = GuestFactory.Init().Build();
+        var guest = await GuestFactory.Init().Build();
         var veaEvent = EventFactory.Init()
             .WithStatus(status)
             .Build();
@@ -42,13 +42,13 @@ public class EventTestsId13
     }
 
     [Fact]
-    public void Id13_F2_Failure_WhenEventIsFull()
+    public async void Id13_F2_Failure_WhenEventIsFull()
     {
-        var guest = GuestFactory.Init().Build();
+        var guest = await GuestFactory.Init().Build();
         var veaEvent = EventFactory.Init()
-            .WithMaxGuests(1)
+            .WithMaxGuests(5)
             .WithStatus(EventStatus.Active)
-            .WithGuest(GuestId.CreateUnique())
+            .WithGhostGuests(5)
             .Build();
 
         var result = veaEvent.InviteGuest(guest.Id);
@@ -58,9 +58,9 @@ public class EventTestsId13
     }
 
     [Fact]
-    public void Id13_F3_Failure_WhenGuestAlreadyInvited()
+    public async void Id13_F3_Failure_WhenGuestAlreadyInvited()
     {
-        var guest = GuestFactory.Init().Build();
+        var guest = await GuestFactory.Init().Build();
         var veaEvent = EventFactory.Init()
             .WithStatus(EventStatus.Active)
             .Build();
@@ -76,9 +76,9 @@ public class EventTestsId13
     }
 
     [Fact]
-    public void Id13_F4_Failure_WhenGuestAlreadyParticipating()
+    public async void Id13_F4_Failure_WhenGuestAlreadyParticipating()
     {
-        var guest = GuestFactory.Init().Build();
+        var guest = await GuestFactory.Init().Build();
         var veaEvent = EventFactory.Init()
             .WithGuest(guest.Id)
             .WithStatus(EventStatus.Active)

@@ -5,34 +5,34 @@ namespace ViaEventAssociation.Core.Domain.Aggregates.Guests;
 
 public class EmailAddress : ValueObject
 {
-    public string? Value { get; }
+    public string Value { get; }
 
     // private constructor - to be used by the static methods below
-    private EmailAddress(string? emailAddress)
+    private EmailAddress(string emailAddress)
         => Value = emailAddress;
 
-    public static EmailAddress Create(string? emailAddress)
+    public static Result<EmailAddress> Create(string? emailAddress)
     {
-        if (emailAddress is not null) emailAddress = emailAddress.Trim().ToLowerInvariant();
-        return new EmailAddress(emailAddress);
+        return Validate(emailAddress);
     }
 
-    public static Result<EmailAddress> Validate(EmailAddress originalEmail)
+    private static Result<EmailAddress> Validate(string? rawEmail)
     {
-        var emailAddress = originalEmail.Value;
-        if (string.IsNullOrWhiteSpace(emailAddress))
-            return Result<EmailAddress>.Failure(Error.EmailRequired);
+        if (string.IsNullOrWhiteSpace(rawEmail))
+            return Result<EmailAddress>.Failure(Error.EmailCannotBeEmpty);
+
+        // trimming empty spaces and converting to lower case
+        var email = rawEmail.Trim().ToLowerInvariant();
 
         var errors = new List<Error>();
-        // trimming empty spaces and converting to lower case @ID:10 - registering a new Guests account: "And the email is in all lower-case"
-        var email = emailAddress.Trim().ToLowerInvariant();
 
         // Must end with @via.dk
         if (!email.EndsWith("@via.dk"))
             errors.Add(Error.EmailMustEndWithViaDomain);
 
-        // Must match format <text1>@<text2>.<text3>
         var parts = email.Split('@');
+
+        // Must match format <text1>@<text2>.<text3>
         if (parts.Length != 2 || !parts[1].Contains('.'))
             errors.Add(Error.EmailInvalidFormat);
 
@@ -50,7 +50,7 @@ public class EmailAddress : ValueObject
         if (errors.Count > 0)
             return Result<EmailAddress>.Failure(errors.ToArray());
 
-        return Result<EmailAddress>.Success(originalEmail);
+        return Result<EmailAddress>.Success(new EmailAddress(email));
     }
 
     protected override IEnumerable<object> GetEqualityComponents()

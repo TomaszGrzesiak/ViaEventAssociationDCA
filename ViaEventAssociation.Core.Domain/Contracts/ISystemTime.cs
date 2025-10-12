@@ -2,5 +2,5 @@
 
 public interface ISystemTime
 {
-    Task GetSystemTimeUtc();
+    DateTime Now();
 }

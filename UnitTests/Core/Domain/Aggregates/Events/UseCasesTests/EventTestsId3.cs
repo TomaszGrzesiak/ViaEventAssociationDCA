@@ -9,7 +9,8 @@ public class EventTestsId3
     [Fact]
     public void Id3_S1_DescriptionValidAndStatusIsDraft_ShouldUpdate()
     {
-        var ev = VeaEvent.Create().Payload!;
+        var eventId = EventId.FromGuid(Guid.NewGuid());
+        var ev = VeaEvent.Create(eventId).Payload!;
         var descriptionTextShortened = "Nullam tempor lacus nisl, eget tempus quam maximus malesuada. " +
                                        "Morbi faucibus sed neque vitae euismod. Vestibulum non purus vel justo ornare vulputate. " +
                                        "In a interdum enim. Maecenas sed sodales elit, sit amet venenatis orci.";
@@ -26,7 +27,8 @@ public class EventTestsId3
     [InlineData(null)]
     public void Id3_S2_UpdateDescriptionToEmpty_ShouldSucceed(string input)
     {
-        var ev = VeaEvent.Create().Payload!;
+        var eventId = EventId.FromGuid(Guid.NewGuid());
+        var ev = VeaEvent.Create(eventId).Payload!;
         var emptyDescription = EventDescription.Create(input).Payload!;
 
         var result = ev.UpdateDescription(emptyDescription);
@@ -50,7 +52,8 @@ public class EventTestsId3
     [Fact]
     public void Id3_F1_DescriptionTooLong_ShouldFail()
     {
-        var ev = VeaEvent.Create().Payload!;
+        var eventId = EventId.FromGuid(Guid.NewGuid());
+        var ev = VeaEvent.Create(eventId).Payload!;
         var tooLongText = new string('a', 251);
         var result = EventDescription.Create(tooLongText);
 
@@ -61,7 +64,8 @@ public class EventTestsId3
     [Fact]
     public void Id3_F2_DescriptionUpdateWhenCancelled_ShouldFail()
     {
-        var ev = VeaEvent.Create().Payload!;
+        var eventId = EventId.FromGuid(Guid.NewGuid());
+        var ev = VeaEvent.Create(eventId).Payload!;
         ev.Cancel();
 
         var desc = EventDescription.Create("Some text").Payload!;

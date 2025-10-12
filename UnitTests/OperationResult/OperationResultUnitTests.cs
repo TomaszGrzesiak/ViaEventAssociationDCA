@@ -43,7 +43,7 @@ namespace UnitTests.OperationResult
         public void Result_Combine_MergesErrors()
         {
             var result1 = Result.Failure(Error.TestError1);
-            var result2 = Result.Combine(result1, Error.TestError2);
+            var result2 = Result.CombineErrors(result1, Error.TestError2);
 
             Assert.True(result2.IsFailure);
             Assert.Equal(2, result2.Errors.Count);
@@ -87,6 +87,16 @@ namespace UnitTests.OperationResult
             Assert.True(result.IsFailure);
             Assert.Null(result.Payload);
             Assert.Equal(2, result.Errors.Count);
+        }
+
+        [Fact]
+        public void ResultT_Combine_MergesErrors()
+        {
+            var result1 = Result<None>.Failure(Error.TestError1);
+            var result2 = Result.CombineErrors(result1, Error.TestError2);
+
+            Assert.True(result2.IsFailure);
+            Assert.Equal(2, result2.Errors.Count);
         }
     }
 }

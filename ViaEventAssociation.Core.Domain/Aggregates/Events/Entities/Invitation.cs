@@ -23,18 +23,18 @@ namespace ViaEventAssociation.Core.Domain.Aggregates.Events.Entities
 
         public Result Approve()
         {
-            if (Status.Equals(InvitationStatus.Approved))
+            if (Status.Equals(InvitationStatus.Accepted))
                 return Result.Failure(Error.InvitationAlreadyApproved);
-            Status = InvitationStatus.Approved;
+            Status = InvitationStatus.Accepted;
             return Result.Success();
         }
 
         public Result Reject()
         {
-            if (Status.Equals(InvitationStatus.Rejected))
+            if (Status.Equals(InvitationStatus.Declined))
                 return Result.Failure(Error.InvitationAlreadyRejected);
 
-            Status = InvitationStatus.Rejected;
+            Status = InvitationStatus.Declined;
             return Result.Success();
         }
     }

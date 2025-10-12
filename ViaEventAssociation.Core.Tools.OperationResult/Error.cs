@@ -41,7 +41,7 @@ public class Error
         Create(111, "Profile picture URL is invalid or empty. Please provide a valid URL starting with http or https. ");
 
     // email errors (codes 140 - 149)
-    public static readonly Error EmailRequired = Create(140, "Email is required.");
+    public static readonly Error EmailCannotBeEmpty = Create(140, "Email cannot be empty.");
     public static readonly Error EmailMustEndWithViaDomain = Create(141, "Email must end with '@via.dk'.");
 
     public static readonly Error EmailInvalidFormat =
@@ -58,7 +58,6 @@ public class Error
     public static readonly Error EventTimeStartMustBeAfter8Am = Create(156, "Start time must be after 08:00.");
     public static readonly Error EventTimeCannotStartInPast = Create(157, "Start must not be in the past.");
     public static readonly Error EventTimeCannotSpan01To08 = Create(158, "Event cannot span between 01:00 and 08:00.");
-    public static readonly Error EventTimeRangeCannotBeDefault = Create(159, "Event time range cannot remain default.");
 
     // invitation errors (170–179)
     public static readonly Error InvitationAlreadyApproved = Create(170, "Invitation is already approved.");
@@ -91,10 +90,15 @@ public class Error
     public static readonly Error InvitationNotFound = Create(251, "Invitation not found.");
     public static readonly Error CancelledEventsCannotBeJoined = Create(252, "Cancelled events cannot be joined.");
     public static readonly Error JoinUnstartedEventImpossible = Create(253, "Join unstarted event impossible.");
-    
-    // Not-grouped errors
+
+    // Not-grouped errors (codes 300-349)
     public static readonly Error InvalidGuestId = Create(300, "GuestId must be greater than 0.");
     public static readonly Error InvalidEventId = Create(301, "EventId must be greater than 0.");
     public static readonly Error CommandCannotBeNull = Create(302, "Command cannot be null");
-    
+    public static readonly Error GuidIsRequired = Create(303, "Guid is required.");
+
+    // Commands and handlers (codes 350 - 400)
+    public static readonly Error EventNotFound = Create(304, "The system can't find any event with this id.");
+    public static readonly Error TimeNotParsable = Create(305, "Given Start or End Time is not parsable from string to DateTime format.");
+    public static readonly Error GuestNotFound = Create(306, "Guest not found.");
 }

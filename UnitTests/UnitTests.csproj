@@ -12,6 +12,8 @@
     <ItemGroup>
         <PackageReference Include="coverlet.collector" Version="6.0.0"/>
         <PackageReference Include="FluentAssertions" Version="8.3.0"/>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.0-rc.1.25451.107" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.0-rc.1.25451.107" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0"/>
         <PackageReference Include="xunit" Version="2.5.3"/>
         <PackageReference Include="xunit.runner.visualstudio" Version="2.5.3"/>
@@ -22,11 +24,11 @@
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\ViaEventAssociation.Core.Application\ViaEventAssociation.Core.Application.csproj"/>
         <ProjectReference Include="..\ViaEventAssociation.Core.Domain\ViaEventAssociation.Core.Domain.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Core\Application\"/>
         <Folder Include="Features\"/>
     </ItemGroup>
 

@@ -8,17 +8,24 @@ namespace UnitTests.Helpers;
 
 public class EventFactory
 {
+    private EventId _eventId = EventId.CreateUnique();
     private EventTitle? _title = EventTitle.Default();
     private EventDescription? _description = EventDescription.Default();
-    private EventTimeRange? _timeRange = EventTimeRange.Default();
+    private EventTimeRange? _timeRange = null;
     private EventVisibility? _visibility = null;
-    private MaxGuests? _maxGuests = MaxGuests.Create(50);
+    private MaxGuests? _maxGuests = MaxGuests.Create(50).Payload;
     private EventStatus? _status = EventStatus.Draft;
     private int _locationMaxCapacity = 500;
     private List<GuestId> _guests = [];
     private List<Invitation> _invitations = [];
 
     public static EventFactory Init() => new();
+
+    public EventFactory WithId(EventId eventId)
+    {
+        _eventId = eventId;
+        return this;
+    }
 
     public EventFactory WithTitle(string? title)
     {
@@ -39,9 +46,9 @@ public class EventFactory
         return this;
     }
 
-    public EventFactory WithMaxGuests(int value)
+    public EventFactory WithMaxGuests(int maxGuests)
     {
-        _maxGuests = MaxGuests.Create(value);
+        _maxGuests = MaxGuests.Create(maxGuests).Payload;
         return this;
     }
 
@@ -65,7 +72,8 @@ public class EventFactory
 
     public VeaEvent Build()
     {
-        return VeaEvent.Create(_title, _description, _timeRange!, _visibility, _maxGuests!, _status, _locationMaxCapacity, _guests, _invitations).Payload!;
+        return VeaEvent.Create(_eventId, _title, _description, _timeRange, _visibility, _maxGuests!, _status, _locationMaxCapacity, _guests, _invitations)
+            .Payload!;
     }
 
     public EventFactory WithValidTitle()
@@ -83,6 +91,12 @@ public class EventFactory
     public EventFactory WithGuest(GuestId guestId)
     {
         _guests.Add(guestId);
+        return this;
+    }
+
+    public EventFactory WithGhostGuests(int amountOfGhostGuests)
+    {
+        for (int i = 0; i < amountOfGhostGuests; i++) _guests.Add(GuestId.CreateUnique());
         return this;
     }
 

@@ -19,7 +19,7 @@ public class CancelParticipationHandler : ICommandHandler<CancelParticipationCom
         _guestRepository = guestRepository;
         _unitOfWork = unitOfWork;
     }
-    
+
     public Task<Result> Handle(CancelParticipationCommand command)
     {
         List<string> errorMessages = new List<string>();
@@ -29,7 +29,7 @@ public class CancelParticipationHandler : ICommandHandler<CancelParticipationCom
             return Task.FromResult(new Result());
         }
 
-        var eventResult = _repository.GetViaEventByIdAsync(new EventId(new Guid()));
+        var eventResult = _repository.GetAsync(new EventId(new Guid()));
 
         var @event = eventResult.Result.Payload;
 
@@ -54,9 +54,8 @@ public class CancelParticipationHandler : ICommandHandler<CancelParticipationCom
             return Task.FromResult(new Result());
         }
 
-        _repository.UpdateAsync(@event);
         _unitOfWork.SaveChangesAsync();
-        
+
         return Task.FromResult(new Result());
     }
 }

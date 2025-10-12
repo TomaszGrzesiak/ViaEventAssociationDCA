@@ -4,5 +4,5 @@ namespace Application.AppEntry;
 
 public interface ICommandHandler<TCommand>
 {
-    Task<Result> Handle(TCommand command);
+    Task<Result> HandleAsync(TCommand command);
 }
