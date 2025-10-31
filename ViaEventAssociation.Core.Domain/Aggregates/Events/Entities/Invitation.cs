@@ -6,6 +6,8 @@ namespace ViaEventAssociation.Core.Domain.Aggregates.Events.Entities
 {
     public class Invitation : Entity<InvitationId>
     {
+        // for EF only
+        private Invitation() { }
         public GuestId GuestId { get; private set; }
 
         public InvitationStatus Status { get; private set; }

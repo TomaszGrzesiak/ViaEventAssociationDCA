@@ -23,6 +23,8 @@ public class VeaEvent : AggregateRoot<EventId>
 
     public int LocationMaxCapacity { get; private set; }
 
+    private VeaEvent() { } // For EF materialization only
+
     private VeaEvent(
         EventId id,
         EventTitle? title,
@@ -268,7 +270,7 @@ public class VeaEvent : AggregateRoot<EventId>
         if (Equals(Status, EventStatus.Ready) || Equals(Status, EventStatus.Draft))
             return Result.Failure(Error.JoinUnstartedEventImpossible);
 
-        if (TimeRange.StartTime < systemTime.Now())
+        if (TimeRange!.StartTime < systemTime.Now())
             return Result.Failure(Error.TooLate);
 
         if (invi.Status.Equals(InvitationStatus.Accepted))

@@ -10,6 +10,7 @@ namespace ViaEventAssociation.Core.Domain.Aggregates.Events
         public static readonly EventStatus Cancelled = new(3, "Cancelled");
         public static readonly EventStatus Ready = new(4, "Ready");
 
+        private EventStatus() {}
         private EventStatus(int id, string name) : base(id, name)
         {
         }

@@ -2,6 +2,11 @@
 
 namespace ViaEventAssociation.Core.Domain.Aggregates.Events.Entities;
 
-public class InvitationId(Guid value) : Id<InvitationId>(value)
+// Assuming Id<T> exposes a Guid Value
+public class InvitationId : Id<InvitationId>
 {
+    // For EF Core materialization
+    private InvitationId() : base(Guid.Empty) { }
+
+    public InvitationId(Guid value) : base(value) { }
 }

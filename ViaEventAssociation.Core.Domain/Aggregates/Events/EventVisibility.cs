@@ -8,6 +8,7 @@ namespace ViaEventAssociation.Core.Domain.Aggregates.Events
         public static readonly EventVisibility Public = new(1, "Public");
         public static readonly EventVisibility Private = new(2, "Private");
 
+        private EventVisibility() {}  // for EF only
         private EventVisibility(int id, string name) : base(id, name)
         {
         }

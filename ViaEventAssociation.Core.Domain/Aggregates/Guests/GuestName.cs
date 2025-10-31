@@ -8,6 +8,7 @@ public class GuestName : ValueObject
 {
     public string? Value { get; private set; }
 
+    private GuestName() {}  // for EF only
     private GuestName(string name)
     {
         Value = name;

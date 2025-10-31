@@ -5,7 +5,8 @@ namespace ViaEventAssociation.Core.Domain.Aggregates.Guests;
 
 public class EmailAddress : ValueObject
 {
-    public string Value { get; }
+    public string? Value { get; }
+    private EmailAddress() {}  // for EF only
 
     // private constructor - to be used by the static methods below
     private EmailAddress(string emailAddress)

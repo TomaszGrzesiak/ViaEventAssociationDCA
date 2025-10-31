@@ -9,6 +9,7 @@
         public static readonly InvitationStatus Accepted = new(2, "Accepted");
         public static readonly InvitationStatus Declined = new(3, "Declined");
 
+        private InvitationStatus() { }
         private InvitationStatus(int id, string name) : base(id, name)
         {
         }

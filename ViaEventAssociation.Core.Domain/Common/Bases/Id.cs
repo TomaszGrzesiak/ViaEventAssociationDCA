@@ -9,14 +9,14 @@ namespace ViaEventAssociation.Core.Domain.Common.Bases;
 public abstract class Id<T>(Guid value) : ValueObject where T : Id<T>
 {
     public Guid Value { get; } = value;
-
+    protected Id() : this(Guid.Empty) {}
     public override string ToString() => Value.ToString();
-
+    
     protected override IEnumerable<object> GetEqualityComponents()
     {
         yield return Value;
     }
-
+    
     private static Result<Guid> CanParseGuid(string id)
     {
         bool canBeParsed = Guid.TryParse(id, out var guid);

@@ -7,6 +7,7 @@ public class ProfilePictureUrl : ValueObject
 {
     public string? Value { get; }
 
+    private ProfilePictureUrl() {}  // for EF only
     private ProfilePictureUrl(string url)
     {
         Value = url;

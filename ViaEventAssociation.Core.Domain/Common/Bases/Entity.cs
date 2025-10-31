@@ -10,7 +10,7 @@ public abstract class Entity<TId>
 {
     // TId is a generic type of the ID, given in the sub-class, e.g. public class VeaEvent : Entity<EventId>.
     // F.x. Despite both EventId and GuestId extend Id, they won't be equal or can't be assigned as ID to a wrong class. 
-    public TId Id { get; protected set; }
+    public TId? Id { get; protected set; }
 
     protected Entity()
     {

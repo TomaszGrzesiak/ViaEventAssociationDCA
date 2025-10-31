@@ -11,6 +11,7 @@ public class Guest : AggregateRoot<GuestId>
     public GuestName LastName { get; private set; }
     public ProfilePictureUrl ProfilePictureUrlAddress { get; private set; }
 
+    private Guest() {} // EF-only
     private Guest(GuestId id, EmailAddress email, GuestName firstName, GuestName lastName, ProfilePictureUrl profilePictureUrlAddress)
         : base(id)
     {

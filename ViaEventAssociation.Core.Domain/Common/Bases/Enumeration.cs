@@ -1,24 +1,28 @@
 ﻿namespace ViaEventAssociation.Core.Domain.Common.Bases
 {
-    public abstract class Enumeration
+    public abstract class Enumeration: IEquatable<Enumeration>
     {
         public int Id { get; }
-        public string Name { get; }
+        public string? Name { get; }
+
+        protected Enumeration() { } // for EF only
 
         protected Enumeration(int id, string name)
         {
             Id = id;
-            Name = name;
+            Name = name ?? throw new ArgumentNullException(nameof(name));
         }
 
-        public override string ToString() => Name;
+        public override string ToString() => Name?? "";
 
-        public override bool Equals(object? obj)
-        {
-            if (obj is not Enumeration otherValue)
-                return false; // If obj js Enumeration, then it gets assigned to a new variable: otherValue of type Enumeration
-            return GetType().Equals(obj.GetType()) && Id.Equals(otherValue.Id); // GetType() is the same as this.GetType()
-        }
+        public override bool Equals(object? obj)  => Equals(obj as Enumeration);
+        
+        public bool Equals(Enumeration? other) => other is not null && other.GetType() == GetType() && other.Id == Id;
+        
+        public override int GetHashCode() => HashCode.Combine(GetType(), Id);
+        
+        public static bool operator ==(Enumeration? left, Enumeration? right) => Equals(left, right);
+        public static bool operator !=(Enumeration? left, Enumeration? right) => !Equals(left, right);
 
         public static IEnumerable<T> GetAll<T>() where T : Enumeration
         {

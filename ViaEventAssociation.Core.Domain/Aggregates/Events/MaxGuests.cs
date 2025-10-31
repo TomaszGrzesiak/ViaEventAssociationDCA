@@ -7,6 +7,7 @@ public class MaxGuests : ValueObject
 {
     public int Value { get; }
 
+    private MaxGuests() {}  // for EF only
     private MaxGuests(int value)
     {
         Value = value;

@@ -10,6 +10,7 @@ public class EventTimeRange : ValueObject
     public DateTime StartTime { get; }
     public DateTime EndTime { get; }
 
+    private EventTimeRange() {} // for EF only
     private EventTimeRange(DateTime startTime, DateTime endTime)
     {
         StartTime = startTime;

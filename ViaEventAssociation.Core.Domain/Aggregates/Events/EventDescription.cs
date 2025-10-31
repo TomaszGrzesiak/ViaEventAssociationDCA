@@ -5,8 +5,9 @@ namespace ViaEventAssociation.Core.Domain.Aggregates.Events;
 
 public class EventDescription : ValueObject
 {
-    public string Value { get; }
+    public string? Value { get; }
 
+    private EventDescription() {}  // for EF only
     private EventDescription(string value)
     {
         Value = value;
