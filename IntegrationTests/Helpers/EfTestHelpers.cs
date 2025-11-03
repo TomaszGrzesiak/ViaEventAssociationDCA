@@ -1,14 +1,26 @@
-﻿using System.Threading.Tasks;
+﻿using EfcDmPersistence;
 using Microsoft.EntityFrameworkCore;
 
-namespace UnitTests.Helpers;
+namespace IntegrationTests.Helpers;
 
-public static class EfTestHelpers
+public abstract class EfTestHelpers
 {
-    public static async Task SaveAndClearAsync(object entity, DbContext ctx)
+    public static DmContext SetupContext()
     {
-        await ctx.AddAsync(entity);
-        await ctx.SaveChangesAsync();
-        ctx.ChangeTracker.Clear();
+        DbContextOptionsBuilder<DmContext> optionsBuilder = new();
+        string testDbName = "Test" + Guid.NewGuid() +".db";
+        optionsBuilder.UseSqlite(@"Data Source = " + testDbName);
+        DmContext context = new(optionsBuilder.Options);
+        context.Database.EnsureDeleted();
+        context.Database.EnsureCreated();
+        return context;
     }
+    
+    protected async Task AddAndSaveAndClearAsync(object entity, DbContext dbContext)
+    {
+        await dbContext.AddAsync(entity);
+        await dbContext.SaveChangesAsync();
+        dbContext.ChangeTracker.Clear();
+    }
+
 }

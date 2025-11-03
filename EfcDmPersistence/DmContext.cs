@@ -8,8 +8,8 @@ namespace EfcDmPersistence;
 
 public class DmContext(DbContextOptions<DmContext> options) : DbContext(options)
 {
-    public DbSet<VeaEvent> Events => Set<VeaEvent>();
-    // public DbSet<Guest> Guests => Set<Guest>();
+    public DbSet<VeaEvent> VeaEvents => Set<VeaEvent>();
+    public DbSet<Guest> Guests => Set<Guest>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

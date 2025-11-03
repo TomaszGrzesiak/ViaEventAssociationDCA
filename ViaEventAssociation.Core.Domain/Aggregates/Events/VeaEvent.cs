@@ -8,12 +8,12 @@ namespace ViaEventAssociation.Core.Domain.Aggregates.Events;
 
 public class VeaEvent : AggregateRoot<EventId>
 {
-    public EventTitle? Title { get; private set; }
-    public EventDescription? Description { get; private set; }
-    public EventTimeRange? TimeRange { get; private set; }
-    public EventStatus? Status { get; private set; }
-    public EventVisibility? Visibility { get; private set; }
-    public MaxGuests MaxGuestsNo { get; private set; }
+    public EventTitle Title { get; private set; }
+    public EventDescription Description { get; private set; }
+    public EventTimeRange? TimeRange { get; private set; } // it should be nullable. Changed for learning purposes of EFC ComplexProperty NonNullable configuration. 
+    public EventStatus Status { get; private set; }
+    public EventVisibility Visibility { get; private set; }
+    public MaxGuests MaxGuestsNo { get; private set; } // it should be nullable. Changed for learning purposes of EFC ComplexProperty NonNullable configuration.
 
     private readonly List<Invitation> _invitations;
     public IReadOnlyList<Invitation> Invitations => _invitations.AsReadOnly();
@@ -27,10 +27,10 @@ public class VeaEvent : AggregateRoot<EventId>
 
     private VeaEvent(
         EventId id,
-        EventTitle? title,
-        EventDescription? description,
+        EventTitle title,
+        EventDescription description,
         EventTimeRange? timeRange,
-        EventVisibility? visibility,
+        EventVisibility visibility,
         MaxGuests maxGuestsNo,
         EventStatus? status,
         int? locationMaxCapacity,
@@ -68,7 +68,7 @@ public class VeaEvent : AggregateRoot<EventId>
 
     public Result UpdateTitle(EventTitle newTitle)
     {
-        if (Status != null && (Status.Equals(EventStatus.Active) || Status.Equals(EventStatus.Cancelled)))
+        if ((Status.Equals(EventStatus.Active) || Status.Equals(EventStatus.Cancelled)))
             return Result.Failure(Error.ActiveOrCanceledEventCannotBeModified);
         Title = newTitle;
         Status = EventStatus.Draft;
@@ -77,7 +77,7 @@ public class VeaEvent : AggregateRoot<EventId>
 
     public Result UpdateDescription(EventDescription newDescription)
     {
-        if (Status != null && (Status.Equals(EventStatus.Active) || Status.Equals(EventStatus.Cancelled)))
+        if ((Status.Equals(EventStatus.Active) || Status.Equals(EventStatus.Cancelled)))
             return Result.Failure(Error.ActiveOrCanceledEventCannotBeModified);
         Description = newDescription;
         Status = EventStatus.Draft;
@@ -88,7 +88,7 @@ public class VeaEvent : AggregateRoot<EventId>
     {
         var errors = new List<Error>();
 
-        if (Status != null && (Status.Equals(EventStatus.Active) || Status.Equals(EventStatus.Cancelled)))
+        if ((Status.Equals(EventStatus.Active) || Status.Equals(EventStatus.Cancelled)))
             errors.Add(Error.ActiveOrCanceledEventCannotBeModified);
 
         var result = EventTimeRange.Validate(newTimeRange, systemTime);
@@ -156,7 +156,7 @@ public class VeaEvent : AggregateRoot<EventId>
 
     public Result Cancel()
     {
-        if (Status != null && Status.Equals(EventStatus.Cancelled))
+        if (Status.Equals(EventStatus.Cancelled))
             return Result.Failure(Error.EventAlreadyCancelled);
 
         Status = EventStatus.Cancelled;
