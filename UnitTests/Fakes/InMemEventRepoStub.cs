@@ -9,12 +9,17 @@ public class InMemEventRepoStub : IEventRepository
     // NOTE: This assumes EventId has value equality (record/struct with proper GetHashCode).
     private readonly ConcurrentDictionary<EventId, VeaEvent> _store = new();
 
-    public Task AddAsync(VeaEvent aggregate)
+    public Task RemoveAsync(EventId id)
     {
-        _store[aggregate.Id] = aggregate;
+        _store.TryRemove(id, out _);
         return Task.CompletedTask;
     }
 
+    public Task AddAsync(VeaEvent aggregate)
+    {
+        _store[aggregate.Id!] = aggregate;
+        return Task.CompletedTask;
+    }
 
     public Task<VeaEvent?> GetAsync(EventId id)
         => Task.FromResult(_store.GetValueOrDefault(id)); // GetValueOrDefault(key) returns the value if present, or default (null for classes) if not.

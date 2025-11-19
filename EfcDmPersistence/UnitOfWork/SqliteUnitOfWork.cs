@@ -1,6 +1,9 @@
-﻿namespace EfcDmPersistence.UnitOfWork;
+﻿using Microsoft.EntityFrameworkCore;
+using ViaEventAssociation.Core.Domain.Common;
 
-public class SqliteUnitOfWork
+namespace EfcDmPersistence.UnitOfWork;
+
+public class SqliteUnitOfWork(DbContext context) : IUnitOfWork
 {
-    //TODO: probably to do at some point?
+    public Task SaveChangesAsync() => context.SaveChangesAsync();
 }

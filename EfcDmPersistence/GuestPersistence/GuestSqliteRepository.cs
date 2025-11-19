@@ -1,6 +1,10 @@
-﻿namespace EfcDmPersistence.GuestPersistence;
+﻿using Microsoft.EntityFrameworkCore;
+using ViaEventAssociation.Core.Domain.Aggregates.Guests;
 
-public class GuestSqliteRepository
+namespace EfcDmPersistence.GuestPersistence;
+
+public class GuestSqliteRepository(DbContext context) :
+    RepositoryEfcBase<Guest, GuestId>(context),
+    IGuestRepository
 {
-    //TODO: probably to do at some point?
 }
