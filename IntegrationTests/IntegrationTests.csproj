@@ -11,7 +11,6 @@
 
     <ItemGroup>
       <Folder Include="Persistence\" />
-      <Folder Include="Repositories\" />
     </ItemGroup>
 
     <ItemGroup>
@@ -24,6 +23,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="9.0.9" />
       <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.9" />
       <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.9" />
       <PackageReference Include="xunit.extensibility.core" Version="2.9.3" />
