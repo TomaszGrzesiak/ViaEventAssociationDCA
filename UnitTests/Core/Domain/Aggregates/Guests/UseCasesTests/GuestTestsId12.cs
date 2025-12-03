@@ -16,12 +16,12 @@ public class EventTestsId12
     {
         var guest = await GuestFactory.Init().Build();
         var veaEvent = EventFactory.Init()
-            .WithGuest(guest.Id)
+            .WithGuest(guest.Id!)
             .Build();
 
         Assert.Contains(veaEvent.GuestList, g => g == guest.Id);
 
-        var result = veaEvent.CancelParticipation(guest.Id, FakeSystemTime);
+        var result = veaEvent.CancelParticipation(guest.Id!, FakeSystemTime);
         Assert.True(result.IsSuccess);
         Assert.DoesNotContain(veaEvent.GuestList, g => g == guest.Id);
     }
@@ -34,7 +34,7 @@ public class EventTestsId12
             .Build();
 
         Assert.DoesNotContain(veaEvent.GuestList, g => g == guest.Id);
-        var result = veaEvent.CancelParticipation(guest.Id, FakeSystemTime);
+        var result = veaEvent.CancelParticipation(guest.Id!, FakeSystemTime);
 
         Assert.True(result.IsSuccess);
         Assert.DoesNotContain(veaEvent.GuestList, g => g == guest.Id);
@@ -48,11 +48,11 @@ public class EventTestsId12
 
         var guest = await GuestFactory.Init().Build();
         var veaEvent = EventFactory.Init()
-            .WithGuest(guest.Id)
+            .WithGuest(guest.Id!)
             .WithTimeRange(pastDateTime)
             .Build();
 
-        var result = veaEvent.CancelParticipation(guest.Id, FakeSystemTime);
+        var result = veaEvent.CancelParticipation(guest.Id!, FakeSystemTime);
 
         Assert.True(result.IsFailure);
         Assert.Contains(result.Errors, e => e == Error.ActiveOrCanceledEventCannotBeModified);

@@ -1,6 +1,6 @@
-﻿using System;
-using ViaEventAssociation.Core.Domain.Aggregates.Events.Entities;
-using Xunit;
+﻿using ViaEventAssociation.Core.Domain.Aggregates.Events.Entities;
+
+namespace UnitTests.Core.Domain.Aggregates.Events.Entities;
 
 public class InvitationIdTests
 {
@@ -10,7 +10,7 @@ public class InvitationIdTests
         var guid = Guid.NewGuid().ToString();
         var result = InvitationId.FromString(guid);
         Assert.True(result.IsSuccess);
-        Assert.Equal(guid, result.Payload.ToString());
+        Assert.Equal(guid, result.Payload!.ToString());
     }
 
     [Fact]

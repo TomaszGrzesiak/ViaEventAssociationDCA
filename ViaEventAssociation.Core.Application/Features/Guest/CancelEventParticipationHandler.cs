@@ -24,7 +24,7 @@ public class CancelEventParticipationHandler(IEventRepository eventRepository, I
         if (errors.Any()) return Result.Failure(errors);
 
         // Business change
-        var result = ev!.CancelParticipation(guest!.Id, systemTime);
+        var result = ev!.CancelParticipation(guest!.Id!, systemTime);
         if (result.IsFailure) return result;
 
         // Save the change

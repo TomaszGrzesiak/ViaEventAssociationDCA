@@ -106,7 +106,7 @@ public class UpdateEventTitleHandlerTests
         var ev = EventFactory.Init().WithStatus(EventStatus.Active).Build();
         await repo.AddAsync(ev);
 
-        var cmd = UpdateEventTitleCommand.Create(ev.Id.ToString(), "New Title").Payload!;
+        var cmd = UpdateEventTitleCommand.Create(ev.Id!.ToString(), "New Title").Payload!;
         var result = await handler.HandleAsync(cmd);
 
         Assert.True(result.IsFailure);
@@ -125,7 +125,7 @@ public class UpdateEventTitleHandlerTests
         ev.Cancel();
         await repo.AddAsync(ev);
 
-        var cmd = UpdateEventTitleCommand.Create(ev.Id.ToString(), "New Title").Payload!;
+        var cmd = UpdateEventTitleCommand.Create(ev.Id!.ToString(), "New Title").Payload!;
         var result = await handler.HandleAsync(cmd);
 
         Assert.True(result.IsFailure);

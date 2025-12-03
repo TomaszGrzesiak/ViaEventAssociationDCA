@@ -23,7 +23,7 @@ public class ParticipateInEventHandler(IEventRepository eventRepository, IGuestR
             return Result.Failure(Error.GuestNotFound);
 
         // Business change
-        var result = ev.Participate(guest.Id, systemTime);
+        var result = ev.Participate(guest.Id!, systemTime);
         if (result.IsFailure) return result;
 
         // Save the change

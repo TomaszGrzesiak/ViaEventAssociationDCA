@@ -13,7 +13,7 @@ namespace IntegrationTests.DmContextConfigurationTests;
 public class VeaEventDbContextWriteTests : EfTestHelpers
 {
     private static readonly ISystemTime FakeSystemTime = new FakeSystemTime(new DateTime(2023, 8, 10, 12, 0, 0));
-    DateTime today = new DateTime(FakeSystemTime.Now().Year, FakeSystemTime.Now().Month, FakeSystemTime.Now().Day, 0, 0, 0);
+    // DateTime today = new DateTime(FakeSystemTime.Now().Year, FakeSystemTime.Now().Month, FakeSystemTime.Now().Day, 0, 0, 0);
     
     [Fact]
     public async Task StrongIdAsPk()
@@ -59,7 +59,7 @@ public class VeaEventDbContextWriteTests : EfTestHelpers
         
         dbContext.Entry(entity)
             .ComplexProperty(e => e.MaxGuestsNo)
-            .CurrentValue = null;
+            .CurrentValue = null!;
         
         Assert.Throws<InvalidOperationException>(() => dbContext.SaveChanges());
     }

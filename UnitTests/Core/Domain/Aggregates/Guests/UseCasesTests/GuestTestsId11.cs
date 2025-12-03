@@ -22,7 +22,7 @@ public class EventTestsId11
             .WithTimeRange(EventTimeRange.Default(FakeSystemTime))
             .Build();
 
-        var result = veaEvent.Participate(guest.Id, FakeSystemTime);
+        var result = veaEvent.Participate(guest.Id!, FakeSystemTime);
 
         Assert.True(result.IsSuccess);
         Assert.Contains(veaEvent.GuestList, id => id == guest.Id);
@@ -41,7 +41,7 @@ public class EventTestsId11
             .WithVisibility(EventVisibility.Public)
             .Build();
 
-        var result = veaEvent.Participate(guest.Id, FakeSystemTime);
+        var result = veaEvent.Participate(guest.Id!, FakeSystemTime);
 
         Assert.True(result.IsFailure);
         Assert.Contains(result.Errors, e => e == Error.OnlyActiveEventsCanBeJoined);
@@ -58,7 +58,7 @@ public class EventTestsId11
             .WithGhostGuests(5) // already 5 guest
             .Build();
 
-        var result = veaEvent.Participate(guest.Id, FakeSystemTime);
+        var result = veaEvent.Participate(guest.Id!, FakeSystemTime);
 
         Assert.True(result.IsFailure);
         Assert.Contains(result.Errors, e => e == Error.NoMoreRoom);
@@ -80,7 +80,7 @@ public class EventTestsId11
             .WithTimeRange(pastTime)
             .Build();
 
-        var result = veaEvent.Participate(guest.Id, FakeSystemTime);
+        var result = veaEvent.Participate(guest.Id!, FakeSystemTime);
 
         Assert.True(result.IsFailure);
         Assert.Contains(result.Errors, e => e == Error.TooLate);
@@ -94,7 +94,7 @@ public class EventTestsId11
             .WithVisibility(EventVisibility.Private)
             .Build();
 
-        var result = veaEvent.Participate(guest.Id, FakeSystemTime);
+        var result = veaEvent.Participate(guest.Id!, FakeSystemTime);
 
         Assert.True(result.IsFailure);
         Assert.Contains(result.Errors, e => e == Error.EventIsNotPublic);
@@ -105,10 +105,10 @@ public class EventTestsId11
     {
         var guest = await GuestFactory.Init().Build();
         var veaEvent = EventFactory.Init()
-            .WithGuest(guest.Id)
+            .WithGuest(guest.Id!)
             .Build();
 
-        var result = veaEvent.Participate(guest.Id, FakeSystemTime);
+        var result = veaEvent.Participate(guest.Id!, FakeSystemTime);
 
         Assert.True(result.IsFailure);
         Assert.Contains(result.Errors, e => e == Error.GuestAlreadyJoined);

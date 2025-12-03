@@ -1,6 +1,6 @@
-﻿using System;
-using ViaEventAssociation.Core.Domain.Aggregates.Events;
-using Xunit;
+﻿using ViaEventAssociation.Core.Domain.Aggregates.Events;
+
+namespace UnitTests.Core.Domain.Aggregates.Events;
 
 public class EventIdTests
 {
@@ -10,7 +10,7 @@ public class EventIdTests
         var guid = Guid.NewGuid().ToString();
         var result = EventId.FromString(guid);
         Assert.True(result.IsSuccess);
-        Assert.Equal(guid, result.Payload.ToString());
+        Assert.Equal(guid, result.Payload!.ToString());
     }
 
     [Fact]

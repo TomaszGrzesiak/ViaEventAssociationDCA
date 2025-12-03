@@ -20,13 +20,13 @@ public class GuestTestsId14
             .WithTimeRange(EventTimeRange.Default(FakeSystemTime))
             .Build();
 
-        var result = veaEvent.InviteGuest(guest.Id);
+        var result = veaEvent.InviteGuest(guest.Id!);
         Assert.True(result.IsSuccess);
 
-        result = veaEvent.AcceptInvitation(guest.Id, FakeSystemTime);
+        result = veaEvent.AcceptInvitation(guest.Id!, FakeSystemTime);
 
         Assert.True(result.IsSuccess);
-        Assert.True(veaEvent.HasAcceptedInvitation(guest.Id));
+        Assert.True(veaEvent.HasAcceptedInvitation(guest.Id!));
     }
 
     [Fact]
@@ -37,7 +37,7 @@ public class GuestTestsId14
             .WithStatus(EventStatus.Active)
             .Build();
 
-        var result = veaEvent.AcceptInvitation(guest.Id, FakeSystemTime);
+        var result = veaEvent.AcceptInvitation(guest.Id!, FakeSystemTime);
 
         Assert.True(result.IsFailure);
         Assert.Contains(result.Errors, e => e == Error.InvitationNotFound);
@@ -50,12 +50,12 @@ public class GuestTestsId14
         var veaEvent = EventFactory.Init()
             .WithStatus(EventStatus.Active)
             .WithMaxGuests(5)
-            .WithInvitedGuest(guest.Id)
+            .WithInvitedGuest(guest.Id!)
             .WithGhostGuests(5)
             .WithTimeRange(EventTimeRange.Default(FakeSystemTime))
             .Build();
 
-        var result = veaEvent.AcceptInvitation(guest.Id, FakeSystemTime);
+        var result = veaEvent.AcceptInvitation(guest.Id!, FakeSystemTime);
 
         Assert.True(result.IsFailure);
         Assert.Contains(result.Errors, e => e == Error.NoMoreRoom);
@@ -67,10 +67,10 @@ public class GuestTestsId14
         var guest = await GuestFactory.Init().Build();
         var veaEvent = EventFactory.Init()
             .WithStatus(EventStatus.Cancelled)
-            .WithInvitedGuest(guest.Id)
+            .WithInvitedGuest(guest.Id!)
             .Build();
 
-        var result = veaEvent.AcceptInvitation(guest.Id, FakeSystemTime);
+        var result = veaEvent.AcceptInvitation(guest.Id!, FakeSystemTime);
 
         Assert.True(result.IsFailure);
         Assert.Contains(result.Errors, e => e == Error.CancelledEventsCannotBeJoined);
@@ -82,10 +82,10 @@ public class GuestTestsId14
         var guest = await GuestFactory.Init().Build();
         var veaEvent = EventFactory.Init()
             .WithStatus(EventStatus.Ready)
-            .WithInvitedGuest(guest.Id)
+            .WithInvitedGuest(guest.Id!)
             .Build();
 
-        var result = veaEvent.AcceptInvitation(guest.Id, FakeSystemTime);
+        var result = veaEvent.AcceptInvitation(guest.Id!, FakeSystemTime);
 
         Assert.True(result.IsFailure);
         Assert.Contains(result.Errors, e => e == Error.JoinUnstartedEventImpossible);
@@ -102,10 +102,10 @@ public class GuestTestsId14
         var veaEvent = EventFactory.Init()
             .WithTimeRange(pastTimeRange)
             .WithStatus(EventStatus.Active)
-            .WithInvitedGuest(guest.Id)
+            .WithInvitedGuest(guest.Id!)
             .Build();
 
-        var result = veaEvent.AcceptInvitation(guest.Id, FakeSystemTime);
+        var result = veaEvent.AcceptInvitation(guest.Id!, FakeSystemTime);
 
         Assert.True(result.IsFailure);
         Assert.Contains(result.Errors, e => e == Error.TooLate);
