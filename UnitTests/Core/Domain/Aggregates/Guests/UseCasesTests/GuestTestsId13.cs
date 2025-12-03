@@ -18,7 +18,7 @@ public class EventTestsId13
             .WithStatus(status)
             .Build();
 
-        var result = veaEvent.InviteGuest(guest.Id);
+        var result = veaEvent.InviteGuest(guest.Id!);
 
         Assert.True(result.IsSuccess);
         Assert.Contains(veaEvent.Invitations, i => i.GuestId == guest.Id);
@@ -35,7 +35,7 @@ public class EventTestsId13
             .WithStatus(status)
             .Build();
 
-        var result = veaEvent.InviteGuest(guest.Id);
+        var result = veaEvent.InviteGuest(guest.Id!);
 
         Assert.True(result.IsFailure);
         Assert.Contains(result.Errors, e => e == Error.CanOnlyInviteToReadyOrActiveEvent);
@@ -51,7 +51,7 @@ public class EventTestsId13
             .WithGhostGuests(5)
             .Build();
 
-        var result = veaEvent.InviteGuest(guest.Id);
+        var result = veaEvent.InviteGuest(guest.Id!);
 
         Assert.True(result.IsFailure);
         Assert.Contains(result.Errors, e => e == Error.NoMoreRoom);
@@ -66,11 +66,11 @@ public class EventTestsId13
             .Build();
 
         // invite once
-        var result = veaEvent.InviteGuest(guest.Id);
+        var result = veaEvent.InviteGuest(guest.Id!);
         Assert.True(result.IsSuccess);
 
         // invite again
-        result = veaEvent.InviteGuest(guest.Id);
+        result = veaEvent.InviteGuest(guest.Id!);
         Assert.True(result.IsFailure);
         Assert.Contains(result.Errors, e => e == Error.GuestAlreadyInvited);
     }
@@ -80,11 +80,11 @@ public class EventTestsId13
     {
         var guest = await GuestFactory.Init().Build();
         var veaEvent = EventFactory.Init()
-            .WithGuest(guest.Id)
+            .WithGuest(guest.Id!)
             .WithStatus(EventStatus.Active)
             .Build();
 
-        var result = veaEvent.InviteGuest(guest.Id);
+        var result = veaEvent.InviteGuest(guest.Id!);
         Assert.True(result.IsFailure);
         Assert.Contains(result.Errors, e => e == Error.GuestAlreadyJoined);
     }

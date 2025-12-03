@@ -1,6 +1,6 @@
-﻿using System;
-using ViaEventAssociation.Core.Domain.Aggregates.Guests;
-using Xunit;
+﻿using ViaEventAssociation.Core.Domain.Aggregates.Guests;
+
+namespace UnitTests.Core.Domain.Aggregates.Guests;
 
 public class GuestIdTests
 {
@@ -10,7 +10,7 @@ public class GuestIdTests
         var guid = Guid.NewGuid().ToString();
         var result = GuestId.FromString(guid);
         Assert.True(result.IsSuccess);
-        Assert.Equal(guid, result.Payload.ToString());
+        Assert.Equal(guid, result.Payload!.ToString());
     }
 
     [Fact]

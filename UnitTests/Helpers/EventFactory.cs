@@ -72,7 +72,7 @@ public class EventFactory
 
     public VeaEvent Build()
     {
-        return VeaEvent.Create(_eventId, _title, _description, _timeRange, _visibility, _maxGuests!, _status, _locationMaxCapacity, _guests, _invitations)
+        return VeaEvent.Create(_eventId, _title!, _description!, _timeRange, _visibility!, _maxGuests!, _status, _locationMaxCapacity, _guests, _invitations)
             .Payload!;
     }
 

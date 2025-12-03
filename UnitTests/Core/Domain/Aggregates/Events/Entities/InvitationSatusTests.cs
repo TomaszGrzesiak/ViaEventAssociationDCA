@@ -30,7 +30,7 @@ public class InvitationStatusTests
     {
         var result = InvitationStatus.FromName(name);
         Assert.True(result.IsSuccess);
-        Assert.Equal(expectedId, result.Payload.Id);
+        Assert.Equal(expectedId, result.Payload!.Id);
     }
 
     [Fact]

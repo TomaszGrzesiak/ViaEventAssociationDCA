@@ -26,6 +26,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EfcQueries", "EfcQueries\Ef
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTests", "IntegrationTests\IntegrationTests.csproj", "{B9DF3C2D-A614-4AC6-9780-31C4C3A6BD06}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ViaEventAssociation.Core.QueryContracts", "ViaEventAssociation.Core.QueryContracts\ViaEventAssociation.Core.QueryContracts.csproj", "{0487BB28-9B8B-4B9F-B8F8-FFCA94E0B30B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -64,6 +66,10 @@ Global
 		{B9DF3C2D-A614-4AC6-9780-31C4C3A6BD06}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B9DF3C2D-A614-4AC6-9780-31C4C3A6BD06}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B9DF3C2D-A614-4AC6-9780-31C4C3A6BD06}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0487BB28-9B8B-4B9F-B8F8-FFCA94E0B30B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0487BB28-9B8B-4B9F-B8F8-FFCA94E0B30B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0487BB28-9B8B-4B9F-B8F8-FFCA94E0B30B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0487BB28-9B8B-4B9F-B8F8-FFCA94E0B30B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{BEF5E627-AA86-4929-8D7C-86F3545D571F} = {4068B119-615E-4526-BB11-39A16DB793CA}
@@ -76,5 +82,6 @@ Global
 		{7DD3B23D-EA57-43CD-BCA0-98E68A7DDAD9} = {BD0D6F2F-978A-46CE-935B-44A279E415EF}
 		{A5DE6072-8B79-4AD2-BFA3-AFCA10DACC83} = {BD0D6F2F-978A-46CE-935B-44A279E415EF}
 		{B9DF3C2D-A614-4AC6-9780-31C4C3A6BD06} = {0F495B80-DDF2-429A-932C-7D232A2DF872}
+		{0487BB28-9B8B-4B9F-B8F8-FFCA94E0B30B} = {BEF5E627-AA86-4929-8D7C-86F3545D571F}
 	EndGlobalSection
 EndGlobal

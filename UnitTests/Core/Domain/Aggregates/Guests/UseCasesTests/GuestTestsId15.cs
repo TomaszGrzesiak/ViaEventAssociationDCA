@@ -17,10 +17,10 @@ public class GuestTestsId15
         var guest = await GuestFactory.Init().Build();
         var veaEvent = EventFactory.Init()
             .WithStatus(EventStatus.Active)
-            .WithInvitedGuest(guest.Id)
+            .WithInvitedGuest(guest.Id!)
             .Build();
 
-        var result = veaEvent.DeclineInvitation(guest.Id);
+        var result = veaEvent.DeclineInvitation(guest.Id!);
 
         Assert.True(result.IsSuccess);
         var invitation = veaEvent.Invitations.FirstOrDefault(i => i.GuestId == guest.Id);
@@ -34,14 +34,14 @@ public class GuestTestsId15
         var guest = await GuestFactory.Init().Build();
         var veaEvent = EventFactory.Init()
             .WithStatus(EventStatus.Active)
-            .WithInvitedGuest(guest.Id)
+            .WithInvitedGuest(guest.Id!)
             .WithTimeRange(EventTimeRange.Default(FakeSystemTime))
             .Build();
 
-        var result = veaEvent.AcceptInvitation(guest.Id, FakeSystemTime);
+        var result = veaEvent.AcceptInvitation(guest.Id!, FakeSystemTime);
         Assert.True(result.IsSuccess);
 
-        result = veaEvent.DeclineInvitation(guest.Id);
+        result = veaEvent.DeclineInvitation(guest.Id!);
         Assert.True(result.IsSuccess);
 
         var invitation = veaEvent.Invitations.FirstOrDefault(i => i.GuestId == guest.Id);
@@ -57,7 +57,7 @@ public class GuestTestsId15
             .WithStatus(EventStatus.Active)
             .Build();
 
-        var result = veaEvent.DeclineInvitation(guest.Id);
+        var result = veaEvent.DeclineInvitation(guest.Id!);
 
         Assert.False(result.IsSuccess);
         Assert.Contains(result.Errors, e => e == Error.InvitationNotFound);
@@ -68,11 +68,11 @@ public class GuestTestsId15
     {
         var guest = await GuestFactory.Init().Build();
         var veaEvent = EventFactory.Init()
-            .WithInvitedGuest(guest.Id)
+            .WithInvitedGuest(guest.Id!)
             .WithStatus(EventStatus.Cancelled)
             .Build();
 
-        var result = veaEvent.DeclineInvitation(guest.Id);
+        var result = veaEvent.DeclineInvitation(guest.Id!);
 
         Assert.False(result.IsSuccess);
         Assert.Contains(result.Errors, e => e == Error.DeclineImpossibleOnCancelledEvent);
