@@ -1,5 +1,7 @@
 ﻿using EfcQueries;
 using IntegrationTests.Helpers;
+using UnitTests.Fakes;
+using ViaEventAssociation.Core.Domain.Contracts;
 using Xunit;
 
 namespace IntegrationTests.CQRS;
@@ -23,7 +25,7 @@ public class ReadModelSeedTests
         await using var ctx = ReadModelTestHelpers.SetupReadContext().Seed();
 
         Assert.NotEmpty(ctx.VeaEvents);
-        Assert.True(ctx.VeaEvents.Count() > 10);
+        Assert.True(ctx.VeaEvents.Count() > 20);
     }
     
     [Fact]

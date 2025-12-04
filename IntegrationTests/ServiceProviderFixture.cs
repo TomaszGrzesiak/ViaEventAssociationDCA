@@ -6,9 +6,11 @@ using EfcDmPersistence;
 using EfcDmPersistence.GuestPersistence;
 using EfcDmPersistence.UnitOfWork;
 using EfcDmPersistence.VeaEventPersistence;
+using UnitTests.Fakes;
 using ViaEventAssociation.Core.Domain.Aggregates.Events;
 using ViaEventAssociation.Core.Domain.Aggregates.Guests;
 using ViaEventAssociation.Core.Domain.Common;
+using ViaEventAssociation.Core.Domain.Contracts;
 
 namespace IntegrationTests;
 
@@ -41,6 +43,9 @@ public sealed class ServiceProviderFixture : IDisposable //IDisposable makes it 
         services.AddScoped<IUnitOfWork, SqliteUnitOfWork>();
         services.AddScoped<IEventRepository, VeaEventSqliteRepository>();
         services.AddScoped<IGuestRepository, GuestSqliteRepository>();
+        
+        // Add FakeSystemTime for unit tests
+        services.AddScoped<ISystemTime, FakeSystemTime>();
 
         Provider = services.BuildServiceProvider(validateScopes: true);
 

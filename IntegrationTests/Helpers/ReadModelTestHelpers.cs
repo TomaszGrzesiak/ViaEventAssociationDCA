@@ -24,18 +24,4 @@ public static class ReadModelTestHelpers
 
         return context;
     }
-   
-    
-    public static VeaReadModelContext SetupReadContextTroels()
-    {
-        // TROELS' VERSION:
-        DbContextOptionsBuilder<VeaReadModelContext> optionsBuilder = new();
-        string testDbName = "Test" + Guid.NewGuid() + ".db";
-        optionsBuilder.UseSqlite($"Data Source={testDbName}");
-        VeaReadModelContext context = new(optionsBuilder.Options);
-        context.Database.EnsureDeleted();
-        context.Database.EnsureCreated();
-        
-        return context;
-    }
 }
