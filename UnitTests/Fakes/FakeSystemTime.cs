@@ -2,7 +2,24 @@
 
 namespace UnitTests.Fakes;
 
-public class FakeSystemTime(DateTime? fixedTime) : ISystemTime
+public sealed class FakeSystemTime : ISystemTime
 {
-    public DateTime Now() => fixedTime ??  new DateTime(2023, 10, 30, 12, 0, 0);
+    private DateTime _now;
+
+    // Used by DI in integration tests
+    public FakeSystemTime()
+        : this(DateTime.UtcNow) // or some default
+    {
+    }
+
+    // Used explicitly in unit tests
+    public FakeSystemTime(DateTime now)
+    {
+        _now = now;
+    }
+
+    public DateTime Now() => _now;
+
+    // Optional helper for tests that want to change time mid-test
+    public void Set(DateTime now) => _now = now;
 }

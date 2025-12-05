@@ -7,6 +7,7 @@
 
         <IsPackable>false</IsPackable>
         <IsTestProject>true</IsTestProject>
+        <PreserveCompilationContext>true</PreserveCompilationContext>
     </PropertyGroup>
 
     <ItemGroup>
@@ -18,6 +19,7 @@
     <ItemGroup>
       <ProjectReference Include="..\EfcDmPersistence\EfcDmPersistence.csproj" />
       <ProjectReference Include="..\EfcQueries\EfcQueries.csproj" />
+      <ProjectReference Include="..\src\Presentation\ViaEventAssociation.Presentation.WebAPI\ViaEventAssociation.Presentation.WebAPI.csproj" />
       <ProjectReference Include="..\UnitTests\UnitTests.csproj" />
       <ProjectReference Include="..\ViaEventAssociation.Core.Application\ViaEventAssociation.Core.Application.csproj" />
       <ProjectReference Include="..\ViaEventAssociation.Core.Domain\ViaEventAssociation.Core.Domain.csproj" />
@@ -43,16 +45,16 @@
         </PackageReference>
     </ItemGroup>
 	<ItemGroup>
-		<Content Include="TestData\Events.json">
+		<Content Update="TestData\Events.json">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</Content>
-		<Content Include="TestData\Guests.json">
+		<Content Update="TestData\Guests.json">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</Content>
-		<Content Include="TestData\Participations.json">
+		<Content Update="TestData\Participations.json">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</Content>
-		<Content Include="TestData\Invitations.json">
+		<Content Update="TestData\Invitations.json">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</Content>
 	</ItemGroup>

@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
+namespace ViaEventAssociation.Presentation.WebAPI.Endpoints.Common;
+
 [ApiController, Route("api")]
 public abstract class EndpointBase : ControllerBase;
 

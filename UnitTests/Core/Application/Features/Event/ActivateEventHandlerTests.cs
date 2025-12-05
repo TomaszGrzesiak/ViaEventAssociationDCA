@@ -13,7 +13,7 @@ public class ActivateEventHandlerTests
     private readonly ISystemTime _fakeSystemTime = new FakeSystemTime(new DateTime(2025, 9, 19, 12, 0, 0));
 
     [Fact]
-    public async void HandleAsync_Activate_Event_Succeeds_When_All_Fields_Are_Valid()
+    public async Task HandleAsync_Activate_Event_Succeeds_When_All_Fields_Are_Valid()
     {
         // Arrange
         var eventRepo = new InMemEventRepoStub();
@@ -40,7 +40,7 @@ public class ActivateEventHandlerTests
     }
 
     [Fact]
-    public async void HandleAsync_Activate_Event_Fails_When_EventId_Is_InValid()
+    public async Task HandleAsync_Activate_Event_Fails_When_EventId_Is_InValid()
     {
         // Arrange
         var eventRepo = new InMemEventRepoStub();
@@ -72,7 +72,7 @@ public class ActivateEventHandlerTests
 
     // test if the handler grabs domain errors
     [Fact]
-    public async void HandleAsync_Activate_Event_Fails_When_TitleIsInvalid()
+    public async Task HandleAsync_Activate_Event_Fails_When_TitleIsInvalid()
     {
         // Arrange
         var eventRepo = new InMemEventRepoStub();

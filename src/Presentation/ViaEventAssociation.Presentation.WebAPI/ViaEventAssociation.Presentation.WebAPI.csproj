@@ -15,11 +15,17 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="MappingConfigurations\" />
+        <InternalsVisibleTo Include="IntegrationTests"/>
     </ItemGroup>
 
     <ItemGroup>
-        <InternalsVisibleTo Include="IntegrationTests"/>
+      <ProjectReference Include="..\..\..\EfcDmPersistence\EfcDmPersistence.csproj" />
+      <ProjectReference Include="..\..\..\EfcQueries\EfcQueries.csproj" />
+      <ProjectReference Include="..\..\..\ViaEventAssociation.Core.Application\ViaEventAssociation.Core.Application.csproj" />
+      <ProjectReference Include="..\..\..\ViaEventAssociation.Core.Domain\ViaEventAssociation.Core.Domain.csproj" />
+      <ProjectReference Include="..\..\..\ViaEventAssociation.Core.QueryContracts\ViaEventAssociation.Core.QueryContracts.csproj" />
+      <ProjectReference Include="..\..\..\ViaEventAssociation.Core.Tools.OperationResult\ViaEventAssociation.Core.Tools.OperationResult.csproj" />
+      <ProjectReference Include="..\..\Tools\ViaEventAssociation.Core.Tools.ObjectMapper\ViaEventAssociation.Core.Tools.ObjectMapper.csproj" />
     </ItemGroup>
 
 </Project>

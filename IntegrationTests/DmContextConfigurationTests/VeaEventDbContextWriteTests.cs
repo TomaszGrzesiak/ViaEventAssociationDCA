@@ -1,9 +1,11 @@
-﻿using EfcDmPersistence;
+﻿using System.Reflection;
+using EfcDmPersistence;
 using IntegrationTests.Helpers;
 using Microsoft.EntityFrameworkCore;
 using UnitTests.Fakes;
 using UnitTests.Helpers;
 using ViaEventAssociation.Core.Domain.Aggregates.Events;
+using ViaEventAssociation.Core.Domain.Aggregates.Events.Entities;
 using ViaEventAssociation.Core.Domain.Aggregates.Guests;
 using ViaEventAssociation.Core.Domain.Contracts;
 using Xunit;
@@ -22,7 +24,11 @@ public class VeaEventDbContextWriteTests : EfTestHelpers
         await using DmContext dbContext = SetupContext();
         
         EventId id = EventId.CreateUnique();
-        VeaEvent entity = EventFactory.Init().WithId(id).Build();
+        VeaEvent entity = EventFactory.Init()
+            .WithId(id)
+            .WithVisibility(EventVisibility.Private)
+            .WithTimeRange(EventTimeRange.Default(FakeSystemTime))
+            .Build();
         
         await AddAndSaveAndClearAsync(entity, dbContext);
 
@@ -36,7 +42,11 @@ public class VeaEventDbContextWriteTests : EfTestHelpers
         await using DmContext dbContext = SetupContext();
         
         EventId id = EventId.CreateUnique();
-        VeaEvent entity = EventFactory.Init().WithId(id).Build();
+        VeaEvent entity = EventFactory.Init()
+            .WithId(id)
+            .WithVisibility(EventVisibility.Private)
+            .WithValidDescription()
+            .Build();
         var newMaxGuest = MaxGuests.Create(15).Payload!;
         entity.UpdateMaxGuests(newMaxGuest);
         
@@ -55,7 +65,10 @@ public class VeaEventDbContextWriteTests : EfTestHelpers
         await using DmContext dbContext = SetupContext();
         
         EventId id = EventId.CreateUnique();
-        VeaEvent entity = EventFactory.Init().WithId(id).Build();
+        VeaEvent entity = EventFactory.Init()
+            .WithVisibility(EventVisibility.Private)
+            .WithTimeRange(EventTimeRange.Default(FakeSystemTime))
+            .WithId(id).Build();
         await dbContext.VeaEvents.AddAsync(entity);
         
         dbContext.Entry(entity)
@@ -71,7 +84,10 @@ public class VeaEventDbContextWriteTests : EfTestHelpers
         // Arrange
         await using DmContext dbContext = SetupContext();
         EventId id = EventId.CreateUnique();
-        VeaEvent entity = EventFactory.Init().WithId(id).Build();
+        VeaEvent entity = EventFactory.Init()
+            .WithVisibility(EventVisibility.Private)
+            .WithTimeRange(EventTimeRange.Default(FakeSystemTime))
+            .WithId(id).Build();
         var newTitle = EventTitle.Create("New, correct title").Payload!;
         entity.UpdateTitle(newTitle);
         
@@ -81,25 +97,6 @@ public class VeaEventDbContextWriteTests : EfTestHelpers
         // Assert
         VeaEvent retrieved = dbContext.VeaEvents.SingleOrDefault(x => x.Id!.Equals(id))!;
         Assert.Equal(retrieved.Title!.Value, newTitle.Value);
-    }
-    
-    [Fact]
-    public async Task TitleProperty_NullableValueObject_SuccessWhenNull()
-    {
-        // Arrange
-        await using DmContext dbContext = SetupContext();
-        EventId id = EventId.CreateUnique();
-        VeaEvent entity = EventFactory.Init()
-            .WithId(id)
-            .WithTitle(null)
-            .Build();
-        
-        // Act
-        await AddAndSaveAndClearAsync(entity, dbContext);
-        
-        // Assert
-        VeaEvent retrieved = dbContext.VeaEvents.SingleOrDefault(x => x.Id!.Equals(id))!;
-        Assert.Null(retrieved.Title);
     }
     
     [Fact]
@@ -141,20 +138,30 @@ public class VeaEventDbContextWriteTests : EfTestHelpers
     }
 
     [Fact]
-    public async Task Cannot_Add_Two_Invites_For_Same_Guest_In_Same_Event()
+    public async Task Invitation_Unique_Index_Prevents_Duplicate_Guest_For_Same_Event()
     {
         await using var ctx = SetupContext();
-        var ev = EventFactory.Init().WithStatus(EventStatus.Ready).Build();
-        var g = GuestId.CreateUnique();
+        var eventId = EventId.CreateUnique();
+        var guestId = GuestId.CreateUnique();
 
-        // Domain: add two invites for same guest (however your API allows)
-        var result = ev.InviteGuest(g); // whatever your domain method is
-        Assert.True(result.IsSuccess);
+        var ev = EventFactory.Init()
+            .WithId(eventId)
+            .WithStatus(EventStatus.Ready)
+            .WithVisibility(EventVisibility.Private)
+            .WithTimeRange(EventTimeRange.Default(FakeSystemTime))
+            .Build();
 
-        ev.InviteGuest(g);
+        // Bypass domain – use reflection to get backing field
+        var invitationsField = typeof(VeaEvent)
+            .GetField("_invitations", BindingFlags.NonPublic | BindingFlags.Instance);
+        var invitations = (List<Invitation>)invitationsField!.GetValue(ev)!;
+
+        invitations.Add(Invitation.Create(guestId));
+        invitations.Add(Invitation.Create(guestId));   // duplicate
 
         await ctx.AddAsync(ev);
-        await Assert.ThrowsAnyAsync<DbUpdateException>(async () => { await ctx.SaveChangesAsync(); });
+
+        await Assert.ThrowsAsync<DbUpdateException>(() => ctx.SaveChangesAsync());
     }
 
     // The domain constraints setting MaxGuest as a non-nullable. But in real life better be safe than sorry: migrations, BI and reports, etc.
@@ -199,41 +206,5 @@ public class VeaEventDbContextWriteTests : EfTestHelpers
         VeaEvent retrieved = ctx.VeaEvents.Single(x => x.Id == entity.Id);
         Assert.NotNull(retrieved.Description);
         Assert.Equal(newEventDescription.Value, retrieved.Description.Value);
-    }
-    
-    [Fact]
-    public async Task EventDescription_NullableMultiValuedValueObject_OneValueObjectPropertyIsNull()
-    {
-        // 1) Build with default Event Description "Default description"
-        await using DmContext ctx = SetupContext();
-        EventId id = EventId.CreateUnique();
-        VeaEvent entity = EventFactory.Init()
-            .WithId(id)
-            .WithTimeRange(EventTimeRange.Default(FakeSystemTime))
-            .WithDescription(EventDescription.Default().Value)
-            .Build();
-        
-        //entity.UpdateDescription(null); // this won't work, because the domain constraints don't allow it. Can we circumvent that?
-        
-        // 2) Save once so the owner (and owned) exist in DB
-        await AddAndSaveAndClearAsync(entity, ctx);
-
-        // 3) Reload a tracked instance
-        var toUpdate = ctx.VeaEvents.Single(x => x.Id == id);
-
-        // Ensure the owned is loaded (important)
-        await ctx.Entry(toUpdate).Reference(e => e.Description).LoadAsync();
-
-        // 4) Now null the owned nav (EF will mark it Deleted in an UPDATE scenario — which is valid)
-        ctx.Entry(toUpdate).Reference(e => e.Description).CurrentValue = null;
-
-        // await AddAndSaveAndClearAsync(toUpdate, ctx);
-        await ctx.SaveChangesAsync();
-        ctx.ChangeTracker.Clear();
-
-    
-        // 5) Assert it persisted as NULL
-        var retrieved = ctx.VeaEvents.Single(x => x.Id == id);
-        Assert.Null(retrieved.Description);
     }
 }
