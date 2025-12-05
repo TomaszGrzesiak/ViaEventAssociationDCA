@@ -31,6 +31,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\src\Tools\ViaEventAssociation.Core.Tools.ObjectMapper\ViaEventAssociation.Core.Tools.ObjectMapper.csproj" />
         <ProjectReference Include="..\ViaEventAssociation.Core.Application\ViaEventAssociation.Core.Application.csproj"/>
         <ProjectReference Include="..\ViaEventAssociation.Core.Domain\ViaEventAssociation.Core.Domain.csproj"/>
     </ItemGroup>
