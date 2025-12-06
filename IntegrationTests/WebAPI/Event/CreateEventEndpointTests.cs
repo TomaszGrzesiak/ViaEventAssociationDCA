@@ -8,10 +8,13 @@ using ViaEventAssociation.Presentation.WebAPI.Endpoints.Event;
 using Xunit;
 using EventId = ViaEventAssociation.Core.Domain.Aggregates.Events.EventId;
 
-namespace IntegrationTests.WebAPI;
 
-public class EventEndpointsTests
+namespace IntegrationTests.WebAPI.Event;
+
+public class CreateEventEndpointTests
 {
+    // Only one scenario, because there's literally nothing that can go wrong at any stage.
+    
     [Fact]
     public async Task CreateEvent_ShouldReturnOk_AndPersistEvent()
     {
@@ -36,32 +39,5 @@ public class EventEndpointsTests
         
         var veaEvent = await ctx.VeaEvents.SingleOrDefaultAsync(e => e.Id == eventIdResult.Payload);
         Assert.NotNull(veaEvent);
-    }
-
-    [Fact]
-    public async Task UpdateTitle_ValidInput_ShouldReturnNoContent()
-    {
-        await using var webApp = new VeaWebApplicationFactory();
-        var client = webApp.CreateClient();
-
-        // create event first through WebAPI
-        var createResponse = await client.PostAsync("/api/events/create", JsonContent.Create(new { }));
-        var createDto = await createResponse.Content.ReadFromJsonAsync<CreateEventResponse>();
-        var eventId = createDto!.Id;
-
-        var body = new UpdateTitleBody("New Title");
-
-        // act
-        var response = await client.PostAsJsonAsync($"/api/events/{eventId}/update-title", body);
-
-        // assert HTTP
-        Assert.Equal(HttpStatusCode.NoContent, response.StatusCode); // NoContent is also a SUCCESS (code 204)
-
-        // assert DB
-        using var scope = webApp.Services.CreateScope();
-        var ctx = scope.ServiceProvider.GetRequiredService<DmContext>();
-        var eventIdResult = EventId.FromString(eventId);
-        var veaEvent = await ctx.VeaEvents.SingleAsync(e => e.Id == eventIdResult.Payload);
-        Assert.Equal("New Title", veaEvent.Title.Value);
     }
 }
