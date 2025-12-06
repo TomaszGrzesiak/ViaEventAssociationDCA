@@ -41,18 +41,26 @@ public sealed class ViewSingleEventEndpoint(
     IObjectMapper mapper)
     : ApiEndpoint
         .WithRequest<ViewSingleEventRequest>
-        .AndResult<Ok<ViewSingleEventResponse>>
+        .AndResults<Ok<ViewSingleEventResponse>, NotFound>
 {
     [HttpGet("events/{Id}")]
-    public override async Task<Ok<ViewSingleEventResponse>> HandleAsync(
+    public override async Task<Results<Ok<ViewSingleEventResponse>, NotFound>> HandleAsync(
         [FromRoute] ViewSingleEventRequest request)
     {
-        // Map request -> query
         var query = mapper.Map<EventDetailsQuery.Query>(request);
 
-        var answer = await dispatcher.DispatchAsync(query);
-
-        // Map answer -> response
+        EventDetailsQuery.Answer answer;
+        try
+        {
+            answer = await dispatcher.DispatchAsync(query);    
+        }     
+        catch (InvalidOperationException ex)
+            when (ex.Message.StartsWith("Event with id", StringComparison.Ordinal))
+        {
+            // This is the "not found in read model" case from EventDetailsQueryHandler
+            return TypedResults.NotFound();
+        }
+        
         var response = mapper.Map<ViewSingleEventResponse>(answer);
 
         return TypedResults.Ok(response);

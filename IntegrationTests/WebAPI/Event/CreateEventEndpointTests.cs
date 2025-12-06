@@ -20,23 +20,30 @@ public class CreateEventEndpointTests
     {
         await using var webApp = new VeaWebApplicationFactory();
         var client = webApp.CreateClient();
-        
+    
         // act
         var response = await client.PostAsync("/api/events/create", JsonContent.Create(new { }));
-        
+    
+        // TEMP: if it fails, see the body
+        if (response.StatusCode != HttpStatusCode.OK)
+        {
+            var errorBody = await response.Content.ReadAsStringAsync();
+            throw new Exception($"CreateEvent failed with status {(int)response.StatusCode}: {response.StatusCode}\nBody:\n{errorBody}");
+        }
+
         // assert (HTTP)
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        
+    
         var dto = await response.Content.ReadFromJsonAsync<CreateEventResponse>();
         Assert.NotNull(dto);
         Assert.False(string.IsNullOrWhiteSpace(dto!.Id));
-        
+    
         // assert (DB)
         using var scope = webApp.Services.CreateScope();
         var ctx = scope.ServiceProvider.GetRequiredService<DmContext>();
         var eventIdResult = EventId.FromString(dto.Id);
         Assert.True(eventIdResult.IsSuccess);
-        
+    
         var veaEvent = await ctx.VeaEvents.SingleOrDefaultAsync(e => e.Id == eventIdResult.Payload);
         Assert.NotNull(veaEvent);
     }

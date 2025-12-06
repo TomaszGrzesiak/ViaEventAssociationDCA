@@ -23,6 +23,23 @@ public sealed class EventDetailsQueryHandler
     {
         if (query is null) throw new ArgumentNullException(nameof(query));
 
+        // Extra guards – fail fast on obviously wrong input
+        if (query.Offset < 0)
+        {
+            throw new ArgumentOutOfRangeException(
+                nameof(query.Offset),
+                query.Offset,
+                "Offset cannot be negative.");
+        }
+        
+        if (query.PageSize <= 0)
+        {
+            throw new ArgumentOutOfRangeException(
+                nameof(query.PageSize),
+                query.PageSize,
+                "PageSize must be greater than zero.");
+        }
+        
         // 1) Load basic event data + attendee count
         var evt = await _context.VeaEvents
             .Where(e => e.Id == query.EventId)
@@ -37,8 +54,14 @@ public sealed class EventDetailsQueryHandler
                 e.MaxGuestsNoValue,
                 AttendeeCount = 0
             })
-            .SingleAsync();
+            .SingleOrDefaultAsync();
 
+        if (evt is null)
+        {
+            throw new InvalidOperationException(
+                $"Event with id '{query.EventId}' was not found in the read model.");
+        }
+        
         // 2. Make a list of Guests participating the event (+these who accepted Invitation)
         // A) GuestIds from EventParticipants (already attending)
         var participantGuestIdsQuery =
@@ -47,11 +70,11 @@ public sealed class EventDetailsQueryHandler
                 .Select(ep => ep.GuestId);
 
         // B) GuestIds from Invitations with "Accepted" status
-        const int InvitationAcceptedStatus = 2; // Enum "Accepted" = 2 in DB
+        const int invitationAcceptedStatus = 2; // Enum "Accepted" = 2 in DB
 
         var acceptedInvitationGuestIdsQuery =
             _context.Invitations
-                .Where(i => i.EventId == query.EventId && i.Status == InvitationAcceptedStatus)
+                .Where(i => i.EventId == query.EventId && i.Status == invitationAcceptedStatus)
                 .Select(i => i.GuestId);
 
         // C) Union + distinct = all *attending* guests for this event

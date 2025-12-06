@@ -27,7 +27,13 @@ public sealed class GuestProfileQueryHandler
     {
         // 1) Load guest basic data
         var guest = await _context.Guests
-            .SingleAsync(g => g.Id == query.GuestId);
+            .SingleOrDefaultAsync(g => g.Id == query.GuestId);
+        
+        if (guest is null)
+        {
+            throw new InvalidOperationException(
+                $"Guest with id '{query.GuestId}' was not found in the read model.");
+        }
 
         // 2) "Now" as string matching DB format: "yyyy-MM-dd HH:mm"
         var now = _systemTime.Now();
